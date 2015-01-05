@@ -120,7 +120,7 @@ As a **user of brief** I would like to **publish this user story to
 github** so that I can **track its completion**
 ```
 
-```
+```ruby
 user_story = briefcase.user_stories.first
 
 user_story.title # => "User Story Title"
