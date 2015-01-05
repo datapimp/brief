@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join(File.dirname(__FILE__),'..','lib')
+
+require 'rubygems'
+require 'commander/import'
+
+program :name, "Brief"
+program :description, "Brief makes writing markdown more productive"
+program :version, "0.0.1"
+
+require 'brief'
+require 'brief/dsl'
+
+Brief.load_commands()
