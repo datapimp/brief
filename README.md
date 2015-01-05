@@ -48,17 +48,16 @@ github, or whatever.
 Brief will allow us to do something like:
 
 ```ruby
-case = Brief::Case.new(root: "/path/to/files")
+briefcase = Brief::Briefcase.new(root: "/path/to/files")
 
-case.thoughtleader_profiles.map(&:subject) # => ["devops", "ruby on rails", "e-mail marketing"]
+briefcase.thoughtleader_profiles.map(&:subject) # => ["devops", "ruby on rails", "e-mail marketing"]
 
-profile = case.find_thoughtleader_profile_by_subject("devops")
+profile = briefcase.find_thoughtleader_profile_by_subject("devops")
 
 profile.thoughtleaders.map(&:name) #=> ["Jon Hendren", "Jon Soeder"]
 ```
 
-With each of these documents, we might want to constantly monitor the
-output and contributions of these two fine men named Jon, and be
+With each of these documents, we might want to constantly monitor the output and contributions of these two fine men named Jon, and be
 automatically notified when they release somethign new.  The possibilities are really endless, and up to you.
 
 ### Example Application
@@ -87,14 +86,46 @@ derived from the document's structure, gets turned into data.
 You can define models very easily:
 
 ```
-Brief.define("User Story") do
-  attribute :title, String
-  attribute :estimate, Integer
-  attribute :assigned_to, String
-  attribute :status, String
-  attribute :github_issue_number, Integer
-  attribute :github_milestone_number, Integer
-  attribute :epic, Brief.models("Epic")
+define "User Story" do
+  meta do
+    title
+    status :in => %w(draft published)
+    epic_title
+  end
+
+  content do
+    title "h1:first-child"
+    persona "p strong:first-child"
+    behavior "p strong:second-child"
+    goal "p strong:third-child"
+  end
+  
+  def markdown_body_for_github_issue
+    extract_content("p:first-child")
+  end
 end
 ```
 
+So now when you have a markdown file which contains a user story, you
+can work with it like it was an object and build applications with it.
+
+```markdown
+---
+type: user_story
+---
+
+# User Story Title
+
+As a **user of brief** I would like to **publish this user story to
+github** so that I can **track its completion**
+```
+
+```
+user_story = briefcase.user_stories.first
+
+user_story.title # => "User Story Title"
+user_story.persona # => "user of brief"
+user_story.goal # => "track its completion"
+
+github.create_issue(title: user_story.title, body: user_story.content) 
+```
