@@ -1,4 +1,6 @@
-# Brief
+# Brief 
+
+### No more dead documents 
 
 Brief is a tool that lets you build simple applications on top of
 collections of markdown files.  The metaphor we use is a briefcase,
@@ -77,7 +79,14 @@ define("Post") do
 end
 
 # this creates a custom command in the brief CLI tool
-# brief publish posts /path/to/*.html.md.
+#
+# so when you run:
+# 
+#   brief publish posts /path/to/*.html.md.
+#
+# the brief CLI will find models for the post files you reference,
+# and call whatever methods you want.
+
 action "publish posts" do |briefcase, models, options|
 
   say "== Publishing #{ models.length } posts"
@@ -87,3 +96,9 @@ action "publish posts" do |briefcase, models, options|
   end
 end
 ```
+
+### Real World Application
+
+My company Architects.io, Inc. uses brief to power our Blueprint
+software.   
+
