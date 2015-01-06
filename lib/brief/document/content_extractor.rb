@@ -17,6 +17,10 @@ module Brief
       model_class.definition.content_schema.attributes
     end
 
+    def respond_to?(meth)
+      attribute_set.key?(meth) || super
+    end
+
     def method_missing(meth, *args, &block)
       if settings = attribute_set.fetch(meth, nil)
         if settings.args.length == 1 && settings.args.first.is_a?(String)

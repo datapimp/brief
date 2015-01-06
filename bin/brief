@@ -13,3 +13,5 @@ require 'brief'
 require 'brief/dsl'
 
 Brief.load_commands()
+
+Brief::Briefcase.new(root: Dir.pwd())

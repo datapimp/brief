@@ -10,6 +10,14 @@ require "nokogiri"
 require "yaml"
 
 module Brief
+  def self.case= value
+    @briefcase = value
+  end
+
+  def self.case
+    @briefcase
+  end
+
   def self.configuration
     Brief::Configuration.instance
   end

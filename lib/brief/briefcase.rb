@@ -10,6 +10,10 @@ module Brief
 
       load_configuration
       load_model_definitions
+
+      if Brief.case.nil?
+        Brief.case = self
+      end
     end
 
     def config

@@ -12,7 +12,7 @@ module Brief
       include Initializers
       include AccessorMethods
 
-      class_attribute :models, :after_initialization_hooks
+      class_attribute :models, :after_initialization_hooks, :defined_helpers
 
       self.models = Array(self.models).to_set
 
@@ -37,6 +37,18 @@ module Brief
 
       def extracted
         @extracted ||= Brief::Document::ContentExtractor.new(self.class.type_alias, document)
+      end
+
+      def method_missing(meth, *args, &block)
+        if args.empty?
+          if document.respond_to?(meth)
+            document.send(meth)
+          else
+            document.data.key?(meth) ? data[meth] : extracted.send(meth)
+          end
+        else
+          super
+        end
       end
     end
 
@@ -67,7 +79,7 @@ module Brief
           end
         end
 
-        klass.definition.apply_meta_settings
+        klass.definition.apply_config
       end
 
       Brief::Repository.define_document_finder_methods
@@ -82,10 +94,6 @@ module Brief
     end
 
     module ClassMethods
-      def content_extractor
-        @content_extrator ||= Brief::Document::ContentExtractor.new(self)
-      end
-
       def where(*args, &block)
         Brief::DocumentMapper::Query.new(self).send(:where, *args)
       end
@@ -100,6 +108,10 @@ module Brief
 
       def content(options={}, &block)
         definition.send(:content, options, &block)
+      end
+
+      def helpers(&block)
+        definition.send(:helpers, &block)
       end
 
       def after_initialize(&block)
@@ -129,6 +141,18 @@ module Brief
       def definition=(value)
         @definition
       end
+
+      def method_missing(meth, *args, &block)
+        if meth.to_s.match(/^on_(.*)_change$/)
+          create_change_handler($1, *args, &block)
+        else
+          super
+        end
+      end
+
+      def create_change_handler(attribute, *args, &block)
+        block.call(self)
+      end
     end
 
     module Initializers
@@ -148,6 +172,5 @@ module Brief
         self.slug = send(column).to_s.downcase.parameterize if self.slug.to_s.length == 0
       end
     end
-
   end
 end

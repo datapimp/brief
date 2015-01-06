@@ -4,7 +4,8 @@ module Brief
                   :name,
                   :metadata_schema,
                   :content_schema,
-                  :options
+                  :options,
+                  :defined_helpers
 
     def initialize(name, options={})
       @name             = name
@@ -34,17 +35,21 @@ module Brief
           Brief::Model.classes << k
         end
 
-        apply_meta_settings
+        apply_config
       end
     end
 
-    def apply_meta_settings
+    def apply_config
       metadata_schema.values.each do |settings|
         if model_class.nil?
           binding.pry
         end
 
         model_class.send(:attribute, *(settings[:args]))
+      end
+
+      Array(self.defined_helpers).each do |mod|
+        model_class.send(:include, mod)
       end
     end
 
@@ -70,6 +75,17 @@ module Brief
       instance_eval(&block)
     end
 
+    def helpers(&block)
+      self.defined_helpers ||= []
+
+      if block
+        mod = Module.new
+        mod.module_eval(&block)
+
+        self.defined_helpers << mod
+      end
+    end
+
     def inside_meta?
       @current == :meta
     end
@@ -93,6 +109,8 @@ module Brief
         end
         args.unshift(meth)
         self.metadata_schema[meth] = {args: args, block: block}
+      else
+        super
       end
     end
   end

@@ -57,7 +57,7 @@ module Brief
     end
 
     def respond_to?(method)
-      super || data.respond_to?(method)
+      super || data.respond_to?(method) || data.key?(method)
     end
 
     def method_missing(meth, *args, &block)
