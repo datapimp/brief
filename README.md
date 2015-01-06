@@ -1,5 +1,7 @@
 # Brief 
 
+An ActiveRecord style layer on top of a folder of markdown files.
+
 ### No more dead documents 
 
 Brief is a tool that lets you build simple applications on top of
@@ -18,6 +20,9 @@ that document would have a `title` method which returned its value.
 This is a great way to build applications whose primary interface is the
 text editor, allowing writing and thought to flow as freely as possible
 and to later be used to power some automation tasks.
+
+**Think of it as an ActiveRecord like layer on top of a folder of
+Markdown files**.  Brief turns static text into a 'living' data object.
 
 ## Getting started 
 
@@ -100,5 +105,68 @@ end
 ### Real World Application
 
 My company Architects.io, Inc. uses brief to power our Blueprint
-software.   
+software.  A Blueprint is a collection of related documents that are
+used in the software architecture and design process, as well as in the
+day to day writing that takes place while building the software itself.
 
+This includes things like:
+
+- daily standups
+- bug reports
+- code reviews
+- feature epics
+- user stories
+- integration tests
+- release notes
+- wireframe annotations
+
+All of these things are simple markdown files.  They live in the
+projects we are working on, and by treating our writing as a structured
+exercise we are able to do a lot more things with it than just read it.
+
+For example we can do:
+
+```
+brief publish user stories /path/to/user-stories/*.html.md
+```
+
+which is implemented by:
+
+```ruby
+# brief.rb
+
+define "User Story" do
+  meta do
+    status
+  end
+
+  content do
+    title "h1"
+    paragraph "p:first-child"
+    persona "p:first-child strong:1st-child"
+    behavior "p:first-child strong:2nd-child"
+    goal "p:first-child strong:3rd-child"
+  end
+
+  helpers do
+    def create_github_issue
+      issue = github.create_issue(title: title, body: document.content)
+      set(issue_number: issue.number)
+    end
+  end
+end
+
+action "publish user stories" do |briefcase, models, options|
+  user_stories = models
+
+  user_stories.each do |user_story|
+    if user_story.create_github_issue()
+      user_story.status = "published"
+      user_story.save
+    end
+  end
+end
+```
+
+As you can see, Brief can be a way to make your Markdown writing efforts
+much more productive. 
