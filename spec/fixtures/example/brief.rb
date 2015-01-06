@@ -14,4 +14,14 @@ define "User Story" do
     behavior "p strong:second-child"
     goal "p strong:third-child"
   end
+
+  helpers do
+    def defined_helper_method
+      true
+    end
+  end
+end
+
+action "custom command" do
+  $custom_command = true
 end
