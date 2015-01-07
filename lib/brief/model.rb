@@ -11,10 +11,12 @@ module Brief
       include Virtus.model(finalize: false)
       include Initializers
       include AccessorMethods
+      include Persistence
 
-      class_attribute :models, :after_initialization_hooks, :defined_helpers
+      class_attribute :models, :after_initialization_hooks, :defined_actions
 
       self.models = Array(self.models).to_set
+      self.defined_actions = Array(self.defined_actions).to_set
 
       class << self
         include Enumerable
@@ -68,21 +70,7 @@ module Brief
 
     def self.finalize
       Virtus.finalize
-
-      classes.each do |klass|
-        klass.name ||= klass.to_s.split('::').last.humanize
-        klass.type_alias ||= klass.name.parameterize.gsub(/-/,'_')
-
-        klass.attribute_set.map(&:name).each do |attr|
-          klass.define_singleton_method("find_by_#{ attr }") do |value|
-            where(attr => value).first
-          end
-        end
-
-        klass.definition.apply_config
-      end
-
-      Brief::Repository.define_document_finder_methods
+      classes.each(&:finalize)
     end
 
     def ==(other)
@@ -94,24 +82,35 @@ module Brief
     end
 
     module ClassMethods
+      def has_actions?
+        definition.has_actions?
+      end
+
+      def finalize
+        klass = self
+
+        klass.name ||= klass.to_s.split('::').last.humanize
+        klass.type_alias ||= klass.name.parameterize.gsub(/-/,'_')
+
+        klass.attribute_set.map(&:name).each do |attr|
+          unless klass.method_defined?("find_by_#{ attr }")
+            klass.define_singleton_method("find_by_#{ attr }") do |value|
+              where(attr => value).first
+            end
+          end
+        end
+
+        klass.definition.apply_config
+
+        Brief::Repository.define_document_finder_methods
+      end
+
       def where(*args, &block)
         Brief::DocumentMapper::Query.new(self).send(:where, *args)
       end
 
       def each(*args, &block)
         Array(self.models).send(:each, *args, &block)
-      end
-
-      def meta(options={}, &block)
-        definition.send(:meta, options, &block)
-      end
-
-      def content(options={}, &block)
-        definition.send(:content, options, &block)
-      end
-
-      def helpers(&block)
-        definition.send(:helpers, &block)
       end
 
       def after_initialize(&block)
@@ -143,7 +142,10 @@ module Brief
       end
 
       def method_missing(meth, *args, &block)
-        if meth.to_s.match(/^on_(.*)_change$/)
+        if %w(meta content actions helpers).include?(meth.to_s)
+          definition.send(meth, &block)
+          finalize
+        elsif meth.to_s.match(/^on_(.*)_change$/)
           create_change_handler($1, *args, &block)
         else
           super

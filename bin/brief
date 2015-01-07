@@ -3,15 +3,20 @@
 $:.unshift File.join(File.dirname(__FILE__),'..','lib')
 
 require 'rubygems'
-require 'commander/import'
-
-program :name, "Brief"
-program :description, "Brief makes writing markdown more productive"
-program :version, "0.0.1"
-
 require 'brief'
 require 'brief/dsl'
 
-Brief.load_commands()
+$briefcase = Brief::Briefcase.new(root: Dir.pwd())
 
-Brief::Briefcase.new(root: Dir.pwd())
+if ARGV[0] == "console"
+  require 'pry'
+  Pry.start($briefcase)
+else
+  require 'commander/import'
+
+  program :name, "Brief"
+  program :description, "Brief makes writing markdown more productive"
+  program :version, "0.0.1"
+
+  Brief.load_commands()
+end

@@ -1,3 +1,4 @@
+# Credit to github.com/ralph/document_mapper
 module Brief::DocumentMapper
   OPERATOR_MAPPING = {
     'equal'     => :==,

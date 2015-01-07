@@ -31,6 +31,11 @@ describe "The Brief Model" do
       set = Brief::Model::UserStory.attribute_set.map(&:name)
       expect(set).to include(:title, :status, :epic_title)
     end
+
+    it "has attribute setters" do
+      story = Brief::Model::UserStory.new
+      expect(story).to respond_to(:title=)
+    end
   end
 
   context "Class Definitions" do
@@ -54,6 +59,12 @@ describe "The Brief Model" do
     it "has the attributes defined inline in the class methods" do
       set = Brief::Epic.attribute_set.map(&:name)
       expect(set).to include(:path, :document, :title, :status)
+    end
+
+    it "has attribute setters" do
+      epic = Brief::Epic.new
+      expect(epic).to respond_to(:title=)
+      expect(epic).to respond_to(:subheading=)
     end
   end
 
@@ -79,6 +90,16 @@ describe "The Brief Model" do
 
     it "uses the configured content extractor settings" do
       expect(epic.extracted.title).to eq("Blueprint Epic Example")
+    end
+  end
+
+  context "Actions and Helpers" do
+    it "uses the actions block to define CLI dispatchers" do
+      expect(epic.class.defined_actions).to include(:custom_action)
+    end
+
+    it "users the actions block to define CLI dispatchers (dsl)" do
+      expect(user_story.class.defined_actions).to include(:custom_action)
     end
   end
 end

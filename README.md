@@ -2,171 +2,110 @@
 
 An ActiveRecord style layer on top of a folder of markdown files.
 
-### No more dead documents 
+Treat your markdown documents as active models, run actions on them,
+convert them into HTML, extract fragments of HTML, combine it all in
+whatever interesting way you can think of.  
 
-Brief is a tool that lets you build simple applications on top of
-collections of markdown files.  The metaphor we use is a briefcase,
-which contains folders with different document types.
+The end result is a really neat way of being able to use the words that you write
+to power all sorts of applications. 
 
-Every document type, or model, can define a simple schema of attributes, 
-which can be specified in a YAML frontmatter preamble at the very top of
-each document.  
+**No more writing dead documents!**
 
-In addition to frontmatter metadata, you can declare other model
-attributes as CSS selectors.  For example, the very first h1 heading
-could be the title for your document, and the corresponding model for
-that document would have a `title` method which returned its value.
+### Documents as Models
 
-This is a great way to build applications whose primary interface is the
-text editor, allowing writing and thought to flow as freely as possible
-and to later be used to power some automation tasks.
-
-**Think of it as an ActiveRecord like layer on top of a folder of
-Markdown files**.  Brief turns static text into a 'living' data object.
-
-## Getting started 
-
-```bash
-gem install brief
-mkdir blog
-cd blog 
-brief init
-```
-
-This will create a new folder for your briefcase, along with the
-following config file and structure.
-
-```
-- docs/
-  - an-introduction-to-brief.html.md
-- models/
-- brief.rb
-```
-
-The config file will look like:
+Brief lets you treat an individual markdown file as if it were a model,
+complete with validations, callbacks, and methods you can run. You can
+define a `Post` model for all of the files in a 'posts' folder and
+define actions like 'publish' on them. 
 
 ```ruby
-
-# configuration options for this briefcase
-config do
-  set(:models_path => Pathname(__FILE__).parent.join("models"))
-end
-
-# define a Post model
-define("Post") do
-
-  # the post model will have YAML frontmatter 
-  # with values for 'status' and 'date'
+define "Post" do
   meta do
     status
-    date DateTime, :default => lambda {|post, attr| post.document.created_at }
+    tags Array
   end
-  
-  # the post model will have a 'title' method which returns the text
-  # from the first h1 heading
+
   content do
-    title "h1"
+    has_one :title, "h1"
     has_many :subheadings, "h2"
   end
 
-  helpers do
-    def publish(options={})
-
+  actions do
+    def publish
+      update_attributes(:status => "published")
     end
   end
-  
-  # Whenever we call post.save() and the status attribute changes
-  # from draft to published, do something with the model
-  on_status_change(:from => "draft", :to => "published") do |model|
-    # Do Something
-    # mail_service.send_html_email_campaign(model.to_html)
-  end
-end
-
-# this creates a custom command in the brief CLI tool
-#
-# so when you run:
-# 
-#   brief publish posts /path/to/*.html.md.
-#
-# the brief CLI will find models for the post files you reference,
-# and call whatever methods you want.
-
-action "publish posts" do |briefcase, models, options|
-
-  say "== Publishing #{ models.length } posts"
-
-  Array(models).each do |post|
-    post.publish()
-  end
 end
 ```
 
-### Real World Application
 
-My company Architects.io, Inc. uses brief to power our Blueprint
-software.  A Blueprint is a collection of related documents that are
-used in the software architecture and design process, as well as in the
-day to day writing that takes place while building the software itself.
+### Model attributes derived from YAML frontmatter 
 
-This includes things like:
+Models can get their attributes from headers on the document, aka YAML frontmatter.
 
-- daily standups
-- bug reports
-- code reviews
-- feature epics
-- user stories
-- integration tests
-- release notes
-- wireframe annotations
+```markdown
+---
+status: draft
+tags: 
+  - demo
+  - sample
+---
 
-All of these things are simple markdown files.  They live in the
-projects we are working on, and by treating our writing as a structured
-exercise we are able to do a lot more things with it than just read it.
+# Title
 
-For example we can do:
-
-```
-brief publish user stories /path/to/user-stories/*.html.md
+## Section One
+## Section Two
 ```
 
-which is implemented by:
+which will let you use it like such:
 
 ```ruby
-# brief.rb
+post = Brief::Document.new(/path/to/doc.html.md)
 
-define "User Story" do
-  meta do
-    status
-  end
+post.status #=> "draft"
+post.title #=> "Title"
+post.tags #=> ['demo','sample']
+```
 
-  content do
-    title "h1"
-    paragraph "p:first-child"
-    persona "p:first-child strong:1st-child"
-    behavior "p:first-child strong:2nd-child"
-    goal "p:first-child strong:3rd-child"
-  end
+#### Model attributes derived from the document structure
 
-  helpers do
-    def create_github_issue
-      issue = github.create_issue(title: title, body: document.content)
-      set(issue_number: issue.number)
-    end
-  end
-end
+Models can also get their attributes from the structure itself.
 
-action "publish user stories" do |briefcase, models, options|
-  user_stories = models
+```ruby
+post.title #=> "Title"
+post.subheadings #=> ["Section One", "Section Two"]
+```
 
-  user_stories.each do |user_story|
-    if user_story.create_github_issue()
-      user_story.status = "published"
-      user_story.save
+### Querying Documents
+
+Given a big folder of markdown files with attributes, we can query them:
+
+```
+posts = briefcase.posts.where(:status => "published")
+posts.map(&:title) #=> ['Title']
+```
+
+This functionality is based on https://github.com/ralph/document_mapper,
+and similar to middleman.
+
+### Document Actions
+
+By defining actions on documents like so:
+
+```ruby
+
+define "Post" do
+  actions do
+    def publish
+      # DO Something
     end
   end
 end
 ```
 
-As you can see, Brief can be a way to make your Markdown writing efforts
-much more productive. 
+you can either call that method as you normally would, or you can run 
+that action from the command line:
+
+```bash
+brief publish posts ./posts/*.html.md
+```

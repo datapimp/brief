@@ -20,35 +20,9 @@ define("Post") do
     has_many :subheadings, "h2"
   end
 
-  helpers do
+  actions do
     def publish(options={})
-
+      puts "The publish action"
     end
   end
-
-  # Whenever we call post.save() and the status attribute changes
-  # from draft to published, do something with the model
-  on_status_change(:from => "draft", :to => "published") do |model|
-    # Do Something
-    # mail_service.send_html_email_campaign(model.to_html)
-  end
 end
-
-# this creates a custom command in the brief CLI tool
-#
-# so when you run:
-#
-#   brief publish posts /path/to/*.html.md.
-#
-# the brief CLI will find models for the post files you reference,
-# and call whatever methods you want.
-
-action "publish posts" do |briefcase, models, options|
-
-  say "== Publishing #{ models.length } posts"
-
-  Array(models).each do |post|
-    post.publish()
-  end
-end
-

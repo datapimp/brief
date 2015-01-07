@@ -27,7 +27,7 @@ module Brief
         create_model_class.tap do |k|
           k.send(:include, Brief::Model)
 
-          k.definition = definition
+          k.definition ||= definition
 
           k.name ||= name
           k.type_alias ||= type_alias
@@ -40,21 +40,22 @@ module Brief
     end
 
     def apply_config
+      # define a virtus attribute mapping
       metadata_schema.values.each do |settings|
-        if model_class.nil?
-          binding.pry
-        end
-
         model_class.send(:attribute, *(settings[:args]))
       end
 
-      Array(self.defined_helpers).each do |mod|
-        model_class.send(:include, mod)
-      end
+      # defined helpers adds an anonymous module include
+      Array(self.defined_helpers).each {|mod| model_class.send(:include, mod) }
+
+      model_class.defined_actions += Array(self.defined_actions)
+      true
     end
 
     def create_model_class
-      model_namespace.const_set(type_alias.camelize, Class.new) unless model_class
+      unless (model_namespace.const_get(type_alias.camelize) rescue nil)
+        model_namespace.const_set(type_alias.camelize, Class.new)
+      end
     end
 
     def model_class
@@ -73,6 +74,18 @@ module Brief
     def content(options={}, &block)
       @current = :content
       instance_eval(&block)
+    end
+
+    def has_actions?
+      !@defined_actions.empty?
+    end
+
+    def actions(&block)
+      helpers(&block)
+    end
+
+    def defined_actions
+      Array(defined_helpers).map(&:instance_methods).flatten
     end
 
     def helpers(&block)
