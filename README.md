@@ -103,9 +103,18 @@ define "Post" do
 end
 ```
 
-you can either call that method as you normally would, or you can run 
-that action from the command line:
+you can either call that method as you normally would: 
+
+```ruby
+post = Brief.case.posts.where(:status => "draft")
+post.publish()
+```
+
+or you can run that action from the command line:
 
 ```bash
 brief publish posts ./posts/*.html.md
 ```
+
+this will find all of the post models matching the document, and then
+call the publish method on them.
