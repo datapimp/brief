@@ -141,9 +141,13 @@ module Brief
         @definition
       end
 
+      def section_mapping(*args)
+        definition.send(:section_mapping, *args)
+      end
+
       def method_missing(meth, *args, &block)
         if %w(meta content actions helpers).include?(meth.to_s)
-          definition.send(meth, &block)
+          definition.send(meth, *args, &block)
           finalize
         elsif meth.to_s.match(/^on_(.*)_change$/)
           create_change_handler($1, *args, &block)

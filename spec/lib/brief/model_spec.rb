@@ -102,4 +102,11 @@ describe "The Brief Model" do
       expect(user_story.class.defined_actions).to include(:custom_action)
     end
   end
+
+  context "Section Mappings" do
+    it "defines a section mapping for User Stories" do
+      mapping = epic.class.section_mapping("User Stories")
+      expect(mapping).to be_a(Brief::Document::Section::Mapping)
+    end
+  end
 end

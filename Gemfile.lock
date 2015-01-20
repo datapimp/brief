@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    brief (1.0.0)
+    brief (1.1.0)
       activemodel
       activesupport
       commander
@@ -39,7 +39,7 @@ GEM
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
     equalizer (0.0.9)
-    faraday (0.9.0)
+    faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
     github-fs (0.0.1)
       activesupport (> 3.2.0)
@@ -50,10 +50,10 @@ GEM
     i18n (0.7.0)
     ice_nine (0.11.1)
     inflecto (0.0.2)
-    json (1.8.1)
+    json (1.8.2)
     method_source (0.8.2)
     mini_portile (0.6.2)
-    minitest (5.5.0)
+    minitest (5.5.1)
     multipart-post (2.0.0)
     nokogiri (1.6.5)
       mini_portile (~> 0.6.0)
@@ -67,7 +67,7 @@ GEM
       pry (>= 0.9.10, < 0.11.0)
     rack (1.6.0)
     rake (10.4.2)
-    redcarpet (3.2.0)
+    redcarpet (3.2.2)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
       rspec-expectations (~> 3.1.0)
@@ -87,7 +87,7 @@ GEM
     thread_safe (0.3.4)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    virtus (1.0.3)
+    virtus (1.0.4)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)

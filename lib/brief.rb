@@ -40,6 +40,13 @@ module Brief
   def self.load_models(from_folder=nil)
     Brief::Model.load_all(from_folder: from_folder)
   end
+
+  # Adapters for Rails, Middleman, or Jekyll apps
+  def self.activate_adapter(identifier)
+    require "brief/adapters/#{ identifier }"
+    adapter = (Brief::Adapters.const_get(identifier.camelize) rescue nil)
+    adapter.try(:activate_adapter)
+  end
 end
 
 require "brief/core_ext"
@@ -49,6 +56,8 @@ require "brief/configuration"
 require "brief/document/rendering"
 require "brief/document/front_matter"
 require "brief/document/content_extractor"
+require "brief/document/structure_analyzer"
+require "brief/document/section"
 require "brief/document"
 require "brief/document_mapper"
 require "brief/repository"

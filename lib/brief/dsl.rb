@@ -13,6 +13,16 @@ module Brief
       definition.validate!
     end
 
+    # defines a method on the model instance named after the identifier
+    # and then creates a CLI command matching that, so for example:
+    #
+    # given a model called 'Post' and an action named 'publish' the
+    # brief CLI executable will respond to:
+    #
+    #   brief publish posts PATH_GLOB
+    #
+    # this will find all of the Post models from the documents matching PATH_GLOB
+    # and call the publish method on them
     def action(identifier, options={}, &block)
       Object.class.class_eval do
         command "#{identifier}" do |c|

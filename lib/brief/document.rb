@@ -3,22 +3,22 @@ module Brief
     include Brief::Document::Rendering
     include Brief::Document::FrontMatter
 
-    attr_accessor :path, :content, :frontmatter
+    attr_accessor :path, :content, :frontmatter, :raw_content
 
     def initialize(path, options={})
       @path = Pathname(path)
       @options = options
 
       if self.path.exist?
-        content
+        @raw_content = path.read
         load_frontmatter
       end
 
       self.model_class.try(:models).try(:<<, to_model) unless model_instance_registered?
     end
 
-    def content
-      @content ||= path.read
+    def sections
+      structure.sections
     end
 
     def extract_content(*args)

@@ -5,13 +5,15 @@ module Brief
                   :metadata_schema,
                   :content_schema,
                   :options,
-                  :defined_helpers
+                  :defined_helpers,
+                  :section_mappings
 
     def initialize(name, options={})
       @name             = name
       @options          = options
       @type_alias       = options.fetch(:type_alias) { name.downcase.parameterize.gsub(/-/,'_') }
       @metadata_schema  = {}.to_mash
+      @section_mappings = {}.to_mash
       @content_schema   = {attributes:{}}.to_mash
       @model_class      = options[:model_class]
     end
@@ -107,15 +109,22 @@ module Brief
       @current == :content
     end
 
+    def section_mapping(identifier)
+      section_mappings.fetch(identifier)
+    end
+
     def method_missing(meth, *args, &block)
       args = args.dup
 
       if inside_content?
-        if meth.to_s == :define_section
-
+        if meth.to_sym == :define_section
+          opts = args.extract_options!
+          identifier = args.first
+          self.section_mappings[identifier] ||= Brief::Document::Section::Mapping.new(identifier, opts)
+          section_mapping(identifier).instance_eval(&block) if block
+        else
+          self.content_schema.attributes[meth] = {args: args, block: block}
         end
-
-        self.content_schema.attributes[meth] = {args: args, block: block}
       elsif inside_meta?
         if args.first.is_a?(Hash)
           args.unshift(String)

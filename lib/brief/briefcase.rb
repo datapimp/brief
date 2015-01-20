@@ -60,7 +60,15 @@ module Brief
     end
 
     def models_path
-      root.join options.fetch(:models_path) { config.models_path }
+      value = options.fetch(:models_path) { config.models_path }
+
+      if value.to_s.match(/\./)
+        Pathname(Dir.pwd).join(value)
+      elsif value.to_s.match(/\//)
+        Pathname(value)
+      else
+        root.join(value)
+      end
     end
 
     def repository

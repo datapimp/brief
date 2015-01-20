@@ -40,7 +40,7 @@ module Brief
     end
 
     def document_paths
-      Dir[root.join("**/*.md").to_s]
+      Dir[root.join("**/*.md").to_s].map {|p| Pathname(p) }
     end
 
     def self.define_document_finder_methods

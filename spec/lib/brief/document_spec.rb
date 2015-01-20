@@ -7,7 +7,7 @@ describe "The Brief Document" do
   end
 
   it "renders html" do
-    expect(sample.to_html).to include("<h1>User Stories</h1>")
+    expect(sample.to_html).to match(/h1.*User Stories.*h1\>/)
   end
 
   it "parses the html" do
@@ -22,6 +22,10 @@ describe "The Brief Document" do
     it "extracts content from a css selector" do
       extracted = sample.extract_content(:args => ["h1:first-child"])
       expect(extracted).to eq("Blueprint Epic Example")
+    end
+
+    it "treats heading tags as section headers" do
+      expect(sample.sections).not_to be_empty
     end
   end
 end
