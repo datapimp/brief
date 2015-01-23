@@ -24,9 +24,20 @@ describe "The Brief Document" do
       extracted = sample.extract_content(:args => ["h1:first-of-type"])
       expect(extracted).to eq("Blueprint Epic Example")
     end
+  end
 
-    it "treats heading tags as section headers" do
+  context "defining sections" do
+    it "lets me define content sections" do
       expect(sample.sections).not_to be_empty
+      expect(sample.sections.user_stories).to be_present
+      expect(sample.sections.user_stories.fragment.name).to eq("section")
+      expect(sample.sections.user_stories.fragment.css("article").length).to eq(3)
+    end
+
+    it "gives me an array of items underneath the section filled with the key value mappings i laid out" do
+      items = sample.sections.user_stories.items
+      expect(items.length).to eq(3)
+      expect(items.map(&:components).map(&:first).uniq).to eq(["User"])
     end
   end
 end

@@ -1,31 +1,41 @@
 class Brief::Document::Section
-  attr_reader :title, :elements, :anchor
+  attr_accessor :title, :fragment
+  attr_reader :config
 
-  attr_accessor :mapping, :html_method
+  Headings = %w(h1 h2 h3 h4 h5 h6)
 
-  include Enumerable
-
-  def initialize(title, anchor)
+  def initialize(title, fragment, config)
     @title = title
-    @anchor = anchor
-    @elements = []
+    @fragment = fragment
+    @config = config
   end
 
-  def each
-    @elements
-  end
+  def items
+    return @items if @items
 
-  def <<(el)
-    @elements << el
-  end
+    data = []
 
-  def fragment
-    @fragment ||= Nokogiri::HTML.fragment(to_html)
-  end
+    config.selectors.each do |selector|
+      settings = config.selector_config[selector]
 
-  def to_html
-    fragment.html
-  end
+      if Headings.include?(selector)
+        headings = fragment.css("article > h2")
+        articles = headings.map(&:parent)
 
+        if !settings.empty?
+          articles.compact.each do |article|
+            data.push(settings.inject({}.to_mash) do |memo, pair|
+              attribute, selector = pair
+              result = article.css(selector)
+              memo[attribute] = result.length > 1 ? result.map(&:text) : result.text
+              memo
+            end)
+          end
+        end
+      end
+    end
+
+    @items = data
+  end
 end
 

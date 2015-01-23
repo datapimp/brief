@@ -24,10 +24,11 @@ module Brief
     def sections
       mappings = model_class.section_mappings
 
-      @sections = {}
+      @sections = {}.to_mash
 
-      mappings.each do |name, section|
-        @sections[name] = {config: section}.to_mash
+      mappings.each do |name, mapping|
+        fragment = css("section[data-heading='#{name}']").first
+        @sections[name.parameterize.downcase.underscore] = Brief::Document::Section.new(name, fragment, mapping)
       end
 
       @sections
