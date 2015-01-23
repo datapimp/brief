@@ -101,6 +101,11 @@ describe "The Brief Model" do
     it "users the actions block to define CLI dispatchers (dsl)" do
       expect(user_story.class.defined_actions).to include(:custom_action)
     end
+
+    it "lets me define a helper method which utilizes all the extracted data and content structure" do
+      expect(epic.user_stories.length).to eq(3)
+      expect(epic.user_stories.map(&:persona)).to include("User")
+    end
   end
 
   context "Section Mappings" do

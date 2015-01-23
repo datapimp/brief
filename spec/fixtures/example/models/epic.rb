@@ -40,8 +40,21 @@ class Brief::Epic
     end
   end
 
+  helpers do
+    def user_stories
+      sections.user_stories.items.map do |item|
+        item.components = Array(item.components)
+
+        item.merge(goal: item.components[2],
+                   persona: item.components[0],
+                   behavior: item.components[1])
+      end
+    end
+  end
+
   actions do
     def custom_action
+
     end
   end
 end
