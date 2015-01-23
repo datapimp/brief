@@ -17,22 +17,57 @@ module Brief
       self.model_class.try(:models).try(:<<, to_model) unless model_instance_registered?
     end
 
+    def data
+      frontmatter
+    end
+
     def sections
-      structure.sections
+      mappings = model_class.section_mappings
+
+      @sections = {}
+
+      mappings.each do |name, section|
+        @sections[name] = {config: section}.to_mash
+      end
+
+      @sections
+    end
+
+    # Shortcut for querying the rendered HTML by css selectors.
+    #
+    # This will allow for model data attributes to be pulled from the
+    # document contents.
+    #
+    # Returns a Nokogiri::HTML::Element
+    def css(*args, &block)
+      parser.send(:css, *args, &block)
+    end
+
+    # Returns a Nokogiri::HTML::Element
+    def at(*args, &block)
+      parser.send(:at, *args, &block)
     end
 
     def extract_content(*args)
       options = args.extract_options!
-      args    = options[:args] if options.is_a?(Hash) && options.key?(:args)
+      args    = options.delete(:args) if options.is_a?(Hash) && options.key?(:args)
 
       case
-      when args.length == 1 && args.first.is_a?(String)
-        css(args.first).try(:text).to_s
+      when options.empty? && args.length == 1 && args.first.is_a?(String)
+        results = css(args.first)
+        results = results.first if results.length > 1 && args.first.match(/:first-of-type/)
+        results.try(:text).to_s
+      else
+        binding.pry
       end
     end
 
-    def data
-      frontmatter
+    def relative_path_identifier
+      if Brief.case
+        path.relative_path_from(Brief.case.root)
+      else
+        path.to_s
+      end
     end
 
     def extension
@@ -60,6 +95,21 @@ module Brief
       super || data.respond_to?(method) || data.key?(method)
     end
 
+    def structure
+      @structure_analyzer ||= Brief::Document::Structure.new(fragment, self.raw_content.lines.to_a)
+    end
+
+    def parser
+      @parser ||= begin
+                    structure.prescan
+                    structure.create_wrappers
+                  end
+    end
+
+    def fragment
+      @fragment ||= Nokogiri::HTML.fragment(to_raw_html)
+    end
+
     def method_missing(meth, *args, &block)
       if data.respond_to?(meth)
         data.send(meth, *args, &block)
@@ -67,7 +117,6 @@ module Brief
         super
       end
     end
-
   end
 end
 

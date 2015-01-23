@@ -8,12 +8,14 @@ class Brief::Epic
   end
 
   content do
-    title "h1:first-child"
+    # have to do this so that the user stories section h1 doesnt get confused
+    title "h1:first-of-type"
 
     define_section "User Stories" do
-      heading("h2").is_a :user_story
+      # NOT YET Implemented
+      each("h2").is_a :user_story
 
-      heading("h2").has(:title     => "h2",
+      each("h2").has(:title     => "h2",
                      :paragraph => "p:first-child",
                      :persona   => "p:first-child strong:first-child",
                      :behavior  => "p:first-child strong:second-child",

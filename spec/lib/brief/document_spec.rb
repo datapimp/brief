@@ -14,13 +14,14 @@ describe "The Brief Document" do
     expect(sample.css("h1").length).to eq(2)
   end
 
+
   it "deserializes YAML frontmatter into attributes" do
     expect(sample.frontmatter.type).to eq("epic")
   end
 
   context "Content Extraction" do
     it "extracts content from a css selector" do
-      extracted = sample.extract_content(:args => ["h1:first-child"])
+      extracted = sample.extract_content(:args => ["h1:first-of-type"])
       expect(extracted).to eq("Blueprint Epic Example")
     end
 

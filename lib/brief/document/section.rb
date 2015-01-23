@@ -1,29 +1,31 @@
 class Brief::Document::Section
-  def initialize(title, fragment, options={})
+  attr_reader :title, :elements, :anchor
+
+  attr_accessor :mapping, :html_method
+
+  include Enumerable
+
+  def initialize(title, anchor)
+    @title = title
+    @anchor = anchor
+    @elements = []
   end
+
+  def each
+    @elements
+  end
+
+  def <<(el)
+    @elements << el
+  end
+
+  def fragment
+    @fragment ||= Nokogiri::HTML.fragment(to_html)
+  end
+
+  def to_html
+    fragment.html
+  end
+
 end
 
-class Brief::Document::Section
-  class Mapping
-    def initialize(title, options={})
-      @title = title
-      @options = options
-    end
-
-    def for_each(*args, &block)
-      self
-    end
-
-    def heading(*args, &block)
-      self
-    end
-
-    def has(*args)
-      self
-    end
-
-    def is_a(*args)
-      self
-    end
-  end
-end

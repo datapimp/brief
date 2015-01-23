@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    brief (1.1.0)
+    brief (1.2.0)
       activemodel
       activesupport
       commander

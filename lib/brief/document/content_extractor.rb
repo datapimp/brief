@@ -25,7 +25,13 @@ module Brief
       if settings = attribute_set.fetch(meth, nil)
         if settings.args.length == 1 && settings.args.first.is_a?(String)
           selector = settings.args.first
-          document.css(selector).try(:text)
+          matches = document.css(selector)
+
+          if matches.length > 1
+            selector.match(/first-of-type/) ? matches.first.text : matches.map(&:text)
+          else
+            matches.first.try(:text)
+          end
         end
       end
     end

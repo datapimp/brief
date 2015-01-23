@@ -145,6 +145,10 @@ module Brief
         definition.send(:section_mapping, *args)
       end
 
+      def section_mappings(*args)
+        definition.send(:section_mappings, *args)
+      end
+
       def method_missing(meth, *args, &block)
         if %w(meta content actions helpers).include?(meth.to_s)
           definition.send(meth, *args, &block)

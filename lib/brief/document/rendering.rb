@@ -3,42 +3,9 @@ module Brief
     module Rendering
       extend ActiveSupport::Concern
 
-      def to_html
-        structure.parser.to_html
-      end
-
-      def structure
-        @structure_analyzer ||= Brief::Document::StructureAnalyzer.new(parser, self.raw_content.lines.to_a)
-      end
-
-      def to_raw_html
-        renderer.render(content)
-      end
-
-      def renderer
-        @renderer ||= self.class.renderer
-      end
-
-      def renderer=(value)
-        @renderer = value
-      end
-
-      def css(*args, &block)
-        processed.send(:css, *args, &block)
-      end
-
-      def at(*args, &block)
-        processed.send(:at, *args, &block)
-      end
-
-      def processed
-        structure.parser
-      end
-
-      def parser
-        @parser ||= Nokogiri::HTML.fragment(to_raw_html)
-      end
-
+      # Uses a custom Redcarpet::Render::HTML subclass
+      # which simply inserts data attributes on each heading element
+      # so that they can be queried with CSS more deliberately.
       class HeadingWrapper < ::Redcarpet::Render::HTML
         def header(text, level)
           "<h#{level} data-level='#{level}' data-heading='#{ text }'>#{text}</h#{level}>"
@@ -61,6 +28,39 @@ module Brief
                           ::Redcarpet::Markdown.new(r)
                         end
         end
+      end
+
+      # Documents can be rendered into HTML.
+      #
+      # They will first be put through a Nokogiri processor pipeline
+      # which allows us to wrap things in section containers, apply data
+      # attributes, and other things to the HTML so that the output HTML retains its
+      # relationship to the underlying data and document structure.
+      def to_html(options={})
+        if options[:wrap] == false
+          unwrapped_html
+        else
+          wrapper = options.fetch(:wrapper, 'div')
+          "<#{ wrapper } data-brief-model='#{ model_class.type_alias }' data-brief-path='#{ relative_path_identifier }'>#{ unwrapped_html }</#{wrapper}>"
+        end
+      end
+
+      def unwrapped_html
+        parser.to_html
+      end
+
+      protected
+
+      def to_raw_html
+        renderer.render(content)
+      end
+
+      def renderer
+        @renderer ||= self.class.renderer
+      end
+
+      def renderer=(value)
+        @renderer = value
       end
     end
   end
