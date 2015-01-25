@@ -7,6 +7,15 @@ class Brief::Epic
     status String, :in => %w(draft published)
   end
 
+  template <<-EOF
+# <%= object.title %>
+# User Stories
+<% Array(object.user_stories).each do |user_story| %>
+## <%= user_story.title %>
+As a **User** I would like to **Do this** so that I can **succeed**
+<% end %>
+  EOF
+
   content do
     # have to do this so that the user stories section h1 doesnt get confused
     title "h1:first-of-type"

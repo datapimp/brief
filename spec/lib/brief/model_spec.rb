@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe "The Brief Model" do
-  let(:briefcase) { Brief.example }
+  let(:briefcase) { Brief.testcase }
   let(:epic) { briefcase.epics.first }
   let(:user_story) { briefcase.user_stories.first }
 

@@ -149,8 +149,33 @@ module Brief
         definition.send(:section_mappings, *args)
       end
 
+      def generate_template_content_from(object, include_frontmatter=true)
+        @erb ||= ERB.new(template_body)
+        content = @erb.result(binding)
+        frontmatter = object.slice(*attribute_names)
+
+        base = ""
+        base += frontmatter.to_hash.to_yaml + "---\n" if include_frontmatter
+        base += content
+
+        base
+      end
+
+      def attribute_names
+        attribute_set.map(&:name)
+      end
+
+      def template_body(*args)
+        res = definition.send(:template_body, *args)
+        res.to_s.length == 0 ? example_body : res.to_s.strip
+      end
+
+      def example_body(*args)
+        definition.send(:example_body, *args).to_s.strip
+      end
+
       def method_missing(meth, *args, &block)
-        if %w(meta content actions helpers).include?(meth.to_s)
+        if %w(meta content template example actions helpers).include?(meth.to_s)
           definition.send(meth, *args, &block)
           finalize
         elsif meth.to_s.match(/^on_(.*)_change$/)

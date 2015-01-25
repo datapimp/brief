@@ -2,16 +2,28 @@ module Brief
   class Document
     include Brief::Document::Rendering
     include Brief::Document::FrontMatter
+    include Brief::Document::Templating
 
     attr_accessor :path, :content, :frontmatter, :raw_content
 
     def initialize(path, options={})
-      @path = Pathname(path)
-      @options = options
+      if path.respond_to?(:key?) && options.empty?
+        @frontmatter = path.to_mash
 
-      if self.path.exist?
+        options = {
+          contents: path.delete(:contents)
+        }
+      else
+        @path = Pathname(path)
+      end
+
+      @options = options.to_mash
+
+      if @path && self.path.exist?
         @raw_content = path.read
         load_frontmatter
+      elsif options[:contents]
+        @raw_content = options[:contents]
       end
 
       self.model_class.try(:models).try(:<<, to_model) unless model_instance_registered?
@@ -32,6 +44,10 @@ module Brief
       end
 
       @sections
+    end
+
+    def content
+      @content || generate_content
     end
 
     # Shortcut for querying the rendered HTML by css selectors.

@@ -1,0 +1,22 @@
+# <%= object.title %>
+
+<% if object.persona && object.behavior %>
+As a **<%= object.persona %>** I would like to <%= object.behavior %>** <% if object.goal; %> so that I can **<%= object.goal %>** <% end; %>
+<% elsif object.paragraph.to_s.length > 0 %>
+<%= object.paragraph %>
+<% end %>
+
+<% if object.wireframes %>
+### Wireframes
+<% Array(object.wireframes).each do |wireframe| %>
+- <%= wireframe %>
+<% end %>
+<% end %>
+
+<% if object.estimates %>
+### Estimates
+<% Array(object.estimates).each do |estimate| %>
+- <%= estimate %>
+<% end %>
+<% end %>
+
