@@ -1,5 +1,6 @@
 config do
   set(:models => Pathname(File.dirname(__FILE__)).join("models"))
+  set(:templates => Pathname(File.dirname(__FILE__)).join("templates"))
 end
 
 define "User Story" do
@@ -8,6 +9,8 @@ define "User Story" do
     status :in => %w(draft published)
     epic_title
   end
+
+  template :file => "user_story.md.erb"
 
   content do
     persona "p strong:first-child"

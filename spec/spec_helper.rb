@@ -9,10 +9,10 @@ module Brief
   end
 
   def self.example_path
-    example.root
+    testcase.root
   end
 
-  def self.example
+  def self.testcase
     @example ||= Brief::Briefcase.new(root:spec_root.join("fixtures","example"))
   end
 end

@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe "The Briefcase" do
-  let(:briefcase) { Brief.example }
+  let(:briefcase) { Brief.testcase }
 
   it "has a root path" do
     expect(briefcase.root).to be_exist

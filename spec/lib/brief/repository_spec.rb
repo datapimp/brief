@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe "The Brief Document Repository" do
-  let(:repository) { Brief.example.repository }
+  let(:repository) { Brief.testcase.repository }
 
   it "has a bunch of documents" do
     expect(repository.documents).not_to be_empty

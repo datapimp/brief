@@ -8,6 +8,7 @@ require "active_support/core_ext"
 require "redcarpet"
 require "nokogiri"
 require "yaml"
+require "erb"
 
 module Brief
   def self.case= value
@@ -37,6 +38,14 @@ module Brief
     end
   end
 
+  def self.default_model_class
+    if defined?(Brief::DefaultModel)
+      Brief::DefaultModel
+    else
+      Brief.const_set(:DefaultModel, Class.new { include Brief::Model; def self.type_alias; "default"; end })
+    end
+  end
+
   def self.load_models(from_folder=nil)
     Brief::Model.load_all(from_folder: from_folder)
   end
@@ -55,6 +64,7 @@ require "brief/util"
 require "brief/configuration"
 require "brief/document/rendering"
 require "brief/document/front_matter"
+require "brief/document/templating"
 require "brief/document/content_extractor"
 require "brief/document/structure"
 require "brief/document/section"

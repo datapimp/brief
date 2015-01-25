@@ -6,7 +6,9 @@ module Brief
                   :content_schema,
                   :options,
                   :defined_helpers,
-                  :section_mappings
+                  :section_mappings,
+                  :template_body,
+                  :example_body
 
     def initialize(name, options={})
       @name             = name
@@ -44,7 +46,13 @@ module Brief
     def apply_config
       # define a virtus attribute mapping
       metadata_schema.values.each do |settings|
-        model_class.send(:attribute, *(settings[:args]))
+        begin
+          settings[:args] = Array(settings[:args])
+          settings[:args][1] = String if settings[:args][1] == ""
+          model_class.send(:attribute, *(settings[:args]))
+        rescue => e
+          raise "Error in metadata schema definition.\n #{ settings.inspect } \n\n #{e.message}"
+        end
       end
 
       # defined helpers adds an anonymous module include
@@ -61,7 +69,7 @@ module Brief
     end
 
     def model_class
-      @model_class || model_namespace.const_get(type_alias.camelize) rescue nil
+      @model_class || model_namespace.const_get(type_alias.camelize) rescue Brief.default_model_class
     end
 
     def model_namespace
@@ -76,6 +84,22 @@ module Brief
     def content(options={}, &block)
       @current = :content
       instance_eval(&block)
+    end
+
+    def example(body=nil, options={})
+      if body.is_a?(Hash)
+        options = body
+      elsif body.is_a?(String)
+        self.example_body= body
+      end
+    end
+
+    def template(body=nil, options={})
+      if body.is_a?(Hash)
+        options = body
+      elsif body.is_a?(String)
+        self.template_body= body
+      end
     end
 
     def has_actions?
