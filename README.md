@@ -1,120 +1,193 @@
 # Brief 
 
-An ActiveRecord style layer on top of a folder of markdown files.
+Brief is a tool for building applications on top of collections of
+documents written in markdown.  
 
-Treat your markdown documents as active models, run actions on them,
-convert them into HTML, extract fragments of HTML, combine it all in
-whatever interesting way you can think of.  
+Brief lets you define models very similar to how you would in
+ActiveRecord and Rails, but instead of rows in a database you are 
+going to be working with files in a folder.
 
-The end result is a really neat way of being able to use the words that you write
-to power all sorts of applications. 
+### Getting Started
+```
+gem install brief
+brief --help
+```
 
-**No more writing dead documents!**
+### Hypothetical Example
 
-### Documents as Models
+```
+brief init my-cookbook
+cd my-cookbook
+brief generate model Recipe # View the DOCUMENTATION for what you can do with a model
+brief write recipe # => opens up your $EDITOR with an example recipe
+```
 
-Brief lets you treat an individual markdown file as if it were a model,
-complete with validations, callbacks, and methods you can run. You can
-define a `Post` model for all of the files in a 'posts' folder and
-define actions like 'publish' on them. 
+Brief treats each markdown file as an active record style model object. It treats a folder of markdown files like a database.
+
+### How does it work?
+
+Brief takes a markdown file which looks like:
+
+```markdown
+---
+type: post
+status: active
+---
+
+# An introduction to brief 
+## Stop writing dead documents 
+
+Brief is a tool which lets you define different patterns of markdown
+headings (h1,h2,h3 etc). This lets you work with collections of your
+writings, and treat each document as a database. 
+```
+
+And turns it into data, not only using the metadata up top, but also the information
+contained in the structure of the document itself.  The headings, subheadings, pretty much
+anything you could query from the HTML using CSS can be turned into key value pairs that you can work
+with and build applications on top of.
+
+With your enhanced writing, you can do things like:
+
+```ruby
+# Find all the posts which are active:
+posts = briefcase.posts.where(status:"published")
+
+# Get their titles, and subheadings:
+posts.map(&:title) #=>['An introduction to brief']
+posts.map(&:subheading) #=>['Stop writing dead documents']
+
+# Publish the post
+posts.first.publish()
+
+# Email the drafts to your editor
+posts.where(status:"draft").each &:mail_to_editors
+```
+
+From the Command line we can:
+
+```bash
+brief publish posts 
+brief write post #=> Opens your editor
+```
+
+This type of interactivity is made possible by the `Brief::Model`
+
+### Documents as models
 
 ```ruby
 define "Post" do
   meta do
     status
-    tags Array
   end
 
   content do
-    has_one :title, "h1"
-    has_many :subheadings, "h2"
+    title "h1:first-of-type"
+    subheading "h2:first-of-type"
+    sample "p:first-of-type"
   end
 
   actions do
     def publish
-      update_attributes(:status => "published")
+      update_attributes(status: "published")
     end
   end
 end
 ```
 
+### CLI Tool
 
-### Model attributes derived from YAML frontmatter 
+Brief gives you a CLI called `brief`
 
-Models can get their attributes from headers on the document, aka YAML frontmatter.
+This lets you run some general commands, but also gives you an
+intelligent interface to work with your models.  In the above example,
+we defined some actions.
+
+This will be available in the CLI:
+
+```
+brief publish posts ./docs/posts/*.md
+```
+
+This will find all of the matching documents, turn them into `Post`
+models, and then run the publish method on them.  You can make your
+models as advanced as you want:
+
+```
+define "Post" do
+  actions do
+    def submit 
+      update_attributes(status:"submitted to editors")
+      mailer.send(:to => "jon@chicago.com", :subject => "Please review: #{ self.title }")
+    end
+  end
+end
+```
+
+### YAML Frontmatter
+
+Each markdown document can contain YAML frontmatter.  This data will be
+available and associated with each document or model, and will also let
+you query, filter, and sort your documents.
+
+### CSS Structure Definition
+
+Since markdown renders into HTML, and HTML Documents can be queried
+using CSS selectors, we use CSS selectors in our model definition DSL so
+that we can isolate certain parts of the document, and use the content
+it contains as metadata.
+
+A real world example:
+
+```ruby
+  content do
+    title "h1:first-of-type"
+    define_section "User Stories" do
+      each("h2").has(:title     => "h2",
+                     :paragraph => "p:first-of-type",
+                     :components   => "p:first-of-type strong"
+                    )
+
+      each("h2").is_a :user_story
+    end
+  end
+```
+
+This lets me turn a markdown file like:
 
 ```markdown
 ---
-status: draft
-tags: 
-  - demo
-  - sample
+title: Epic Example
+status: published
 ---
+# Epic Example
+# User Stories
 
-# Title
+## A user wants to do something
+As a **User** I would like to **Do this** so that I can **succeed**
 
-## Section One
-## Section Two
+## A user wants to do something else
+As a **User** I would like to **Do this** so that I can **succeed**
 ```
 
-which will let you use it like such:
+into:
 
 ```ruby
-post = Brief::Document.new(/path/to/doc.html.md)
-
-post.status #=> "draft"
-post.title #=> "Title"
-post.tags #=> ['demo','sample']
+{
+  title: "Epic Example",
+  status: "published",
+  type: "epic",
+  user_stories:[{
+    title: "A user wants to do something",
+    paragraph: "As a user I would like to do something so that I can succeed",
+    goal: "I can succeed",
+    persona: "user",
+    behavior: "do something"
+  },{
+    title: "A user wants to do something else",
+    paragraph: "As a user I would like to do something else so that I can succeed"
+  }]
+}
 ```
 
-#### Model attributes derived from the document structure
-
-Models can also get their attributes from the structure itself.
-
-```ruby
-post.title #=> "Title"
-post.subheadings #=> ["Section One", "Section Two"]
-```
-
-### Querying Documents
-
-Given a big folder of markdown files with attributes, we can query them:
-
-```
-posts = briefcase.posts.where(:status => "published")
-posts.map(&:title) #=> ['Title']
-```
-
-This functionality is based on https://github.com/ralph/document_mapper,
-and similar to middleman.
-
-### Document Actions
-
-By defining actions on documents like so:
-
-```ruby
-
-define "Post" do
-  actions do
-    def publish
-      # DO Something
-    end
-  end
-end
-```
-
-you can either call that method as you normally would: 
-
-```ruby
-post = Brief.case.posts.where(:status => "draft")
-post.publish()
-```
-
-or you can run that action from the command line:
-
-```bash
-brief publish posts ./posts/*.html.md
-```
-
-this will find all of the post models matching the document, and then
-call the publish method on them.
+And we can even go in the other direction.

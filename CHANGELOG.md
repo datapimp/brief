@@ -65,6 +65,11 @@ attributes.
 
 - Introducing Templates
 
+  - Templates are ERB strings that can be associated with models. This
+    will convert a data structure into the appropriate markdown, so that
+    it can be persisted as a `Brief::Document` and do everything a
+    normal doc can.
+
 - Introducing Examples
 
   - Each model class can point to an example, or include example content
