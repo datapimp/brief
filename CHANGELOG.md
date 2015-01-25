@@ -1,3 +1,27 @@
+### 1.0.0
+
+Rewrite.  
+
+- New style for structure definition
+
+  Instead of parsing markdown prior to rendering it in order to
+  determine the structure, I've taken a new approach where I render the markdown into HTML and then use Nokogiri.
+
+  This means I don't even really have to parse the markdown, I can just
+  let the user tell us how the documents are structured using CSS
+  selectors.
+
+  In addition to this, I've added a DSL that lets a user declare the model
+attributes.
+
+- Documents and Models
+
+  Documents are just YAML frontmatter and markdown.
+
+  Each document can be represented in model form. 
+
+  The `Brief::Model` is an ActiveModel like object.
+
 ### 1.1.0 
 
 - Introducing Briefcases
@@ -36,3 +60,44 @@
   - using a custom redcarpet markdown renderer in order to include
     data-attributes on heading tags
   - rendered html retains line number reference to the source markdown
+
+### 1.3.0
+
+- Introducing Templates
+
+- Introducing Examples
+
+  - Each model class can point to an example, or include example content
+    inline as a string.
+
+- Introducing the 'write' command.
+
+  The brief CLI will have a write command for each model, which 
+  will open up $EDITOR and load the example content for a model
+
+  so for example, given a model:
+
+  ```
+  define "User Story" do
+
+  example <<- EOF
+  ---
+  type: user_story
+  status: draft
+  ---
+
+  # User story example
+  
+  As a **user** I would like to **do this thing** so that I can
+  **achieve this goal**
+  EOF
+  end
+  ```
+
+  When I run this on the command line:
+
+  ```bash
+  brief write user story
+  ```
+
+  then it will open up $EDITOR
