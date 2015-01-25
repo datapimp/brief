@@ -68,6 +68,14 @@ module Brief
       table[type_alias]
     end
 
+    def self.lookup_class_from_args(args=[])
+      args = Array(args)
+
+      if model_class = for_type(args.first)
+        model_class
+      end
+    end
+
     def self.finalize
       Virtus.finalize
       classes.each(&:finalize)

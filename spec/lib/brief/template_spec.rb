@@ -19,12 +19,21 @@ describe "Document Templates" do
     }
   end
 
+  it "has template body" do
+    expect(Brief::Epic.template_body).not_to be_empty
+  end
+
+  it "has an example" do
+    expect(Brief::Epic.example_body).not_to be_empty
+  end
+
   it "takes a hash of data and renders yaml frontmatter" do
     expect(Brief::Document.create_from_data(data).title).to eq("Epic Example")
   end
 
   it "supports more complex renderings" do
-    content = Brief::Document.create_from_data(data).content
+    doc = Brief::Document.create_from_data(data)
+    content = doc.content
 
     expect(content).to include("# User Stories")
     expect(content).to include("# Epic Example")

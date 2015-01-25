@@ -9,10 +9,6 @@ module Brief
     def initialize(path, options={})
       if path.respond_to?(:key?) && options.empty?
         @frontmatter = path.to_mash
-
-        options = {
-          contents: path.delete(:contents)
-        }
       else
         @path = Pathname(path)
       end

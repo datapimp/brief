@@ -7,6 +7,23 @@ class Brief::Epic
     status String, :in => %w(draft published)
   end
 
+  example <<-EOF
+---
+type: epic
+status: draft
+---
+
+# Epic Title
+
+Write a description for your epic.
+
+# User Stories
+
+## User Story Title
+
+As a **PERSONA** I would like to **BEHAVIOR** so that I can **GOAL**
+  EOF
+
   template <<-EOF
 # <%= object.title %>
 # User Stories
