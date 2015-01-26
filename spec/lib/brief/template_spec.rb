@@ -35,8 +35,6 @@ describe "Document Templates" do
     doc = Brief::Document.create_from_data(data)
     content = doc.content
 
-    binding.pry
-
     expect(content).to include("# User Stories")
     expect(content).to include("# Epic Example")
     expect(content).to include("## A user wants to do something")
