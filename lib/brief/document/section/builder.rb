@@ -1,15 +1,15 @@
 class Brief::Document::Section
   class Builder
-    def self.run(source, options={})
+    def self.run(source, options = {})
       new(source, options).to_fragment
     end
 
     attr_accessor :source, :nodes, :low, :high
 
-    def initialize(source, options={})
+    def initialize(source, options = {})
       @source = source.map do |item|
         level, group = item
-        [level, group.map {|f| f.is_a?(String) ? Nokogiri::HTML.fragment(f) : f }]
+        [level, group.map { |f| f.is_a?(String) ? Nokogiri::HTML.fragment(f) : f }]
       end
 
       @low = options.fetch(:low, 1)
@@ -28,7 +28,7 @@ class Brief::Document::Section
           next_level, next_fragments = source[n]
 
           if next_level && (next_level == level) && (level > low)
-            new_fragment = (fragments + next_fragments).map(&:to_html).join("")
+            new_fragment = (fragments + next_fragments).map(&:to_html).join('')
             source[index] = [level, [Nokogiri::HTML.fragment(new_fragment)]]
             source[n] = nil
           end
@@ -49,7 +49,7 @@ class Brief::Document::Section
           next_level, next_fragment = source[n]
 
           if fragment && next_level && (next_level > level)
-            parent = fragment.css("section, article").first
+            parent = fragment.css('section, article').first
             parent.add_child(next_fragment)
             source[index] = [level, fragment]
             source[n] = nil
@@ -63,14 +63,14 @@ class Brief::Document::Section
 
       self.nodes = source.map(&:last)
 
-      self.nodes.each do |node|
-        parent = node.css("section, article").first
+      nodes.each do |node|
+        parent = node.css('section, article').first
         if %w(h1 h2 h3 h4 h5 h6).include?(parent.children.first.name)
           parent['data-heading'] = parent.children.first.text
         end
       end
 
-      self.nodes.map!(&:to_html)
+      nodes.map!(&:to_html)
     end
 
     def maxed_out?
@@ -82,8 +82,8 @@ class Brief::Document::Section
     end
 
     def to_fragment
-      @html = nodes.join("") unless nodes.empty?
-      Nokogiri::HTML.fragment(@html || "<div/>")
+      @html = nodes.join('') unless nodes.empty?
+      Nokogiri::HTML.fragment(@html || '<div/>')
     end
   end
 end

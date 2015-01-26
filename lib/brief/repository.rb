@@ -9,7 +9,7 @@ module Brief
       documents.send(:each, *args, &block)
     end
 
-    def initialize(briefcase, options={})
+    def initialize(briefcase, options = {})
       @briefcase = briefcase
       @options = options
 
@@ -40,7 +40,7 @@ module Brief
     end
 
     def document_paths
-      Dir[root.join("**/*.md").to_s].map {|p| Pathname(p) }
+      Dir[root.join('**/*.md').to_s].map { |p| Pathname(p) }
     end
 
     def self.define_document_finder_methods
@@ -52,6 +52,5 @@ module Brief
         end
       end
     end
-
   end
 end

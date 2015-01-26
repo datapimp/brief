@@ -14,12 +14,12 @@ module Brief
 
     def current
       @current ||= {
-        docs_path: "docs",
-        models_path: "models"
+        docs_path: 'docs',
+        models_path: 'models'
       }.to_mash
     end
 
-    def set(attribute, value=nil)
+    def set(attribute, value = nil)
       current[attribute] = value
       self
     end
@@ -33,6 +33,5 @@ module Brief
         nil
       end
     end
-
   end
 end

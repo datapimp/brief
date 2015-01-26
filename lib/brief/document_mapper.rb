@@ -20,7 +20,7 @@ module Brief::DocumentMapper
 
     def initialize(opts = {})
       unless Brief::DocumentMapper::VALID_OPERATORS.include?(opts[:operator])
-        raise 'Operator not supported'
+        fail 'Operator not supported'
       end
 
       @attribute, @operator = opts[:attribute], opts[:operator]
@@ -36,18 +36,18 @@ module Brief::DocumentMapper
     end
 
     def where(constraints_hash)
-      selector_hash = constraints_hash.reject { |key, value| !key.is_a? Selector }
-      symbol_hash = constraints_hash.reject { |key, value| key.is_a? Selector }
+      selector_hash = constraints_hash.reject { |key, _value| !key.is_a? Selector }
+      symbol_hash = constraints_hash.reject { |key, _value| key.is_a? Selector }
       symbol_hash.each do |attribute, value|
-        selector = Selector.new(:attribute => attribute, :operator => 'equal')
-        selector_hash.update({ selector => value })
+        selector = Selector.new(attribute: attribute, operator: 'equal')
+        selector_hash.update(selector => value)
       end
       @where.merge! selector_hash
       self
     end
 
     def order_by(field)
-      @order_by = field.is_a?(Symbol) ? {field => :asc} : field
+      @order_by = field.is_a?(Symbol) ? { field => :asc } : field
       self
     end
 
@@ -62,11 +62,11 @@ module Brief::DocumentMapper
     end
 
     def first
-      self.all.first
+      all.first
     end
 
     def last
-      self.all.last
+      all.last
     end
 
     def run_query
@@ -129,7 +129,7 @@ module Brief::DocumentMapper
     end
 
     def inspect
-      "Query: #{ @where.map {|k,v| "#{k.attribute} #{k.operator} #{v}" }}"
+      "Query: #{ @where.map { |k, v| "#{k.attribute} #{k.operator} #{v}" }}"
     end
 
     def method_missing(meth, *args, &block)
@@ -153,7 +153,7 @@ class Symbol
 
   unless method_defined?(:"<=>")
     def <=>(other)
-      self.to_s <=> other.to_s
+      to_s <=> other.to_s
     end
   end
 end

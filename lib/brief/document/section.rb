@@ -19,10 +19,10 @@ class Brief::Document::Section
       settings = config.selector_config[selector]
 
       if Headings.include?(selector)
-        headings = fragment.css("article > h2")
+        headings = fragment.css('article > h2')
         articles = headings.map(&:parent)
 
-        if !settings.empty?
+        unless settings.empty?
           articles.compact.each do |article|
             data.push(settings.inject({}.to_mash) do |memo, pair|
               attribute, selector = pair
@@ -38,4 +38,3 @@ class Brief::Document::Section
     @items = data
   end
 end
-

@@ -6,7 +6,7 @@ module Brief
 
     attr_accessor :path, :content, :frontmatter, :raw_content
 
-    def initialize(path, options={})
+    def initialize(path, options = {})
       if path.respond_to?(:key?) && options.empty?
         @frontmatter = path.to_mash
       else
@@ -22,7 +22,7 @@ module Brief
         @raw_content = options[:contents]
       end
 
-      self.model_class.try(:models).try(:<<, to_model) unless model_instance_registered?
+      model_class.try(:models).try(:<<, to_model) unless model_instance_registered?
     end
 
     def data
@@ -99,8 +99,8 @@ module Brief
     # and ensures that there is a 1-1 relationship between a document path
     # and the model.
     def model_instance_registered?
-      self.model_class && self.model_class.models.any? do |model|
-        model.path == self.path
+      model_class && model_class.models.any? do |model|
+        model.path == path
       end
     end
 
@@ -109,7 +109,7 @@ module Brief
     end
 
     def structure
-      @structure_analyzer ||= Brief::Document::Structure.new(fragment, self.raw_content.lines.to_a)
+      @structure_analyzer ||= Brief::Document::Structure.new(fragment, raw_content.lines.to_a)
     end
 
     def parser
@@ -132,4 +132,3 @@ module Brief
     end
   end
 end
-

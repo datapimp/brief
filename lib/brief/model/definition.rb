@@ -10,13 +10,13 @@ module Brief
                   :template_body,
                   :example_body
 
-    def initialize(name, options={})
+    def initialize(name, options = {})
       @name             = name
       @options          = options
-      @type_alias       = options.fetch(:type_alias) { name.downcase.parameterize.gsub(/-/,'_') }
+      @type_alias       = options.fetch(:type_alias) { name.downcase.parameterize.gsub(/-/, '_') }
       @metadata_schema  = {}.to_mash
       @section_mappings = {}.to_mash
-      @content_schema   = {attributes:{}}.to_mash
+      @content_schema   = { attributes: {} }.to_mash
       @model_class      = options[:model_class]
     end
 
@@ -48,7 +48,7 @@ module Brief
       metadata_schema.values.each do |settings|
         begin
           settings[:args] = Array(settings[:args])
-          settings[:args][1] = String if settings[:args][1] == ""
+          settings[:args][1] = String if settings[:args][1] == ''
           model_class.send(:attribute, *(settings[:args]))
         rescue => e
           raise "Error in metadata schema definition.\n #{ settings.inspect } \n\n #{e.message}"
@@ -56,9 +56,9 @@ module Brief
       end
 
       # defined helpers adds an anonymous module include
-      Array(self.defined_helpers).each {|mod| model_class.send(:include, mod) }
+      Array(defined_helpers).each { |mod| model_class.send(:include, mod) }
 
-      model_class.defined_actions += Array(self.defined_actions)
+      model_class.defined_actions += Array(defined_actions)
       true
     end
 
@@ -76,29 +76,29 @@ module Brief
       Brief.configuration.model_namespace || Brief::Model
     end
 
-    def meta(options={}, &block)
+    def meta(_options = {}, &block)
       @current = :meta
       instance_eval(&block)
     end
 
-    def content(options={}, &block)
+    def content(_options = {}, &block)
       @current = :content
       instance_eval(&block)
     end
 
-    def example(body=nil, options={})
+    def example(body = nil, _options = {})
       if body.is_a?(Hash)
         options = body
       elsif body.is_a?(String)
-        self.example_body= body
+        self.example_body = body
       end
     end
 
-    def template(body=nil, options={})
+    def template(body = nil, _options = {})
       if body.is_a?(Hash)
         options = body
       elsif body.is_a?(String)
-        self.template_body= body
+        self.template_body = body
       end
     end
 
@@ -144,17 +144,17 @@ module Brief
         if meth.to_sym == :define_section
           opts = args.extract_options!
           identifier = args.first
-          self.section_mappings[identifier] ||= Brief::Document::Section::Mapping.new(identifier, opts)
+          section_mappings[identifier] ||= Brief::Document::Section::Mapping.new(identifier, opts)
           section_mapping(identifier).instance_eval(&block) if block
         else
-          self.content_schema.attributes[meth] = {args: args, block: block}
+          content_schema.attributes[meth] = { args: args, block: block }
         end
       elsif inside_meta?
         if args.first.is_a?(Hash)
           args.unshift(String)
         end
         args.unshift(meth)
-        self.metadata_schema[meth] = {args: args, block: block}
+        metadata_schema[meth] = { args: args, block: block }
       else
         super
       end

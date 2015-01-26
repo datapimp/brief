@@ -1,27 +1,26 @@
-command "init" do |c|
-  c.syntax = "brief init NAME [OPTIONS]"
-  c.description = "Create a new brief project, aka a briefcase"
+command 'init' do |c|
+  c.syntax = 'brief init NAME [OPTIONS]'
+  c.description = 'Create a new brief project, aka a briefcase'
 
-  c.option "--root", String, "The root folder for the new project."
+  c.option '--root', String, 'The root folder for the new project.'
 
   c.action do |args, options|
-    options.default(:root => Dir.pwd())
+    options.default(root: Dir.pwd)
 
     if path = args.first
       root = Pathname(options.root).join(path)
     end
 
-    [root, root.join("models"), root.join("docs")].each do |p|
+    [root, root.join('models'), root.join('docs')].each do |p|
       puts "== folder #{ p.basename } #{ '. exists' if p.exist? }"
       FileUtils.mkdir_p(p) unless p.exist?
     end
 
-
-    if root.join("brief.rb").exist?
-      say "== Briefcase config already exists. Skipping."
+    if root.join('brief.rb').exist?
+      say '== Briefcase config already exists. Skipping.'
     else
-      say "== Creating config file brief.rb"
-      root.join("brief.rb").open("w+") do |fh|
+      say '== Creating config file brief.rb'
+      root.join('brief.rb').open('w+') do |fh|
         default_config = <<-EOF
 
 config do

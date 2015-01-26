@@ -15,8 +15,8 @@ module Brief
 
       class_attribute :models, :after_initialization_hooks, :defined_actions
 
-      self.models = Array(self.models).to_set
-      self.defined_actions = Array(self.defined_actions).to_set
+      self.models = Array(models).to_set
+      self.defined_actions = Array(defined_actions).to_set
 
       class << self
         include Enumerable
@@ -68,7 +68,7 @@ module Brief
       table[type_alias]
     end
 
-    def self.lookup_class_from_args(args=[])
+    def self.lookup_class_from_args(args = [])
       args = Array(args)
 
       if model_class = for_type(args.first)
@@ -82,10 +82,10 @@ module Brief
     end
 
     def ==(other)
-      self.path == other.path
+      path == other.path
     end
 
-    def extract_content(options={})
+    def extract_content(options = {})
       document.extract_content(options)
     end
 
@@ -98,7 +98,7 @@ module Brief
         klass = self
 
         klass.name ||= klass.to_s.split('::').last.humanize
-        klass.type_alias ||= klass.name.parameterize.gsub(/-/,'_')
+        klass.type_alias ||= klass.name.parameterize.gsub(/-/, '_')
 
         klass.attribute_set.map(&:name).each do |attr|
           unless klass.method_defined?("find_by_#{ attr }")
@@ -113,39 +113,35 @@ module Brief
         Brief::Repository.define_document_finder_methods
       end
 
-      def where(*args, &block)
+      def where(*args, &_block)
         Brief::DocumentMapper::Query.new(self).send(:where, *args)
       end
 
       def each(*args, &block)
-        Array(self.models).send(:each, *args, &block)
+        Array(models).send(:each, *args, &block)
       end
 
       def after_initialize(&block)
         (self.after_initialization_hooks ||= []).push(block)
       end
 
-      def name=(value)
-        @name = value
-      end
+      attr_writer :name
 
       def name
-        @name || to_s.split('::').last.underscore.gsub('_',' ').titlecase
+        @name || to_s.split('::').last.underscore.gsub('_', ' ').titlecase
       end
 
-      def type_alias=(value)
-        @type_alias = value
-      end
+      attr_writer :type_alias
 
       def type_alias
-        @type_alias || name.parameterize.gsub(/-/,'_')
+        @type_alias || name.parameterize.gsub(/-/, '_')
       end
 
       def definition
         @definition ||= Brief::Model::Definition.new(name, type_alias: type_alias, model_class: self)
       end
 
-      def definition=(value)
+      def definition=(_value)
         @definition
       end
 
@@ -157,12 +153,12 @@ module Brief
         definition.send(:section_mappings, *args)
       end
 
-      def generate_template_content_from(object, include_frontmatter=true)
+      def generate_template_content_from(object, include_frontmatter = true)
         @erb ||= ERB.new(template_body)
         content = @erb.result(binding)
         frontmatter = object.slice(*attribute_names)
 
-        base = ""
+        base = ''
         base += frontmatter.to_hash.to_yaml + "---\n" if include_frontmatter
         base += content
 
@@ -187,13 +183,13 @@ module Brief
           definition.send(meth, *args, &block)
           finalize
         elsif meth.to_s.match(/^on_(.*)_change$/)
-          create_change_handler($1, *args, &block)
+          create_change_handler(Regexp.last_match[1], *args, &block)
         else
           super
         end
       end
 
-      def create_change_handler(attribute, *args, &block)
+      def create_change_handler(_attribute, *_args, &block)
         block.call(self)
       end
     end
@@ -211,8 +207,8 @@ module Brief
         end
       end
 
-      def set_slug_from(column=:name)
-        self.slug = send(column).to_s.downcase.parameterize if self.slug.to_s.length == 0
+      def set_slug_from(column = :name)
+        self.slug = send(column).to_s.downcase.parameterize if slug.to_s.length == 0
       end
     end
   end

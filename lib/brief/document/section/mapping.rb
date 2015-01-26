@@ -1,6 +1,6 @@
 class Brief::Document::Section
   class Mapping
-    def initialize(title, options={})
+    def initialize(title, options = {})
       @title = title
       @options = options
       @config  = {}.to_mash
@@ -14,23 +14,17 @@ class Brief::Document::Section
       config.selectors
     end
 
-    def config
-      @config
-    end
+    attr_reader :config
 
-    def options
-      @options
-    end
+    attr_reader :options
 
-    def title
-      @title
-    end
+    attr_reader :title
 
     def selector
       @selector || :next
     end
 
-    def each(*args, &block)
+    def each(*args, &_block)
       @selector = args.first
       self
     end

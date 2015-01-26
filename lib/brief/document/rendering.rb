@@ -19,11 +19,11 @@ module Brief
 
         def renderer
           @renderer ||= begin
-                          r = renderer_class.new(:tables => true,
-                                            :autolink => true,
-                                            :gh_blockcode => true,
-                                            :fenced_code_blocks => true,
-                                            :footnotes => true)
+                          r = renderer_class.new(tables: true,
+                                                 autolink: true,
+                                                 gh_blockcode: true,
+                                                 fenced_code_blocks: true,
+                                                 footnotes: true)
 
                           ::Redcarpet::Markdown.new(r)
                         end
@@ -36,7 +36,7 @@ module Brief
       # which allows us to wrap things in section containers, apply data
       # attributes, and other things to the HTML so that the output HTML retains its
       # relationship to the underlying data and document structure.
-      def to_html(options={})
+      def to_html(options = {})
         if options[:wrap] == false
           unwrapped_html
         else
@@ -59,9 +59,7 @@ module Brief
         @renderer ||= self.class.renderer
       end
 
-      def renderer=(value)
-        @renderer = value
-      end
+      attr_writer :renderer
     end
   end
 end

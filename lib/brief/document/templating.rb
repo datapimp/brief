@@ -6,7 +6,7 @@ module Brief::Document::Templating
   end
 
   module ClassMethods
-    def create_from_data(data={})
+    def create_from_data(data = {})
       data = data.to_mash if data.is_a?(Hash)
       new(data)
     end

@@ -5,7 +5,7 @@ module Brief
     attr_reader :options,
                 :model_definitions
 
-    def initialize(options={})
+    def initialize(options = {})
       @options = options.to_mash
 
       load_configuration
@@ -24,7 +24,7 @@ module Brief
     # or the configured path for the configuration file.
     def load_configuration
       config_path = options.fetch(:config_path) do
-        root.join("brief.rb")
+        root.join('brief.rb')
       end
 
       if config_path.exist?
@@ -34,7 +34,7 @@ module Brief
 
     def load_model_definitions
       if models_path.exist?
-        Dir[models_path.join("**/*.rb")].each {|f| require(f) }
+        Dir[models_path.join('**/*.rb')].each { |f| require(f) }
       end
 
       Brief::Model.finalize

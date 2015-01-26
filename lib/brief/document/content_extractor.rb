@@ -5,9 +5,7 @@ module Brief
       @document = document
     end
 
-    def document
-      @document
-    end
+    attr_reader :document
 
     def model_class
       Brief::Model.for_type(@model_type)
@@ -21,7 +19,7 @@ module Brief
       attribute_set.key?(meth) || super
     end
 
-    def method_missing(meth, *args, &block)
+    def method_missing(meth, *_args, &_block)
       if settings = attribute_set.fetch(meth, nil)
         if settings.args.length == 1 && settings.args.first.is_a?(String)
           selector = settings.args.first
