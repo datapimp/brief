@@ -16,6 +16,16 @@ module Brief
       end
     end
 
+    def use(module_type=:app, module_id)
+      if module_type == :app && apps_path.join(module_id).exist?
+        config = module_type.join("config.rb")
+        models = module_type.join("models")
+
+        instance_eval(config.read) if config.exist?
+        Brief.load_modules_from(models) if models.exist?
+      end
+    end
+
     def config
       Brief::Configuration.instance
     end
@@ -27,16 +37,29 @@ module Brief
         root.join('brief.rb')
       end
 
+      if uses_app?
+        instance_eval(app_path.join("config.rb").read)
+      end
+
       if config_path.exist?
-        instance_eval(config_path.read)
+        instance_eval(config_path.read) rescue nil
       end
     end
 
+    def uses_app?
+      options.key?(:app) && Brief.apps_path.join(options[:app]).exist?
+    end
+
+    def app_path
+      uses_app? && Brief.apps_path.join(options[:app])
+    end
+
     def load_model_definitions
-      if models_path.exist?
-        Dir[models_path.join('**/*.rb')].each { |f| require(f) }
+      if uses_app?
+        Brief.load_modules_from(app_path.join("models"))
       end
 
+      Brief.load_modules_from(models_path) if models_path.exist?
       Brief::Model.finalize
     end
 

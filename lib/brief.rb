@@ -27,6 +27,10 @@ module Brief
     Pathname(File.dirname(__FILE__))
   end
 
+  def self.apps_path
+    gem_root.join("..","apps")
+  end
+
   def self.load_commands
     Dir[gem_root.join('brief', 'cli', '**/*.rb')].each { |f| require(f) }
 
@@ -46,8 +50,8 @@ module Brief
     end
   end
 
-  def self.load_models(from_folder = nil)
-    Brief::Model.load_all(from_folder: from_folder)
+  def self.load_modules_from(folder)
+    Dir[folder.join('**/*.rb')].each { |f| require(f) }
   end
 
   # Adapters for Rails, Middleman, or Jekyll apps

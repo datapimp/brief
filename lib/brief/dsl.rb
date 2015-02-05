@@ -3,7 +3,6 @@ module Brief
     extend ActiveSupport::Concern
 
     def config(options = {}, &block)
-      Brief::Configuration.instance.load_options(options) unless options.nil? || options.empty?
       Brief::Configuration.instance.instance_eval(&block) if block_given?
     end
 
