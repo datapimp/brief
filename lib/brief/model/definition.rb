@@ -6,6 +6,7 @@ module Brief
                   :content_schema,
                   :options,
                   :defined_helpers,
+                  :defined_actions,
                   :section_mappings,
                   :template_body,
                   :example_body
@@ -25,20 +26,7 @@ module Brief
     end
 
     def validate!
-      definition = self
-
       if valid?
-        create_model_class.tap do |k|
-          k.send(:include, Brief::Model)
-
-          k.definition ||= definition
-
-          k.name ||= name
-          k.type_alias ||= type_alias
-
-          Brief::Model.classes << k
-        end
-
         apply_config
       end
     end
@@ -56,16 +44,13 @@ module Brief
       end
 
       # defined helpers adds an anonymous module include
-      Array(defined_helpers).each { |mod| model_class.send(:include, mod) }
+      Array(self.defined_helpers).each { |mod| model_class.send(:include, mod) }
 
-      model_class.defined_actions += Array(defined_actions)
       true
     end
 
-    def create_model_class
-      unless (model_namespace.const_get(type_alias.camelize) rescue nil)
-        model_namespace.const_set(type_alias.camelize, Class.new)
-      end
+    def defined_helper_methods
+      defined_helpers.map(&:instance_methods).flatten
     end
 
     def model_class
@@ -103,23 +88,26 @@ module Brief
     end
 
     def has_actions?
-      !@defined_actions.empty?
+      self.defined_actions.empty?
     end
 
     def actions(&block)
-      helpers(&block)
+      self.defined_actions ||= []
+      helpers(true, &block)
     end
 
-    def defined_actions
-      Array(defined_helpers).map(&:instance_methods).flatten
-    end
-
-    def helpers(&block)
+    def helpers(include_in_command_list=false, &block)
       self.defined_helpers ||= []
 
       if block
         mod = Module.new
         mod.module_eval(&block)
+
+        if include_in_command_list
+          self.defined_actions ||= []
+          self.defined_actions += mod.instance_methods
+          self.defined_actions.uniq!
+        end
 
         self.defined_helpers << mod
       end

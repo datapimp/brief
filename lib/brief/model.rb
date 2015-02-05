@@ -13,10 +13,9 @@ module Brief
       include AccessorMethods
       include Persistence
 
-      class_attribute :models, :after_initialization_hooks, :defined_actions
+      class_attribute :models, :after_initialization_hooks
 
       self.models = Array(models).to_set
-      self.defined_actions = Array(defined_actions).to_set
 
       class << self
         include Enumerable
@@ -92,6 +91,10 @@ module Brief
     module ClassMethods
       def has_actions?
         definition.has_actions?
+      end
+
+      def defined_actions
+        definition.defined_actions ||= []
       end
 
       def finalize
@@ -182,6 +185,8 @@ module Brief
         if %w(meta content template example actions helpers).include?(meth.to_s)
           definition.send(meth, *args, &block)
           finalize
+        elsif %w(defined_helper_methods defined_actions).include?(meth.to_s)
+          definition.send(meth)
         elsif meth.to_s.match(/^on_(.*)_change$/)
           create_change_handler(Regexp.last_match[1], *args, &block)
         else

@@ -7,9 +7,28 @@ module Brief
     end
 
     def define(*args, &block)
-      definition = Brief::Model::Definition.new(args.first, args.extract_options!)
-      definition.instance_eval(&block) if block_given?
-      definition.validate!
+      options     = args.dup.extract_options!
+      name        = args.first
+      type_alias  = options.fetch(:type_alias) { name.downcase.parameterize.gsub(/-/, '_') }
+
+      namespace = Brief.configuration.model_namespace || Brief::Model
+
+      klass = namespace.const_get(type_alias.camelize) rescue nil
+
+      if klass
+        # raise class already defined
+      end
+
+      klass ||= namespace.const_set(type_alias.camelize, Class.new).tap do |k|
+        k.send(:include, Brief::Model)
+        k.definition ||= Brief::Model::Definition.new(args.first, args.extract_options!)
+        k.name ||= name
+        k.type_alias ||= type_alias
+        Brief::Model.classes << k
+      end
+
+      klass.definition.instance_eval(&block) if block_given?
+      klass.definition.validate!
     end
 
     # defines a method on the model instance named after the identifier
