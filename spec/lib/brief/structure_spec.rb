@@ -2,8 +2,7 @@ require "spec_helper"
 
 describe "Document Structure Information" do
   let(:sample) do
-    path = Brief.example_path.join("docs","epic.html.md")
-    Brief::Document.new(path)
+    Brief.example_document
   end
 
   let(:one) do

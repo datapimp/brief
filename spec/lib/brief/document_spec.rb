@@ -2,8 +2,7 @@ require "spec_helper"
 
 describe "The Brief Document" do
   let(:sample) do
-    path = Brief.example_path.join("docs","epic.html.md")
-    Brief::Document.new(path)
+    Brief.example_document
   end
 
   it "renders html" do
@@ -14,9 +13,16 @@ describe "The Brief Document" do
     expect(sample.css("h1").length).to eq(2)
   end
 
-
   it "deserializes YAML frontmatter into attributes" do
     expect(sample.frontmatter.type).to eq("epic")
+  end
+
+  it "references the parent folder name" do
+    expect(sample.parent_folder_name).to eq("epics")
+  end
+
+  it "can resolve the model type using the parent folder name if possible" do
+    expect(Brief::Model.for_folder_name(sample.parent_folder_name)).to eq(Brief::Epic)
   end
 
   context "Content Extraction" do

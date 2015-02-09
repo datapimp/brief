@@ -92,7 +92,18 @@ module Brief
     end
 
     def model_class
-      @model_class || ((data && data.type) && Brief::Model.for_type(data.type))
+      case
+      when @model_class
+        @model_class
+      when data && data.type
+        Brief::Model.for_type(data.type)
+      when parent_folder_name.length > 0
+        Brief::Model.for_folder_name(parent_folder_name)
+      end
+    end
+
+    def parent_folder_name
+      path.parent.basename.to_s.downcase
     end
 
     # Each model class tracks the instances of the models created

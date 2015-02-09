@@ -67,6 +67,11 @@ module Brief
       table[type_alias]
     end
 
+    def self.for_folder_name(folder_name=nil)
+      folder_name = folder_name.to_s.downcase
+      table[folder_name.singularize] || table[folder_name]
+    end
+
     def self.lookup_class_from_args(args = [])
       args = Array(args)
 

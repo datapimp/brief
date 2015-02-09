@@ -4,7 +4,9 @@ module Brief
       extend ActiveSupport::Concern
 
       def frontmatter
-        @frontmatter || load_frontmatter
+        (@frontmatter || load_frontmatter).tap do |d|
+          d[:type] ||= parent_folder_name && parent_folder_name.to_s.singularize if parent_folder_name && parent_folder_name.length > 0
+        end
       end
 
       def frontmatter_line_count

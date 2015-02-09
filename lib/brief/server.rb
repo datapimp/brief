@@ -1,0 +1,3 @@
+class Brief::Server
+
+end

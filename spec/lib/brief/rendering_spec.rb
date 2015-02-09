@@ -2,12 +2,11 @@ require "spec_helper"
 
 describe "Brief HTML Rendering" do
   let(:sample) do
-    path = Brief.example_path.join("docs","epic.html.md")
-    Brief::Document.new(path)
+    Brief.example_document
   end
 
   it "wraps the document with some identifying details" do
-    expect(sample.to_html).to include("docs/epic.html.md")
+    expect(sample.to_html).to include("docs/epics/epic.html.md")
   end
 
   it "wraps the higher level headings under section elements" do

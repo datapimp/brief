@@ -47,8 +47,15 @@ module Brief
       # Create a finder method on the repository
       # which lets us find instances of models by their class name
       Brief::Model.table.keys.each do |type|
-        define_method(type.to_s.pluralize) do
-          Brief::Model.for_type(type).models.to_a
+        plural = type.to_s.pluralize
+
+        define_method("#{ plural }") do
+          instance_variable_get("@#{ plural }") || send("#{ plural }!")
+        end
+
+        define_method("#{ plural }!") do
+          instance_variable_set("@#{plural}", Brief::Model.for_type(type).models.to_a)
+          instance_variable_get("@#{ plural }")
         end
       end
     end

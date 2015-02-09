@@ -106,3 +106,8 @@ attributes.
   ```
 
   then it will open up $EDITOR
+
+### 1.3.2
+
+- Various performance fixes
+- Model package loading system foundation
