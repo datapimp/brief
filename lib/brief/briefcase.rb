@@ -30,6 +30,10 @@ module Brief
       Brief::Configuration.instance
     end
 
+    def server
+      @server ||= Brief::Server.new(self)
+    end
+
     # Loads the configuration for this briefcase, either from the current working directory
     # or the configured path for the configuration file.
     def load_configuration
