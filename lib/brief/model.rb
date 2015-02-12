@@ -12,6 +12,7 @@ module Brief
       include Initializers
       include AccessorMethods
       include Persistence
+      include Serializers
 
       class_attribute :models, :after_initialization_hooks
 

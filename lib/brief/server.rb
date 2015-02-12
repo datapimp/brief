@@ -1,4 +1,3 @@
-
 class Brief::Server
   attr_reader :options, :briefcase
 
@@ -10,6 +9,9 @@ class Brief::Server
   def call(env)
     request = Brief::Server::Route.new(env, briefcase, options)
     status, headers, body = request.respond()
+
+    body = body.to_json if body.is_a?(Hash)
+    body = body.to_json if body.is_a?(Array)
 
     headers["Content-Length"]                 = Rack::Utils.bytesize(body)
     headers["Access-Control-Allow-Origin"]    = "*"

@@ -1,6 +1,6 @@
 require 'pry'
-require 'brief'
 require 'rack/test'
+require 'brief'
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
@@ -25,6 +25,6 @@ end
 
 RSpec.configure do |config|
   config.mock_with :rspec
-  config.include Rack::Test
-  config.include Requests::JsonHelpers, type: :request
+  config.include Rack::Test::Methods
+  config.include TestHelpers
 end
