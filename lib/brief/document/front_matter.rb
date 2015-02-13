@@ -3,6 +3,14 @@ module Brief
     module FrontMatter
       extend ActiveSupport::Concern
 
+      def frontmatter= attributes
+        @frontmatter = attributes
+      end
+
+      def data= attributes
+        self.frontmatter= attributes
+      end
+
       def frontmatter
         (@frontmatter || load_frontmatter).tap do |d|
           d[:type] ||= parent_folder_name && parent_folder_name.to_s.singularize if parent_folder_name && parent_folder_name.length > 0
@@ -21,6 +29,8 @@ module Brief
           @frontmatter_line_count = Regexp.last_match[1].lines.size
           @raw_frontmatter = Regexp.last_match[1]
           @frontmatter = YAML.load(Regexp.last_match[1]).to_mash
+        else
+          @frontmatter = {}.to_mash
         end
       end
     end

@@ -7,6 +7,12 @@ describe "The Brief Document Repository" do
     expect(repository.documents).not_to be_empty
   end
 
+  it "gives me the document models for paths" do
+    paths = ["./concept.html.md", "wireframe.html.md", "epics/epic.html.md", Brief.example_document.path.realpath]
+
+    docs = repository.documents_at(*paths)
+  end
+
   context "querying api" do
     it "finds the first document matching a query" do
       query = repository.where(state:"active")

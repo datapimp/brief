@@ -46,7 +46,7 @@ module Brief
           if document.respond_to?(meth)
             document.send(meth)
           else
-            document.data.key?(meth) ? data[meth] : extracted.send(meth)
+            document.data && document.data.key?(meth) ? data[meth] : extracted.send(meth)
           end
         else
           super
@@ -62,6 +62,10 @@ module Brief
       classes.inject({}.to_mash) do |memo, klass|
         memo.tap { memo[klass.type_alias] = klass }
       end
+    end
+
+    def self.lookup(type_alias)
+      for_type(type_alias) || for_folder_name(type_alias) || for_type(type_alias.singularize)
     end
 
     def self.for_type(type_alias)
@@ -95,6 +99,16 @@ module Brief
     end
 
     module ClassMethods
+      def to_schema
+        {
+          content: definition.content_schema,
+          metadata: definition.metadata_schema,
+          class_name: to_s,
+          type_alias: type_alias,
+          name: name
+        }
+      end
+
       def has_actions?
         definition.has_actions?
       end

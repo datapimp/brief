@@ -25,8 +25,30 @@ module Brief
       model_class.try(:models).try(:<<, to_model) unless model_instance_registered?
     end
 
+    def save
+      path.open('w') {|fh| fh.write(combined_data_and_content) }
+    end
+
+    def save!
+      path.open('w+') {|fh| fh.write(combined_data_and_content) }
+    end
+
+    def combined_data_and_content
+      return content if data.nil? || data.empty?
+      frontmatter.to_hash.to_yaml + "---\n\n#{ content }"
+    end
+
     def data
       frontmatter
+    end
+
+    def in_briefcase(briefcase)
+      @briefcase = briefcase
+      self
+    end
+
+    def briefcase
+      @briefcase || Brief.case
     end
 
     def sections
@@ -40,6 +62,10 @@ module Brief
       end
 
       @sections
+    end
+
+    def content= value
+      @content = value
     end
 
     def content
@@ -88,7 +114,11 @@ module Brief
     end
 
     def to_model
-      model_class.new(data.to_hash.merge(path: path, document: self)) if model_class
+      model_class.new((data || {}).to_hash.merge(path: path, document: self)) if model_class
+    end
+
+    def exist?
+      path && path.exist?
     end
 
     def model_class
@@ -99,7 +129,15 @@ module Brief
         Brief::Model.for_type(data.type)
       when parent_folder_name.length > 0
         Brief::Model.for_folder_name(parent_folder_name)
+      else
+        raise 'Could not determine the model class to use for this document. Specify the type, or put it in a folder that maps to the correct type.'
       end
+    end
+
+    def document_type
+      existing = data && data.type
+      return existing if existing
+      parent_folder_name.try(:singularize)
     end
 
     def parent_folder_name
@@ -116,7 +154,7 @@ module Brief
     end
 
     def respond_to?(method)
-      super || data.respond_to?(method) || data.key?(method)
+      super || (data && data.respond_to?(method)) || (data && data.key?(method))
     end
 
     def structure

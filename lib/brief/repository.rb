@@ -16,6 +16,31 @@ module Brief
       load_documents
     end
 
+    def document_at(path)
+      path = normalize_path(path)
+      Brief::Document.new(path)
+    end
+
+    def documents_at!(*paths)
+      documents_at(*paths).select {|doc| doc.path.exist? }
+    end
+
+    def normalize_path(p)
+      docs_path.join(p)
+    end
+
+    def documents_at(*paths)
+      paths.compact!
+
+      paths.map! {|p| normalize_path(p) }
+
+      paths.map {|p| p && Brief::Document.new(p)}
+    end
+
+    def models_at(*paths)
+      documents_at(*paths).map(&:to_model)
+    end
+
     def documents
       return @documents if @documents
       load_documents
@@ -33,9 +58,13 @@ module Brief
       briefcase.root
     end
 
+    def docs_path
+      briefcase.docs_path
+    end
+
     def load_documents
       @documents = document_paths.map do |path|
-        Brief::Document.new(path)
+        Brief::Document.new(path).in_briefcase(briefcase)
       end
     end
 

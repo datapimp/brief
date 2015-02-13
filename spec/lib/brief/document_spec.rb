@@ -5,6 +5,20 @@ describe "The Brief Document" do
     Brief.example_document
   end
 
+  it "creates a new doc if the path doesn't exist" do
+    begin
+      new_path = Brief.testcase.docs_path.join("newly-created.html.md")
+      doc = Brief::Document.new(new_path)
+      doc.data= {}
+      doc.content= "sup"
+      doc.save!
+
+      expect(doc).to be_exist
+    ensure
+      FileUtils.rm_rf(new_path)
+    end
+  end
+
   it "renders html" do
     expect(sample.to_html).to match(/h1.*User Stories.*h1\>/)
   end

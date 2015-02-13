@@ -20,7 +20,7 @@ class Brief::Server::Route
   private
 
     def response_data
-      resp = handler.handle(path_args, request, briefcase)
+      resp = handler.handle(path_args, briefcase, request: request, action: path_action)
 
       self.code = resp[0]
       self.headers.merge(resp[1])
