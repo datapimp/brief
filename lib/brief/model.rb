@@ -101,11 +101,21 @@ module Brief
     module ClassMethods
       def to_schema
         {
-          content: definition.content_schema,
-          metadata: definition.metadata_schema,
+          schema: {
+            content: definition.content_schema,
+            metadata: definition.metadata_schema,
+          },
           class_name: to_s,
           type_alias: type_alias,
-          name: name
+          name: name,
+          group: name.to_s.pluralize,
+          actions: defined_actions,
+          example: definition.example_body.to_s,
+          template: definition.template_body.to_s,
+          urls: {
+            browse_url: "browse/#{ type_alias.to_s.pluralize }",
+            schema_url: "schema/#{ type_alias }"
+          }
         }
       end
 

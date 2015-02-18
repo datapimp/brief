@@ -1,9 +1,9 @@
 class Brief::Server::Gateway
-  attr_reader :root
+  attr_reader :root, :briefcases
 
   def initialize(options={})
     @root = options.fetch(:root)
-    @briefcases = {}
+    @briefcases = {}.to_mash
     @briefcase_options = options.fetch(:briefcase_options, {})
     load_briefcases
   end
@@ -25,6 +25,11 @@ class Brief::Server::Gateway
 
   def call(env)
     request = Rack::Request.new(env)
+
+    if request.path.match(/__info$/)
+      return [200, {}, [@briefcases.keys.to_json]]
+    end
+
     name    = request.path.match(/\/\w+\/(\w+)/)[1] rescue nil
 
     if name && @briefcases[name]
