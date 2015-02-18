@@ -45,6 +45,10 @@ module Brief
         root.join('brief.rb')
       end
 
+      if config_path.is_a?(String)
+        config_path = root.join(config_path)
+      end
+
       if uses_app?
         instance_eval(app_path.join("config.rb").read)
       end

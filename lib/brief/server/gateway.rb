@@ -4,15 +4,21 @@ class Brief::Server::Gateway
   def initialize(options={})
     @root = options.fetch(:root)
     @briefcases = {}
-
+    @briefcase_options = options.fetch(:briefcase_options, {})
     load_briefcases
   end
 
+  def briefcase_options
+    (@briefcase_options || {})
+  end
+
   def load_briefcases
+    config_path = briefcase_options.fetch(:config_path, "brief.rb")
+
     root.children.select(&:directory?).each do |dir|
-      if dir.join("brief.rb").exist?
+      if dir.join(config_path).exist?
         slug = dir.basename.to_s.parameterize
-        @briefcases[slug] ||= Brief::Briefcase.new(root: dir)
+        @briefcases[slug] ||= Brief::Briefcase.new(briefcase_options.merge(root: dir))
       end
     end
   end
@@ -24,7 +30,7 @@ class Brief::Server::Gateway
     if name && @briefcases[name]
       @briefcases[name].server.call(env)
     else
-      [404, {}, ["Not found"]]
+      [404, {}, ["Not found: #{ name } -- #{ request.path }"]]
     end
   end
 end
