@@ -2,7 +2,7 @@
 type: concept
 title: Blueprint Concept Example
 subheading: A key concept to the domain model
-contents: "# Modified Content dlxme8prwt3idiaa39awwl71te9u0po77pgs"
-needle: la8ofh9g6234u8sfv0iyg78qk164xk4rom3k
+contents: "# Modified Content j61glp17zxvbzyg2b4bd4iwcehadkl93dvcg"
+needle: g0bz0wo6bo13xezh1t033ecgj7j3cpt7s3d8
 ---
 

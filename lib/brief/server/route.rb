@@ -6,7 +6,7 @@ class Brief::Server::Route
     @env = env
     @request = Rack::Request.new(env)
     @briefcase = briefcase
-    @prefix = options.fetch(:prefix, "/briefcase")
+    @prefix = options.fetch(:prefix) {"/briefcases/#{ briefcase.folder_name.to_s.parameterize }"}
     @code = 400
     @headers = {}
     @body = {}

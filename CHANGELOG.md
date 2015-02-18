@@ -111,3 +111,9 @@ attributes.
 
 - Various performance fixes
 - Model package loading system foundation
+
+### 1.4.0
+
+- Brief::Server provides a REST interface to a briefcase
+- Brief::Server::Gateway provdies a REST wrapper around a folder of
+  briefcases

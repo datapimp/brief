@@ -30,8 +30,12 @@ module Brief
       Brief::Configuration.instance
     end
 
-    def server
-      @server ||= Brief::Server.new(self)
+    def server(options={})
+      @server ||= Brief::Server.new(self, options)
+    end
+
+    def folder_name
+      root.basename
     end
 
     # Loads the configuration for this briefcase, either from the current working directory
