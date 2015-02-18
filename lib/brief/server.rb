@@ -14,7 +14,7 @@ class Brief::Server
     body = body.to_json if body.is_a?(Array)
     body = "" if body.nil?
 
-    headers["Content-Length"]                 = Rack::Utils.bytesize(body)
+    headers["Content-Length"]                 = Rack::Utils.bytesize(body).to_s
     headers["Access-Control-Allow-Origin"]    = "*"
     headers["Access-Control-Allow-Methods"]   = "GET, POST, PUT"
 
