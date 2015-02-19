@@ -12,12 +12,12 @@ module Brief::Model::Serializers
     end
 
     # TEMP
-    title = data['title'] || (send(:title) rescue nil) || path.basename.to_s.gsub(/\.html.md/,'')
+    title = data.try(:[], :title) || extracted_content.try(:title) || (send(:title) rescue nil) || path.basename.to_s.gsub(/\.html.md/,'')
     title = title.to_s.gsub(/\.md/,'')
 
     {
       data: data,
-      path: doc_path,
+      path: doc_path.to_s,
       type: type,
       title: title,
       actions: self.class.defined_actions,

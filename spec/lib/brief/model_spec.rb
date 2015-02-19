@@ -6,7 +6,7 @@ describe "The Brief Model" do
   let(:user_story) { briefcase.user_stories.first }
 
   it "exposes information about its schema" do
-    expect(epic.class.to_schema.keys).to include(:content, :metadata, :name, :class_name, :type_alias)
+    expect(epic.class.to_schema.keys).to include(:schema, :name, :class_name, :type_alias)
   end
 
   context "DSL Style Declarations" do
