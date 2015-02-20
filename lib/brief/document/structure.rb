@@ -26,12 +26,24 @@ module Brief
       end
     end
 
+    # Markdown rendered HTML comes in the forms of a bunch of siblings,
+    # and no parents.  We need to introduce the concept of ownership of
+    # sections of the document, by using the heading level (h1 - h6) as
+    # a form of rank.
+    #
+    # All h1 elements will 'own' the h2,h3,h4,h5,h6
+    # elements underneath them.
     def create_wrappers
       return if @elements_have_been_wrapped
 
       elements      = fragment.children
 
+      # The different groups of elements
       mapping = []
+
+      # The current bucket of elements that is being
+      # collected, will get reset whenever it runs into
+      # an element that is a greater heading rank
       bucket = []
 
       current_level = Util.level(elements.first)
@@ -39,6 +51,8 @@ module Brief
       elements.each_cons(2) do |element, next_element|
         bucket << element
 
+        # We will have run into a greater header, so close up the bucket
+        # and put it into the mapping
         if Util.is_header?(next_element) && Util.level(next_element) >= current_level
           mapping.push([current_level, bucket])
           bucket = []
@@ -49,7 +63,10 @@ module Brief
         end
       end
 
-      mapping.push([current_level, bucket]) unless mapping.include?(bucket)
+      # we never ended up reaching a header, so close up and move on
+      if !mapping.include?(bucket)
+        mapping.push([current_level, bucket])
+      end
 
       base_fragment = Nokogiri::HTML.fragment("<div class='brief top level' />")
 
