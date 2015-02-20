@@ -65,8 +65,10 @@ class Brief::Document::Section
 
       nodes.each do |node|
         parent = node.css('section, article').first
-        if %w(h1 h2 h3 h4 h5 h6).include?(parent.children.first.name)
-          parent['data-heading'] = parent.children.first.text
+        parents_first_el = parent.children.first
+
+        if parents_first_el && %w(h1 h2 h3 h4 h5 h6).include?(parent.children.first.name)
+          parent['data-heading'] = parents_first_el.text
         end
       end
 
