@@ -40,7 +40,6 @@ class Brief::Document::Section
       until even? || maxed_out?
         source.map! do |item|
           level, fragments = item
-          fragments = Array(fragments)
           [level, fragments.first]
         end
 
@@ -62,20 +61,16 @@ class Brief::Document::Section
         @cycles += 1
       end
 
-      self.nodes = source.map(&:last).compact
+      self.nodes = source.map(&:last).flatten
 
       nodes.each do |node|
-        # this could be a bad bugfix
-        node = node.first if node.is_a?(Array)
-
         parent = node.css('section, article').first
-        if parent.children.first && %w(h1 h2 h3 h4 h5 h6).include?(parent.children.first.name)
+        if %w(h1 h2 h3 h4 h5 h6).include?(parent.children.first.name)
           parent['data-heading'] = parent.children.first.text
         end
       end
 
-      nodes.map! {|n| n.to_html rescue nil}
-      nodes.compact!
+      nodes.map!(&:to_html)
     end
 
     def maxed_out?
