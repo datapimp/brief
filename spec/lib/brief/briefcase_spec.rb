@@ -11,13 +11,21 @@ describe "The Briefcase" do
     expect(briefcase.repository).to be_a(Brief::Repository)
   end
 
+  it "defines methods which combine models in arbitrary ways" do
+    expect(briefcase.custom_aggregator).to be_a(Hash)
+  end
+
+  it "reads the settings.yml" do
+    expect(briefcase.settings.settings).to be_present
+  end
+
   context "Model Loading" do
     it "loads the model definitions from the models folder" do
-      expect(Brief::Model.classes.length).to eq(2)
+      expect(Brief::Model.classes.length).to eq(3)
     end
 
     it "loads the model definitions from the DSL in the config file" do
-      expect(Brief::Model.classes.length).to eq(2)
+      expect(Brief::Model.classes.length).to eq(3)
     end
 
     it "caches the output" do
@@ -29,7 +37,7 @@ describe "The Briefcase" do
   context "Document Mappings" do
     it "has all of the documents" do
       expect(briefcase.epics.length).to eq(1)
-      expect(briefcase.documents.length).to eq(7)
+      expect(briefcase.documents.length).to eq(8)
     end
   end
 end

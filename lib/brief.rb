@@ -19,6 +19,10 @@ module Brief
     @briefcase
   end
 
+  def self.views
+    @views ||= {}
+  end
+
   def self.configuration
     Brief::Configuration.instance
   end

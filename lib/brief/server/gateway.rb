@@ -26,8 +26,13 @@ class Brief::Server::Gateway
   def call(env)
     request = Rack::Request.new(env)
 
-    if request.path.match(/__info$/)
-      return [200, {}, [@briefcases.keys.to_json]]
+    if request.path.match(/\/all$/)
+      format = request.params.fetch('format', 'default')
+      return [200, {}, [
+        @briefcases.values.map do |bc|
+          bc.present(format, request.params)
+        end.to_json
+      ]]
     end
 
     name    = request.path.match(/\/\w+\/(\w+)/)[1] rescue nil

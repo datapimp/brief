@@ -37,6 +37,8 @@ class Brief::Server::Route
       case
       when request.path.match(/^\/schema/)
         handlers.const_get(:Schema)
+      when path_action == "aggregator"
+        handlers.const_get(:Aggregator)
       when path_action == "browse"
         handlers.const_get(:Browse)
       when %w(create update delete remove).include?(path_action)
@@ -73,3 +75,4 @@ require "brief/server/handlers/browse"
 require "brief/server/handlers/modify"
 require "brief/server/handlers/schema"
 require "brief/server/handlers/show"
+require "brief/server/handlers/aggregator"

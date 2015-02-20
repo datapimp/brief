@@ -3,6 +3,10 @@ config do
   set(:templates => Pathname(File.dirname(__FILE__)).join("templates"))
 end
 
+view :custom_aggregator do
+  {aggregator:"custom"}
+end
+
 define "User Story" do
   meta do
     title

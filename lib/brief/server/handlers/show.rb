@@ -26,7 +26,7 @@ module Brief::Server::Handlers
         body = document.to_html
         content_type = "text/html"
       when document && view == "details"
-        body = document.to_model.as_json
+        body = document.to_model.as_json(request.params)
       end
 
       [code, {"Content-Type"=>content_type}, body]

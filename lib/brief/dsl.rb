@@ -6,6 +6,10 @@ module Brief
       Brief::Configuration.instance.instance_eval(&block) if block_given?
     end
 
+    def view(name, &block)
+      Brief.views[name.to_sym] = block
+    end
+
     def define(*args, &block)
       options     = args.dup.extract_options!
       name        = args.first

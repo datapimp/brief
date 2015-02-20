@@ -72,6 +72,17 @@ module Brief
       Dir[root.join('**/*.md').to_s].map { |p| Pathname(p) }
     end
 
+    def all_models
+      documents.map(&:to_model).compact
+    end
+
+    def all_models_by_type
+      all_models.reduce({}) do |memo, model|
+        (memo[model.class.type_alias] ||= []) << model
+        memo
+      end
+    end
+
     def self.define_document_finder_methods
       # Create a finder method on the repository
       # which lets us find instances of models by their class name

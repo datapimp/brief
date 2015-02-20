@@ -23,6 +23,10 @@ describe "The Brief Document" do
     expect(sample.to_html).to match(/h1.*User Stories.*h1\>/)
   end
 
+  it "renders html" do
+    expect(Brief.page_document.to_html).to be_present
+  end
+
   it "parses the html" do
     expect(sample.css("h1").length).to eq(2)
   end

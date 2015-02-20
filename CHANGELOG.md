@@ -117,3 +117,7 @@ attributes.
 - Brief::Server provides a REST interface to a briefcase
 - Brief::Server::Gateway provdies a REST wrapper around a folder of
   briefcases
+
+### 1.4.5
+  - Introducing a new DSL to define aggregator methods on the briefcase
+  - Aggregators have a REST interface

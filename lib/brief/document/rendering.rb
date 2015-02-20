@@ -37,12 +37,14 @@ module Brief
       # attributes, and other things to the HTML so that the output HTML retains its
       # relationship to the underlying data and document structure.
       def to_html(options = {})
-        if options[:wrap] == false
+        html = if options[:wrap] == false
           unwrapped_html
         else
           wrapper = options.fetch(:wrapper, 'div')
           "<#{ wrapper } data-brief-model='#{ model_class.type_alias }' data-brief-path='#{ relative_path_identifier }'>#{ unwrapped_html }</#{wrapper}>"
         end
+
+        html.respond_to?(:html_safe) ? html.html_safe : html.to_s
       end
 
       def unwrapped_html

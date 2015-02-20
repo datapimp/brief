@@ -16,6 +16,53 @@ module Brief
       end
     end
 
+    def present(style="default", params={})
+      send("as_#{style}", params)
+    end
+
+    def settings
+      @settings ||= settings!
+    end
+
+    def settings!
+      if root.join("settings.yml").exist?
+        y = YAML.load(root.join("settings.yml").read) rescue nil
+        (y || {}).to_mash
+      end
+    end
+
+    def as_default(params={})
+      params.symbolize_keys!
+
+      model_settings = {
+        docs_path: docs_path
+      }
+
+      model_settings[:rendered] = !!(params.key?(:rendered))
+      model_settings[:content] = !!(params.key?(:content))
+
+      all = all_models.compact
+
+      schema = all.map(&:class).uniq.compact
+                 .map(&:to_schema)
+                 .reduce({}) {|m, k| m[k[:type_alias]] = k; m }
+
+      models = all.map {|m| m.as_json(model_settings) }
+
+      {
+        views: Brief.views.keys,
+        key: briefcase.folder_name.to_s.parameterize,
+        name: briefcase.folder_name.to_s.titlecase,
+        schema: schema,
+        models: models,
+        settings: settings
+      }
+    end
+
+    def as_full_export
+      as_default(content: true, rendered: true)
+    end
+
     def use(module_type=:app, module_id)
       if module_type == :app && apps_path.join(module_id).exist?
         config = module_type.join("config.rb")
@@ -111,7 +158,10 @@ module Brief
     end
 
     def method_missing(meth, *args, &block)
-      if repository.respond_to?(meth)
+      if Brief.views.key?(meth.to_sym)
+        block = Brief.views[meth.to_sym]
+        instance_eval(&block)
+      elsif repository.respond_to?(meth)
         repository.send(meth, *args, &block)
       else
         super

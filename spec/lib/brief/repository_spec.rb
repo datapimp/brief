@@ -36,7 +36,7 @@ describe "The Brief Document Repository" do
 
     it "supports different operators" do
       query = repository.where(:type.neq => "epic")
-      expect(query.length).to eq(6)
+      expect(query.length).to eq(7)
     end
 
     it "limits the results to the specified size" do

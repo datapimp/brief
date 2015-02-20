@@ -1,5 +1,6 @@
 module Brief::Model::Serializers
   def as_json(options={})
+    options.symbolize_keys!
 
     if options[:docs_path]
       if path.absolute?
@@ -30,6 +31,9 @@ module Brief::Model::Serializers
         schema_url: "/schema/#{ type }",
         actions_url: "/actions/:action/#{ doc_path }"
       }
-    }
+    }.tap do |h|
+      h[:content] = document.combined_data_and_content if options[:content]
+      h[:rendered] = document.to_html if options[:rendered]
+    end
   end
 end

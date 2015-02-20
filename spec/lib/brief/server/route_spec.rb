@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe Brief::Server::Route do
-
   it "routes to the browse handler" do
     expect(handler_for("/browse/epics")).to eq(Brief::Server::Handlers::Browse)
   end
