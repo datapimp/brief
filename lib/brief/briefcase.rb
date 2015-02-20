@@ -14,6 +14,8 @@ module Brief
       if Brief.case.nil?
         Brief.case = self
       end
+
+      Brief.cases[root] ||= self
     end
 
     def present(style="default", params={})

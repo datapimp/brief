@@ -43,12 +43,12 @@ module Brief
     end
 
     def in_briefcase(briefcase)
-      @briefcase = briefcase
+      @briefcase_root = briefcase.root
       self
     end
 
     def briefcase
-      @briefcase || Brief.case
+      (@briefcase_root && Brief.cases[@briefcase_root]) || Brief.case
     end
 
     def sections

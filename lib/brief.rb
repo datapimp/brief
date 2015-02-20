@@ -11,6 +11,11 @@ require 'yaml'
 require 'erb'
 
 module Brief
+
+  def self.cases
+    @cases ||= {}
+  end
+
   def self.case=(value)
     @briefcase = value
   end
