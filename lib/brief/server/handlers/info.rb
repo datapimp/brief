@@ -2,9 +2,10 @@ module Brief::Server::Handlers
   class Info
     def self.handle(path, briefcase, options={})
       request = options.fetch(:request)
-      action = options.fetch(:action)
+      params  = request.params.symbolize_keys
+      style   = params.fetch(:presenter, "default")
 
-      [200, {}, briefcase.as_default]
+      [200, {}, briefcase.present(style, params)]
     end
   end
 end

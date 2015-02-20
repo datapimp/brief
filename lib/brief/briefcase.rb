@@ -19,7 +19,12 @@ module Brief
     end
 
     def present(style="default", params={})
-      send("as_#{style}", params)
+      if respond_to?("as_#{style}")
+        send("as_#{style}", params)
+      elsif Brief.views.key?(style.to_sym)
+        block = Brief.views[style.to_sym]
+        block.call(self, params)
+      end
     end
 
     def settings
@@ -162,7 +167,7 @@ module Brief
     def method_missing(meth, *args, &block)
       if Brief.views.key?(meth.to_sym)
         block = Brief.views[meth.to_sym]
-        instance_eval(&block)
+        block.call(self, args.extract_options!)
       elsif repository.respond_to?(meth)
         repository.send(meth, *args, &block)
       else

@@ -6,6 +6,17 @@ describe "Browsing a Briefcase REST Interface", :type => :request do
     expect(last_response.status).to eq(200)
   end
 
+  it "lets me request the briefcase info view in whatever format" do
+    Brief.views[:special_format] = lambda do |briefcase, params|
+      briefcase.as_default.merge({format: "special"})
+    end
+
+    resp = Brief.testcase.special_format
+    binding
+    get("/info?presenter=special_format")
+    expect(json["format"]).to eq(resp[:format])
+  end
+
   it "shows me all of the documents for the requested type" do
     get "/browse/epics"
     expect(json).to be_a(Array)
