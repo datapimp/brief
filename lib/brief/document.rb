@@ -6,6 +6,10 @@ module Brief
 
     attr_accessor :path, :content, :frontmatter, :raw_content
 
+    def document
+      self
+    end
+
     def initialize(path, options = {})
       if path.respond_to?(:key?) && options.empty?
         @frontmatter = path.to_mash
@@ -13,24 +17,55 @@ module Brief
         @path = Pathname(path)
       end
 
+      if options[:Test]
+        binding.pry
+      end
+
       @options = options.to_mash
 
       if @path && self.path.exist?
-        @raw_content = path.read
+        @raw_content = self.path.read
         load_frontmatter
       elsif options[:contents]
         @raw_content = options[:contents]
       end
 
+      register_model_instance if self.path && self.path.exist?
+    end
+
+    def register_model_instance
       model_class.try(:models).try(:<<, to_model) unless model_instance_registered?
     end
 
+    def raw= val
+      @raw_set = true
+      @raw_content = val
+      #document.load_frontmatter
+      @raw_content
+    end
+
+    def set_raw?
+      !!@raw_set
+    end
+
     def save
-      path.open('w') {|fh| fh.write(combined_data_and_content) }
+      if set_raw?
+        file_contents = raw_content
+      else
+        file_contents = combined_data_and_content
+      end
+
+      path.open('w') {|fh| fh.write(file_contents) }
     end
 
     def save!
-      path.open('w+') {|fh| fh.write(combined_data_and_content) }
+      if set_raw?
+        file_contents = raw_content
+      else
+        file_contents = combined_data_and_content
+      end
+
+      path.open('w+') {|fh| fh.write(file_contents) }
     end
 
     def combined_data_and_content
@@ -69,6 +104,9 @@ module Brief
     end
 
     def content
+      if @content.nil?
+        generate_content
+      end
       @content || generate_content
     end
 
@@ -114,7 +152,7 @@ module Brief
     end
 
     def to_model
-      model_class.new((data || {}).to_hash.merge(path: path, document: self)) if model_class
+      model_class.new((data || {}).to_hash.merge(path: path, document: self).reverse_merge(:type=>document_type)) if model_class
     end
 
     def exist?
@@ -170,6 +208,10 @@ module Brief
 
     def fragment
       @fragment ||= Nokogiri::HTML.fragment(to_raw_html)
+    end
+
+    def type
+      document_type
     end
 
     def method_missing(meth, *args, &block)

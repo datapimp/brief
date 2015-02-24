@@ -30,7 +30,7 @@ module Brief
 
     module AccessorMethods
       def data
-        document.data
+        document.data || {}.to_mash
       end
 
       def content
@@ -52,6 +52,10 @@ module Brief
           super
         end
       end
+
+      def exists?
+        document && document.path && document.path.exist?
+      end
     end
 
     def self.classes
@@ -70,6 +74,11 @@ module Brief
 
     def self.for_type(type_alias)
       table[type_alias]
+    end
+
+    def self.existing_models_for_type(type_alias)
+      klass = for_type(type_alias)
+      klass.models.select(&:exists?)
     end
 
     def self.for_folder_name(folder_name=nil)
@@ -99,6 +108,10 @@ module Brief
     end
 
     module ClassMethods
+      def purge
+        models.reject! {|model| !model.document.path.exist? }
+      end
+
       def to_schema
         {
           schema: {

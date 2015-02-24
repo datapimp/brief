@@ -25,12 +25,13 @@ class Brief::Server::Gateway
 
   def call(env)
     request = Rack::Request.new(env)
+    params  = request.params.symbolize_keys
 
     if request.path.match(/\/all$/)
-      format = request.params.fetch('format', 'default')
+      presenter = params.fetch(:presenter, 'default')
       return [200, {}, [
         @briefcases.values.map do |bc|
-          bc.present(format, request.params)
+          bc.present(presenter, params)
         end.to_json
       ]]
     end

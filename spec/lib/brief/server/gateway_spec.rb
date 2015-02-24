@@ -13,6 +13,6 @@ describe "Briefcase Server Gateway" do
 
     expect(status).to eq(200)
     expect(headers["Access-Control-Allow-Origin"]).to eq("*")
-    expect(json.length).to eq(2)
+    expect(json.length).to eq(1)
   end
 end

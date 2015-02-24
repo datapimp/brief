@@ -12,6 +12,8 @@ class Brief::Server
 
     body = body.to_json if body.is_a?(Hash)
     body = body.to_json if body.is_a?(Array)
+    body = body.as_json.to_json if body.is_a?(Brief::Model)
+
     body = "" if body.nil?
 
     headers["Content-Length"]                 = Rack::Utils.bytesize(body).to_s

@@ -12,8 +12,8 @@ describe "Browsing a Briefcase REST Interface", :type => :request do
     end
 
     resp = Brief.testcase.special_format
-    binding
     get("/info?presenter=special_format")
+
     expect(json["format"]).to eq(resp[:format])
   end
 

@@ -48,7 +48,8 @@ module Brief::Server::Handlers
 
       def create
         data      = params[:data]
-        contents  = params[:contents]
+        contents  = params[:content] || params[:contents]
+        raw       = params[:raw]
 
         if path && path.exist?
           @errors[:path] = "Path already exists"
@@ -56,8 +57,13 @@ module Brief::Server::Handlers
         end
 
         doc = Brief::Document.new(path).tap do |document|
-          document.content = contents if contents.to_s.length > 0
-          document.data = data if data && !data.empty?
+          if raw
+            document.raw = raw
+          elsif contents || data
+            document.content = contents if contents.to_s.length > 0
+            document.data = data if data && !data.empty?
+          end
+
           document.save!
         end
 
@@ -75,14 +81,23 @@ module Brief::Server::Handlers
       end
 
       def update
+        data      = params[:data]
+        contents  = params[:content] || params[:contents]
+        raw       = params[:raw]
+
         document = Brief::Document.new(path)
 
         if document.nil? || !document.exist?
           @errors[:document] = "No document was found at #{ path_args }"
           @errors
         else
-          document.contents = params[:contents] if params[:contents]
-          document.data = (document.data || {}).merge(params[:data]) if params[:data].is_a?(Hash)
+          if raw
+            document.raw = raw
+          elsif contents || data
+            document.content = contents if contents.to_s.length > 0
+            document.data = (document.data || {}).merge(params[:data]) if params[:data].is_a?(Hash)
+          end
+
           document.save
 
           document.to_model

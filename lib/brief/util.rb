@@ -1,4 +1,14 @@
 module Brief::Util
+  def self.split_doc_content(raw_content)
+    if raw_content =~ /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
+      content = raw_content[(Regexp.last_match[1].size + Regexp.last_match[2].size)..-1]
+      frontmatter = YAML.load(Regexp.last_match[1]).to_mash
+      [content, frontmatter]
+    else
+      [nil, {}.to_mash]
+    end
+  end
+
   def self.create_method_dispatcher_command_for(action, klass)
     identifier = "#{ action } #{ klass.type_alias.to_s.pluralize }"
 

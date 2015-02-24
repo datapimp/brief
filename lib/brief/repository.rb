@@ -73,14 +73,30 @@ module Brief
     end
 
     def all_models
-      documents.map(&:to_model).compact
+      list = documents.map(&:to_model)
+      list.compact!
+      list.select!(&:exists?)
+
+      list
     end
 
     def all_models_by_type
       all_models.reduce({}) do |memo, model|
-        (memo[model.class.type_alias] ||= []) << model
+        (memo[model.class.type_alias] ||= []) << model if model.exists?
         memo
       end
+    end
+
+    def purge(model_type=nil)
+      if model_type
+        plural = model_type.to_s.pluralize
+
+        if instance_variable_get("@#{ plural }")
+          instance_variable_set("@#{plural}",nil)
+        end
+      end
+
+      documents.reject! {|doc| !doc.path.exist? }
     end
 
     def self.define_document_finder_methods
@@ -94,7 +110,7 @@ module Brief
         end
 
         define_method("#{ plural }!") do
-          instance_variable_set("@#{plural}", Brief::Model.for_type(type).models.to_a)
+          instance_variable_set("@#{plural}", Brief::Model.existing_models_for_type(type))
           instance_variable_get("@#{ plural }")
         end
       end
