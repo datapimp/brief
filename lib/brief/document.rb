@@ -52,6 +52,17 @@ module Brief
       end
 
       path.open('w') {|fh| fh.write(file_contents) }
+      refresh!
+    end
+
+    def refresh!
+      @content = nil
+      @raw_content = path.read
+      @frontmatter = nil
+      @raw_frontmatter = nil
+      @refreshing = true
+      load_frontmatter
+      true
     end
 
     def save!
@@ -62,6 +73,7 @@ module Brief
       end
 
       path.open('w+') {|fh| fh.write(file_contents) }
+      refresh!
     end
 
     def combined_data_and_content

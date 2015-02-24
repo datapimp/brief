@@ -69,7 +69,7 @@ module Brief::Server::Handlers
           document.save!
         end
 
-        doc.to_model
+        doc.to_model.as_json(content: true, rendered: true)
       end
 
       def remove
@@ -102,7 +102,7 @@ module Brief::Server::Handlers
 
           document.save
 
-          document.to_model
+          document.to_model.as_json(content: true, rendered: true)
         end
       end
 

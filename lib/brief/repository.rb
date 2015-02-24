@@ -74,7 +74,7 @@ module Brief
     end
 
     def all_models
-      list = documents.map(&:to_model)
+      list = documents.select(&:refresh!).map(&:to_model)
       list.compact!
       list.select!(&:exists?)
 

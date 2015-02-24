@@ -15,6 +15,7 @@ module Brief::Model::Serializers
       extracted: extracted_content_data,
       path: path.to_s,
       type: type,
+      group: type.to_s.pluralize,
       title: title,
       actions: self.class.defined_actions,
       urls: {

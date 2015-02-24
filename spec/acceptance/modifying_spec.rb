@@ -49,7 +49,6 @@ describe "Modifying Documents", :type => :request do
     needle = rand(36**36).to_s(36)
     post "/update/concept.html.md", content: "# Modified Content #{ needle }", data: {needle: needle}
     get("/browse/concepts")
-
     needles = json.map {|h| h["data"]["needle"] }
     expect(needles).to include(needle)
   end
