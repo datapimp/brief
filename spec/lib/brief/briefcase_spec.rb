@@ -21,11 +21,11 @@ describe "The Briefcase" do
 
   context "Model Loading" do
     it "loads the model definitions from the models folder" do
-      expect(Brief::Model.classes.length).to eq(3)
+      expect(Brief::Model.classes.length).to eq(4)
     end
 
     it "loads the model definitions from the DSL in the config file" do
-      expect(Brief::Model.classes.length).to eq(3)
+      expect(Brief::Model.classes.length).to eq(4)
     end
 
     it "caches the output" do

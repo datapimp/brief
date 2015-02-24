@@ -19,6 +19,7 @@ class Brief::Server
     headers["Content-Length"]                 = Rack::Utils.bytesize(body).to_s
     headers["Access-Control-Allow-Origin"]    = "*"
     headers["Access-Control-Allow-Methods"]   = "GET, POST, PUT"
+    headers["X-BRIEF-HANDLER"] = request.send(:handler).try(:to_s)
 
     [status, headers, [body]]
   end

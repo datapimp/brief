@@ -17,10 +17,6 @@ module Brief
         @path = Pathname(path)
       end
 
-      if options[:Test]
-        binding.pry
-      end
-
       @options = options.to_mash
 
       if @path && self.path.exist?

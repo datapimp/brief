@@ -6,7 +6,7 @@ module Brief::Server::Handlers
 
       writer = Writer.new(briefcase, path_args, request.params.symbolize_keys)
 
-      headers = {"Content-Type"=>"application/json"}
+      headers = {"Content-Type"=>"application/json", "X-BRIEF-MODIFY-ACTION"=>action}
 
       response = writer.run(action)
 

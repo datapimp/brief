@@ -23,8 +23,11 @@ class Brief::Server::Route
       resp = handler.handle(path_args, briefcase, request: request, action: path_action)
 
       self.code = resp[0]
-      self.headers.merge(resp[1])
+      self.headers.merge!(resp[1])
       self.body = resp[2]
+
+      headers["X-BRIEF-PATH-ACTION"] = path_action.to_s
+      headers["X-BRIEF-PATH-ARGS"] = path_args.to_s
 
       [code, headers, body]
     end
