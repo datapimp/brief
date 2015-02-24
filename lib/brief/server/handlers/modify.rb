@@ -87,7 +87,7 @@ module Brief::Server::Handlers
         contents  = params[:content] || params[:contents]
         raw       = params[:raw]
 
-        document = Brief::Document.new(path).in_briefcase(briefcase)
+        document  = briefcase.document_at(path)
 
         if document.nil? || !document.exist?
           @errors[:document] = "No document was found at #{ path_args }"

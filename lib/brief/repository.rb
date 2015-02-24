@@ -18,7 +18,8 @@ module Brief
 
     def document_at(path)
       path = normalize_path(path)
-      Brief::Document.new(path)
+      found = documents.find {|doc| doc.path == path }
+      found || Brief::Document.new(path).in_briefcase(briefcase)
     end
 
     def documents_at!(*paths)
@@ -34,7 +35,7 @@ module Brief
 
       paths.map! {|p| normalize_path(p) }
 
-      paths.map {|p| p && Brief::Document.new(p)}
+      paths.map {|p| p && document_at(p) }
     end
 
     def models_at(*paths)

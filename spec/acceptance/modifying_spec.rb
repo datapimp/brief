@@ -35,10 +35,29 @@ describe "Modifying Documents", :type => :request do
     expect(last_response.status).to eq(200)
   end
 
+  it "updates both the content and the data" do
+    needle = rand(36**36).to_s(36)
+    post "/update/concept.html.md", content: "# Modified Content #{ needle }", data: {needle: needle}
+
+    doc = Brief::Document.new(Brief.example_path.join("docs","concept.html.md"))
+
+    expect(doc.data.values).to include(needle)
+    expect(doc.content).to include(needle)
+  end
+
+  it "refreshes the browse endpoint data after an update" do
+    needle = rand(36**36).to_s(36)
+    post "/update/concept.html.md", content: "# Modified Content #{ needle }", data: {needle: needle}
+    get("/browse/concepts")
+
+    needles = json.map {|h| h["data"]["needle"] }
+    expect(needles).to include(needle)
+  end
+
   it "lets me update just the metadata for an existing document" do
     needle = rand(36**36).to_s(36)
     post "/update/concept.html.md", data: {needle: needle}
-
+    expect(json["data"]["needle"]).to eq(needle)
     expect(last_response.status).to eq(200)
   end
 
