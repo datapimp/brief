@@ -1,16 +1,10 @@
 module Brief::Model::Serializers
   def as_json(options={})
     options.symbolize_keys!
+    docs_path = options.fetch(:docs_path) { briefcase.docs_path }
+    docs_path = docs_path.to_pathname if docs_path.is_a?(String)
 
-    if options[:docs_path]
-      if path.absolute?
-        doc_path = path.relative_path_from(options[:docs_path])
-      else
-        doc_path = path
-      end
-    else
-      doc_path = path.to_s
-    end
+    doc_path  = path.relative_path_from(docs_path).to_s
 
     # TEMP
     title = data.try(:[], :title) || extracted_content.try(:title) || (send(:title) rescue nil) || path.basename.to_s.gsub(/\.html.md/,'')
@@ -19,7 +13,7 @@ module Brief::Model::Serializers
     {
       data: data,
       extracted: extracted_content_data,
-      path: doc_path.to_s,
+      path: path.to_s,
       type: type,
       title: title,
       actions: self.class.defined_actions,

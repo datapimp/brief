@@ -57,6 +57,8 @@ module Brief::Server::Handlers
         end
 
         doc = Brief::Document.new(path).tap do |document|
+          document.in_briefcase(briefcase)
+
           if raw
             document.raw = raw
           elsif contents || data
@@ -85,7 +87,7 @@ module Brief::Server::Handlers
         contents  = params[:content] || params[:contents]
         raw       = params[:raw]
 
-        document = Brief::Document.new(path)
+        document = Brief::Document.new(path).in_briefcase(briefcase)
 
         if document.nil? || !document.exist?
           @errors[:document] = "No document was found at #{ path_args }"
