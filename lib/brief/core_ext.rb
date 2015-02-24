@@ -9,3 +9,9 @@ class String
     Pathname(self)
   end
 end
+
+class Pathname
+  def to_pathname
+    self
+  end
+end

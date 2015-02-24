@@ -113,11 +113,11 @@ module Brief
     end
 
     def uses_app?
-      options.key?(:app) && Brief.apps_path.join(options[:app]).exist?
+      options.key?(:app) && Brief::Apps.available?(options[:app].to_s)
     end
 
     def app_path
-      uses_app? && Brief.apps_path.join(options[:app])
+      uses_app? && Brief::Apps.path_for(options[:app]).to_pathname
     end
 
     def load_model_definitions

@@ -33,3 +33,5 @@ RSpec.configure do |config|
   config.include Rack::Test::Methods
   config.include TestHelpers
 end
+
+ENV['BRIEF_APPS_PATH'] = Brief.spec_root.join("fixtures","apps").to_s
