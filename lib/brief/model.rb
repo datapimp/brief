@@ -108,8 +108,8 @@ module Brief
     end
 
     module ClassMethods
-      def purge
-        models.reject! {|model| !model.document.path.exist? }
+      def ==(other)
+        type_alias && type_alias == other.type_alias
       end
 
       def to_schema

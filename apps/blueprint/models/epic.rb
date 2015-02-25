@@ -1,4 +1,4 @@
-class Epic
+class Brief::Apps::Blueprint::Epic
   include Brief::Model
 
   meta do

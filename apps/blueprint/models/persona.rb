@@ -1,4 +1,4 @@
-class Persona
+class Brief::Apps::Blueprint::Persona
   include Brief::Model
 
   meta do

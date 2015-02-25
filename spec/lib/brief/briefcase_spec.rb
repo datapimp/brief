@@ -19,13 +19,14 @@ describe "The Briefcase" do
     expect(briefcase.settings.settings).to be_present
   end
 
+  # Need to improve this
   context "Model Loading" do
-    it "loads the model definitions from the models folder" do
-      expect(Brief::Model.classes.length).to eq(4)
+    it "loads the model definitions from the models and the apps folder" do
+      expect(Brief::Model.classes).not_to be_empty
     end
 
     it "loads the model definitions from the DSL in the config file" do
-      expect(Brief::Model.classes.length).to eq(4)
+      expect(Brief::Model.classes).not_to be_empty
     end
 
     it "caches the output" do

@@ -1,4 +1,4 @@
-class Page
+class Brief::Apps::Blueprint::Page
   include Brief::Model
 
   meta do

@@ -120,6 +120,18 @@ module Brief
       uses_app? && Brief::Apps.path_for(options[:app]).to_pathname
     end
 
+    def model_class_for(document_type)
+      return generic_model_class_for(document_type) unless uses_app?
+
+      namespace = Brief::Apps.find_namespace(options[:app])
+      classes = namespace.constants.map {|c| namespace.const_get(c) }
+      classes.find {|k| k.type_alias == document_type }
+    end
+
+    def generic_model_class_for(document_type)
+      Brief::Model.for_type(document_type) || Brief::Model.for_folder_name(parent_folder_name)
+    end
+
     def load_model_definitions
       if uses_app?
         Brief.load_modules_from(app_path.join("models"))

@@ -16,6 +16,25 @@ module Brief
       load_documents
     end
 
+    def respond_to?(meth)
+      super || model_groups.include?(meth.to_s)
+    end
+
+    def method_missing(meth, *args, &block)
+      if model_groups.include?(meth.to_s)
+        find_models_by_type(meth)
+      end
+    end
+
+    def find_models_by_type(group_name)
+      type = group_name.to_s.singularize
+      all_models_by_type.fetch(type) { [] }
+    end
+
+    def model_groups
+      documents.map(&:document_type).tap {|l| l.compact!; l.uniq!; l.map! {|i| i.pluralize } }
+    end
+
     def document_at(path)
       path = normalize_path(path)
       found = documents.find {|doc| doc.path == path }
@@ -74,46 +93,35 @@ module Brief
     end
 
     def all_models
-      list = documents.select(&:refresh!).map(&:to_model)
-      list.compact!
-      list.select!(&:exists?)
+      @all_models ||= begin
+                        list = documents.select(&:refresh!).map(&:to_model)
+                        list.compact!
+                        list.select!(&:exists?)
 
-      list
+                        list
+                      end
     end
 
     def all_models_by_type
-      all_models.reduce({}) do |memo, model|
-        (memo[model.class.type_alias] ||= []) << model if model.exists?
-        memo
-      end
+      @all_models_by_type ||= begin
+                                all_models.reduce({}) do |memo, model|
+                                  (memo[model.class.type_alias.to_s] ||= []) << model if model.exists?
+                                  memo
+                                end
+                              end
     end
 
     def purge(model_type=nil)
-      if model_type
-        plural = model_type.to_s.pluralize
-
-        if instance_variable_get("@#{ plural }")
-          instance_variable_set("@#{plural}",nil)
-        end
-      end
-
-      documents.reject! {|doc| !doc.path.exist? }
+      load_documents
+      @all_models_by_type = nil
+      @all_models = nil
     end
 
     def self.define_document_finder_methods
       # Create a finder method on the repository
       # which lets us find instances of models by their class name
       Brief::Model.table.keys.each do |type|
-        plural = type.to_s.pluralize
 
-        define_method("#{ plural }") do
-          instance_variable_get("@#{ plural }") || send("#{ plural }!")
-        end
-
-        define_method("#{ plural }!") do
-          instance_variable_set("@#{plural}", Brief::Model.existing_models_for_type(type))
-          instance_variable_get("@#{ plural }")
-        end
       end
     end
   end

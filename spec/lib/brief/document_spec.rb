@@ -40,7 +40,7 @@ describe "The Brief Document" do
   end
 
   it "can resolve the model type using the parent folder name if possible" do
-    expect(Brief::Model.for_folder_name(sample.parent_folder_name)).to eq(Brief::Epic)
+    expect(Brief::Model.for_folder_name(sample.parent_folder_name).type_alias).to eq("epic")
   end
 
   context "Content Extraction" do

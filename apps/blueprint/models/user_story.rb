@@ -1,4 +1,4 @@
-class UserStory
+class Brief::Apps::Blueprint::UserStory
   include Brief::Model
 
   meta do

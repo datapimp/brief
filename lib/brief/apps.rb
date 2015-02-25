@@ -34,5 +34,15 @@ module Brief
     def self.available_apps
       app_paths.map(&:basename).map(&:to_s)
     end
+
+    def self.create_namespaces
+      available_apps.map(&:camelize).each do |namespace|
+        const_set(namespace, Module.new)
+      end
+    end
+
+    def self.find_namespace(app_name)
+      Brief::Apps.const_get(app_name.to_s.camelize)
+    end
   end
 end

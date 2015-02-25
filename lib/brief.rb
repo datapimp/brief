@@ -60,7 +60,10 @@ module Brief
   end
 
   def self.load_modules_from(folder)
-    Dir[folder.join('**/*.rb')].each { |f| require(f) }
+    Dir[folder.join('**/*.rb')].each do |f|
+      puts "Loading model from #{ f }"
+      require(f)
+    end
   end
 
   # Adapters for Rails, Middleman, or Jekyll apps
@@ -94,3 +97,5 @@ require 'brief/dsl'
 require 'brief/server'
 require 'brief/briefcase'
 require 'brief/apps'
+
+Brief::Apps.create_namespaces()

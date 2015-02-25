@@ -25,12 +25,6 @@ module Brief
       elsif options[:contents]
         @raw_content = options[:contents]
       end
-
-      register_model_instance if self.path && self.path.exist?
-    end
-
-    def register_model_instance
-      model_class.try(:models).try(:<<, to_model) unless model_instance_registered?
     end
 
     def raw= val
