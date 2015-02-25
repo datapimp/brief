@@ -8,9 +8,9 @@ class Brief::Apps::Blueprint::Page
   end
 
   content do
-    title "h1:first-of-type"
-    tagline "h2:first-of-type"
     paragraph "p:first-of-type"
-    yaml_data "code.yaml:first-of-type", :serialize => :yaml
+    title "h1:first-of-type", :hide => true
+    tagline "h2:first-of-type", :hide => true
+    yaml_data "code.yaml:first-of-type", :serialize => :yaml, :hide => true
   end
 end

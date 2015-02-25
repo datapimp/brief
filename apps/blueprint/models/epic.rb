@@ -35,6 +35,9 @@ As a **User** I would like to **Do this** so that I can **succeed**
 
   content do
     title "h1:first-of-type"
+    paragraph "p:first-of-type"
+    paragraphs "p"
+
     define_section "User Stories" do
       each("h2").has(:title     => "h2",
                      :paragraph => "p:first-of-type",
