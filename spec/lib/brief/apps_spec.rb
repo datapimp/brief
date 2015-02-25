@@ -17,6 +17,10 @@ describe "Packaged Apps" do
     expect(blueprint).to be_uses_app
   end
 
+  it "should pick up the view defined" do
+    expect(Brief.views.key?(:summary)).to eq(true)
+  end
+
   it "should be using the blueprint app" do
     expect(sample).to be_uses_app
   end

@@ -9,6 +9,8 @@ module Brief
       @options = options.to_mash
 
       load_configuration
+      use(:app, options[:app]) if options[:app]
+
       load_model_definitions
 
       if Brief.case.nil?
@@ -71,12 +73,10 @@ module Brief
     end
 
     def use(module_type=:app, module_id)
-      if module_type == :app && apps_path.join(module_id).exist?
-        config = module_type.join("config.rb")
-        models = module_type.join("models")
+      options[:app] = module_id.to_s
 
-        instance_eval(config.read) if config.exist?
-        Brief.load_modules_from(models) if models.exist?
+      if app_path && app_path.exist?
+        instance_eval(app_config_path.read)
       end
     end
 
@@ -103,10 +103,6 @@ module Brief
         config_path = root.join(config_path)
       end
 
-      if uses_app?
-        instance_eval(app_path.join("config.rb").read)
-      end
-
       if config_path.exist?
         instance_eval(config_path.read) rescue nil
       end
@@ -118,6 +114,14 @@ module Brief
 
     def app_path
       uses_app? && Brief::Apps.path_for(options[:app]).to_pathname
+    end
+
+    def app_config_path
+      uses_app? && app_path.join("config.rb")
+    end
+
+    def app_models_folder
+      uses_app? && app_path.join("models")
     end
 
     def model_class_for(document_type)

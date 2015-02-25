@@ -61,7 +61,7 @@ module Brief
 
   def self.load_modules_from(folder)
     Dir[folder.join('**/*.rb')].each do |f|
-      puts "Loading model from #{ f }"
+      #puts "Loading model from #{ f }"
       require(f)
     end
   end
