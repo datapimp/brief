@@ -8,7 +8,7 @@ module Brief
     attr_reader :document
 
     def model_class
-      Brief::Model.for_type(@model_type)
+      document.model_class
     end
 
     def content_schema_attributes
@@ -38,6 +38,25 @@ module Brief
             selector.match(/first-of-type/) ? matches.first.text : matches.map(&:text)
           else
             matches.first.try(:text)
+          end
+        elsif settings.args.first.to_s.match(/code/i) && (settings.args.last.serialize rescue nil)
+          selector = settings.args.first
+          opts = settings.args.last
+
+          matches = document.css(selector)
+
+          val = if matches.length > 1
+            selector.match(/first-of-type/) ? matches.first.text : matches.map(&:text)
+          else
+            matches.first.try(:text)
+          end
+
+          if val && opts.serialize == :yaml
+            return (YAML.load(val) rescue {}).to_mash
+          end
+
+          if val && opts.serialize == :json
+            return (JSON.parse(val) rescue {}).to_mash
           end
         end
       end

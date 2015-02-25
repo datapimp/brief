@@ -121,3 +121,7 @@ attributes.
 ### 1.4.5
   - Introducing a new DSL to define aggregator methods on the briefcase
   - Aggregators have a REST interface
+
+### 1.6.0
+  - Introducing the apps repository for shared model code
+  - Added capability to pull out yaml blocks from the document as deserialized hashes on our models

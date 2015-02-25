@@ -132,8 +132,8 @@ module Brief
       classes.find {|k| k.type_alias == document_type }
     end
 
-    def generic_model_class_for(document_type)
-      Brief::Model.for_type(document_type) || Brief::Model.for_folder_name(parent_folder_name)
+    def generic_model_class_for(document)
+      Brief::Model.for_type(document.document_type) || Brief::Model.for_folder_name(document.parent_folder_name)
     end
 
     def load_model_definitions

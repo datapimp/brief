@@ -6,7 +6,6 @@ describe "Serializing From Docs" do
   }
 
   it "should serialize the yaml" do
-    binding.pry
-    expect(page.yaml.nested).to eq("structure")
+    expect(page.yaml_data.nested).to eq("structure")
   end
 end
