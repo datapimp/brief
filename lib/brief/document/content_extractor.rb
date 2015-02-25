@@ -12,7 +12,7 @@ module Brief
     end
 
     def content_schema_attributes
-      model_class.definition.content_schema.attributes
+      model_class.definition.content_schema.attributes.symbolize_keys!
     end
 
     def extracted_content_data
@@ -25,39 +25,67 @@ module Brief
     end
 
     def respond_to?(meth)
-      content_schema_attributes.key?(meth) || super
+      supports_extraction?(meth) || super
+    end
+
+    def extraction_rule_for(attribute)
+      content_schema_attributes.fetch(attribute.to_sym, nil)
+    end
+
+    def selector_for(attribute)
+      extraction_rule_for(attribute).first
+    end
+
+    def supports_extraction?(attribute)
+      content_schema_attributes.key?(attribute.to_sym)
     end
 
     def method_missing(meth, *_args, &_block)
-      if settings = content_schema_attributes.fetch(meth, nil)
-        if settings.args.length == 1 && settings.args.first.is_a?(String)
-          selector = settings.args.first
-          matches = document.css(selector)
+      return super unless supports_extraction?(meth)
+      rule = ExtractionRule.new(extraction_rule_for(meth))
+      rule.apply_to(document)
+    end
 
-          if matches.length > 1
-            selector.match(/first-of-type/) ? matches.first.text : matches.map(&:text)
-          else
-            matches.first.try(:text)
-          end
-        elsif settings.args.first.to_s.match(/code/i) && (settings.args.last.serialize rescue nil)
-          selector = settings.args.first
-          opts = settings.args.last
+    class ExtractionRule
+      attr_reader :rule, :args
 
-          matches = document.css(selector)
+      def initialize(rule)
+        @rule = rule
+        @args = rule.args
+      end
 
-          val = if matches.length > 1
-            selector.match(/first-of-type/) ? matches.first.text : matches.map(&:text)
-          else
-            matches.first.try(:text)
-          end
+      def options
+        args[1] || {}.to_mash
+      end
 
-          if val && opts.serialize == :yaml
-            return (YAML.load(val) rescue {}).to_mash
-          end
+      def deserialize?
+        !!(options.serialize.present? && options.serialize)
+      end
 
-          if val && opts.serialize == :json
-            return (JSON.parse(val) rescue {}).to_mash
-          end
+      def format
+        options.serialize.to_sym
+      end
+
+      def selector
+        args.first if args.first.is_a?(String)
+      end
+
+      def apply_to(document)
+        raise 'Must specify a selector' unless selector
+
+        extracted = document.css(selector)
+
+        return nil if extracted.length == 0
+
+        case
+        when deserialize? && format == :json
+          (JSON.parse(extracted.text.to_s) rescue {}).to_mash
+        when deserialize? && format == :yaml
+          (YAML.load(extracted.text.to_s) rescue {}).to_mash
+        when selector.match(/first-of-type/) && extracted.length > 0
+          extracted.first.text
+        else
+          extracted.map(&:text)
         end
       end
     end
