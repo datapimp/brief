@@ -1,4 +1,7 @@
 view(:summary) do |briefcase, params|
-  summary = where(title:"Summary",type:"page").first.to_model.as_json(:rendered=>true, :content=>true)
-  briefcase.present(:default, params).merge(summary: summary)
+  briefcase.present(:default, params).tap do |hash|
+    if summary = where(title:"Summary",type:"page").first
+      hash.merge!(summary: summary.to_model.as_json(:rendered=>true, :content=>true))
+    end
+  end
 end

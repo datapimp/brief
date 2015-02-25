@@ -25,7 +25,7 @@ module Brief
                                                  fenced_code_blocks: true,
                                                  footnotes: true)
 
-                          ::Redcarpet::Markdown.new(r)
+                          ::Redcarpet::Markdown.new(r, :tables => true, :autolink => true, :gh_blockcode => true, :fenced_code_blocks => true, :footnotes => true)
                         end
         end
       end

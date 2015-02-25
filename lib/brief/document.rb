@@ -165,6 +165,8 @@ module Brief
       case
       when @model_class
         @model_class
+      when briefcase
+        briefcase.model_class_for(document_type)
       when data && data.type
         Brief::Model.for_type(data.type)
       when parent_folder_name.length > 0
