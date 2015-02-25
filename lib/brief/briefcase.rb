@@ -124,12 +124,17 @@ module Brief
       uses_app? && app_path.join("models")
     end
 
-    def model_class_for(document_type)
-      return generic_model_class_for(document_type) unless uses_app?
+    def app_namespace
+      Brief::Apps.find_namespace(options[:app])
+    end
 
-      namespace = Brief::Apps.find_namespace(options[:app])
-      classes = namespace.constants.map {|c| namespace.const_get(c) }
-      classes.find {|k| k.type_alias == document_type }
+    def app_models
+      app_namespace.constants.map {|c| app_namespace.const_get(c) }
+    end
+
+    def model_class_for(document)
+      return generic_model_class_for(document) unless uses_app?
+      app_models.find {|k| k.type_alias == document.document_type }
     end
 
     def generic_model_class_for(document)
