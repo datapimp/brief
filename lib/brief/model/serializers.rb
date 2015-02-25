@@ -7,7 +7,7 @@ module Brief::Model::Serializers
     doc_path  = path.relative_path_from(docs_path).to_s
 
     # TEMP
-    title = data.try(:[], :title) || extracted_content.try(:title) || (send(:title) rescue nil) || path.basename.to_s.gsub(/\.html.md/,'')
+    title = data.try(:[], :title) || extracted_content_data.try(:title) || (send(:title) rescue nil) || path.basename.to_s.gsub(/\.html.md/,'')
     title = title.to_s.gsub(/\.md/,'')
 
     {

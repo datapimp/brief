@@ -17,7 +17,7 @@ module Brief
         Brief.case = self
       end
 
-      Brief.cases[root] ||= self
+      Brief.cases[root.basename.to_s] ||= self
     end
 
     def present(style="default", params={})

@@ -4,6 +4,12 @@ class Hash
   end
 end
 
+class Hashie::Mash
+  def to_mash
+    self
+  end
+end
+
 class String
   def to_pathname
     Pathname(self)

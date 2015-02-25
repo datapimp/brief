@@ -1,3 +1,3 @@
 # the test suite writes to this
-spec/fixtures/example/docs/epic.html.md
-spec/fixtures/example/docs/concept.html.md
+spec/fixtures/example/docs
+spec/fixtures/example/docs
