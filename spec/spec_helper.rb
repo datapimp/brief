@@ -13,14 +13,19 @@ module Brief
     testcase.root
   end
 
+  def self.concept_document
+    path = Brief.example_path.join("docs","concept.html.md")
+    testcase.document_at(path)
+  end
+
   def self.page_document
     path = Brief.example_path.join("docs","page.html.md")
-    Brief::Document.new(path)
+    testcase.document_at(path)
   end
 
   def self.example_document
     path = Brief.example_path.join("docs","epics","epic.html.md")
-    Brief::Document.new(path)
+    testcase.document_at(path)
   end
 
   def self.testcase

@@ -16,7 +16,7 @@ module Brief::Model::Serializers
       path: path.to_s,
       type: type,
       group: type.to_s.pluralize,
-      title: title,
+      title: document_title,
       actions: self.class.defined_actions,
       urls: {
         view_content_url: "/view/content/#{ doc_path }",

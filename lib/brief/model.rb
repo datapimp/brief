@@ -29,6 +29,14 @@ module Brief
     end
 
     module AccessorMethods
+      def document_title
+        data.try(:[], :title) ||
+        extracted_content_data.try(:title) ||
+        path.basename.to_s
+          .gsub(/\.html.md/,'')
+          .gsub(/\.md/,'')
+      end
+
       def data
         document.data || {}.to_mash
       end
@@ -110,6 +118,10 @@ module Brief
     module ClassMethods
       def ==(other)
         type_alias && type_alias == other.type_alias
+      end
+
+      def accessor_property_names
+        (definition.content_schema.attributes.keys + definition.metadata_schema.keys).uniq
       end
 
       def to_schema

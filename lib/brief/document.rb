@@ -10,6 +10,18 @@ module Brief
       self
     end
 
+    def to_s
+      "#{ model_class }.at_path(#{relative_path})"
+    end
+
+    def inspect
+      "#{ model_class }.at_path(#{relative_path})"
+    end
+
+    def relative_path
+      briefcase.present? ? path.relative_path_from(briefcase.docs_path) : path
+    end
+
     def initialize(path, options = {})
       if path.respond_to?(:key?) && options.empty?
         @frontmatter = path.to_mash
@@ -25,6 +37,18 @@ module Brief
       elsif options[:contents]
         @raw_content = options[:contents]
       end
+    end
+
+    def content_hash
+      Digest::MD5.hexdigest(@content.to_s)
+    end
+
+    def file_hash
+      Digest::MD5.hexdigest(path.read.to_s)
+    end
+
+    def content_stale?
+      content_hash != file_hash
     end
 
     def raw= val
@@ -55,6 +79,7 @@ module Brief
       @frontmatter = nil
       @raw_frontmatter = nil
       @refreshing = true
+      @content_hash = nil
       load_frontmatter
       true
     end
@@ -106,9 +131,10 @@ module Brief
     end
 
     def content
-      if @content.nil?
-        generate_content
+      if @content.nil? && path && path.exist?
+        @content = path.read
       end
+
       @content || generate_content
     end
 
@@ -153,8 +179,14 @@ module Brief
       path.extname
     end
 
+    def model_attributes
+      (data || {}).to_hash
+        .merge(path: path, document: self)
+        .reverse_merge(type: document_type)
+    end
+
     def to_model
-      model_class.new((data || {}).to_hash.merge(path: path, document: self).reverse_merge(:type=>document_type)) if model_class
+      model_class.try(:new, model_attributes)
     end
 
     def exist?
