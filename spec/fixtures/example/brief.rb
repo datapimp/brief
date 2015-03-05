@@ -7,6 +7,12 @@ view :custom_aggregator do
   {aggregator:"custom"}
 end
 
+define "Release" do
+  meta do
+    name
+  end
+end
+
 define "User Story" do
   meta do
     title
