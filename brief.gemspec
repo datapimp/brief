@@ -19,13 +19,13 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'hashie'
-  spec.add_dependency 'commander'
+  spec.add_dependency 'commander', '>= 4.2.1'
   spec.add_dependency 'github-fs'
   spec.add_dependency 'virtus', '>= 1.0.3'
   spec.add_dependency 'inflecto'
   spec.add_dependency 'activemodel'
   spec.add_dependency 'activesupport'
-  spec.add_dependency 'redcarpet'
+  spec.add_dependency 'redcarpet', '>= 3.2.2'
   spec.add_dependency 'nokogiri'
 
   spec.add_development_dependency "bundler", "~> 1.3"

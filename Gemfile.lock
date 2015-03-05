@@ -1,15 +1,15 @@
 PATH
   remote: .
   specs:
-    brief (1.6.2)
+    brief (1.7.0)
       activemodel
       activesupport
-      commander
+      commander (>= 4.2.1)
       github-fs
       hashie
       inflecto
       nokogiri
-      redcarpet
+      redcarpet (>= 3.2.2)
       virtus (>= 1.0.3)
 
 GEM
