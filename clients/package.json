@@ -1,0 +1,11 @@
+{
+  "name": "brief-client",
+  "version": "0.0.1",
+  "description": "a client for the brief markdown as a database service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

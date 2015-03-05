@@ -21,8 +21,15 @@ module Brief
     end
 
     def method_missing(meth, *args, &block)
-      if model_groups.include?(meth.to_s)
+      in_model_group = model_groups.include?(meth.to_s)
+
+      if in_model_group && args.empty?
         find_models_by_type(meth)
+      elsif in_model_group && !args.empty?
+        group = find_models_by_type(meth)
+        Brief::DocumentMapper::Query.new(group).send(:where, *args)
+      else
+        super
       end
     end
 

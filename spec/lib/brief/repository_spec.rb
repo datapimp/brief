@@ -9,11 +9,22 @@ describe "The Brief Document Repository" do
 
   it "gives me the document models for paths" do
     paths = ["./concept.html.md", "wireframe.html.md", "epics/epic.html.md", Brief.example_document.path.realpath]
-
     docs = repository.documents_at(*paths)
+    expect(docs).not_to be_empty
   end
 
   context "querying api" do
+    it "lets me query the model groups with params" do
+      items = Brief.testcase.epics(title:"No Bueno").all
+      expect(items).to be_empty
+    end
+
+    it "lets me query the model group with params" do
+      items = Brief.testcase.epics(title:"Blueprint Epic Example").all
+      expect(items).not_to be_empty
+      expect(items.map(&:title).uniq).to include("Blueprint Epic Example")
+    end
+
     it "finds the first document matching a query" do
       query = repository.where(state:"active")
       expect(query.first.type).to eq("epic")
