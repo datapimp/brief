@@ -80,8 +80,10 @@ module Brief
       end
     end
 
-    def config
-      Brief::Configuration.instance
+    def config(&block)
+      Brief::Configuration.instance.tap do |cfg|
+        cfg.instance_eval(&block) if block.respond_to?(:call)
+      end
     end
 
     def server(options={})

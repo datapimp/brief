@@ -69,8 +69,9 @@ module Brief
   # Adapters for Rails, Middleman, or Jekyll apps
   def self.activate_adapter(identifier)
     require "brief/adapters/#{ identifier }"
-    adapter = (Brief::Adapters.const_get(identifier.camelize) rescue nil)
-    adapter.try(:activate_adapter)
+    (Brief::Adapters.const_get(identifier.camelize) rescue nil).tap do |adapter|
+      raise "Invalid adapter: #{ identifier }" unless adapter
+    end
   end
 end
 
@@ -99,3 +100,4 @@ require 'brief/briefcase'
 require 'brief/apps'
 
 Brief::Apps.create_namespaces()
+Brief.activate_adapter("middleman_extension").activate_brief_extension() if defined?(::Middleman)

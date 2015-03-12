@@ -23,6 +23,11 @@ module Brief
     def method_missing(meth, *args, &block)
       in_model_group = model_groups.include?(meth.to_s)
 
+      if options[:caching] == false || options[:cache] == false
+        @all_models = nil
+        @all_models_by_type = nil
+      end
+
       if in_model_group && args.empty?
         find_models_by_type(meth)
       elsif in_model_group && !args.empty?
