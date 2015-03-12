@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    brief (1.7.1)
+    brief (1.7.2)
       activemodel
-      activesupport
+      activesupport (>= 4.0)
       commander (>= 4.2.1)
       github-fs
       hashie

@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'virtus', '>= 1.0.3'
   spec.add_dependency 'inflecto'
   spec.add_dependency 'activemodel'
-  spec.add_dependency 'activesupport'
+  spec.add_dependency 'activesupport', '>= 4.0'
   spec.add_dependency 'redcarpet', '>= 3.2.2'
   spec.add_dependency 'nokogiri'
 
