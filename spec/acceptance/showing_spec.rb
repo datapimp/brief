@@ -1,6 +1,12 @@
 require "spec_helper"
 
 describe "Viewing a Briefcase Document", :type => :request do
+
+  it "does not show the document content if it is invalid" do
+    get("/view/content/../../../../spec_helper.rb")
+    expect(last_response.status).to eq(403)
+  end
+
   it "shows the document content" do
     get("/view/content/epics/epic.html.md")
     expect(last_response.status).to eq(200)

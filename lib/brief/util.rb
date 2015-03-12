@@ -1,4 +1,17 @@
 module Brief::Util
+  def self.ensure_child_path(root, testpath)
+    root = Pathname(root).realpath.to_s.downcase
+    testpath = Pathname(testpath).parent.realpath.to_s.downcase
+
+    outside = !!(root.split("/").length > testpath.split("/").length)
+
+    if !outside && testpath.match(/^#{root}/)
+      return true
+    end
+
+    false
+  end
+
   def self.split_doc_content(raw_content)
     if raw_content =~ /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
       content = raw_content[(Regexp.last_match[1].size + Regexp.last_match[2].size)..-1]

@@ -52,8 +52,14 @@ module Brief
       documents_at(*paths).select {|doc| doc.path.exist? }
     end
 
+    InvalidPath = Class.new(Exception)
+
     def normalize_path(p)
-      docs_path.join(p)
+      docs_path.join(p).tap do |normalized|
+        if normalized.to_s.split("/").length < docs_path.realpath.to_s.split("/").length
+          raise InvalidPath
+        end
+      end
     end
 
     def documents_at(*paths)
@@ -96,7 +102,7 @@ module Brief
     end
 
     def document_paths
-      Dir[root.join('**/*.md').to_s].map { |p| Pathname(p) }
+      Dir[docs_path.join('**/*.md').to_s].map { |p| Pathname(p) }
     end
 
     def all_models

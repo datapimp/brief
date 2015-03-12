@@ -56,6 +56,11 @@ module Brief::Server::Handlers
           return @errors
         end
 
+        if !Brief::Util.ensure_child_path(briefcase.docs_path, path)
+          @errors[:path] = "Invalid Path"
+          return @errors
+        end
+
         doc = Brief::Document.new(path).tap do |document|
           document.in_briefcase(briefcase)
 

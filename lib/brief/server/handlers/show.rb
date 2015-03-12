@@ -7,7 +7,11 @@ module Brief::Server::Handlers
       view      = parts.shift.to_s.downcase
       path      = parts.join("/")
 
-      document = briefcase.document_at(path) rescue nil
+      document = begin
+                   briefcase.document_at(path)
+                 rescue Brief::Repository::InvalidPath
+                   :forbidden
+                 end
 
       code          = 200
       content_type  = "application/json"
@@ -16,6 +20,9 @@ module Brief::Server::Handlers
       when document.nil?
         code = 404
         body = {error: "Not found"}
+      when document == :forbidden
+        code = 403
+        body = {error: "Access denied." }
       when !%w(content rendered details).include?(view)
         code = 400
         body = {error: "Invalid view: must be content, rendered, details" }

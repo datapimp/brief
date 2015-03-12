@@ -1,6 +1,11 @@
 require "spec_helper"
 
 describe "Modifying Documents", :type => :request do
+  it "will not let me work with a document outside of the root" do
+    post "/create/epics/../../../newly-created-epic.html.md", content: "# Epic Title"
+    expect(last_response.status).to eq(500)
+  end
+
   it "lets me create new documents by passing data and content" do
     begin
       post "/create/epics/newly-created-epic.html.md", content: "# Epic Title"

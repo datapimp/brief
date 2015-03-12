@@ -106,6 +106,11 @@ module Brief
 
     def in_briefcase(briefcase)
       @briefcase_root = briefcase.root
+
+      unless Brief::Util.ensure_child_path(briefcase.docs_path, path)
+        raise 'Invalid document path'
+      end
+
       self
     end
 
