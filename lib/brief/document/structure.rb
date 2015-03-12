@@ -154,7 +154,7 @@ module Brief
         end
 
         def level(element)
-          element.name.to_s.gsub(/^h/i, '').to_i
+          (element && element.name.to_s.gsub(/^h/i, '')).to_i
         end
       end
     end
