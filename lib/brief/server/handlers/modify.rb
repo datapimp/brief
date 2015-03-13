@@ -56,7 +56,7 @@ module Brief::Server::Handlers
           return @errors
         end
 
-        if !Brief::Util.ensure_child_path(briefcase.docs_path, path)
+        if !Brief::Util.ensure_child_path(briefcase.root, path)
           @errors[:path] = "Invalid Path"
           return @errors
         end
@@ -78,6 +78,11 @@ module Brief::Server::Handlers
       end
 
       def remove
+        if !Brief::Util.ensure_child_path(briefcase.root, path)
+          @errors[:path] = "Invalid Path"
+          return @errors
+        end
+
         doc = Brief::Document.new(path)
         doc.path.unlink rescue nil
 
@@ -91,6 +96,11 @@ module Brief::Server::Handlers
         data      = params[:data]
         contents  = params[:content] || params[:contents]
         raw       = params[:raw]
+
+        if !Brief::Util.ensure_child_path(briefcase.root, path)
+          @errors[:path] = "Invalid Path"
+          return @errors
+        end
 
         document  = briefcase.document_at(path)
 
