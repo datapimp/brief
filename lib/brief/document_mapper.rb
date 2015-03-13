@@ -77,8 +77,14 @@ module Brief::DocumentMapper
           match = true
 
           @where.each do |selector, value|
+            obj = obj.symbolize_keys if obj.is_a?(Hash)
+
             if obj.respond_to?(selector.attribute)
               test_value = obj.send(selector.attribute)
+              operator   = OPERATOR_MAPPING[selector.operator]
+              match      = false unless test_value.send(operator, value)
+            elsif obj.key?(selector.attribute.to_sym)
+              test_value = obj.send(:[], selector.attribute.to_sym)
               operator   = OPERATOR_MAPPING[selector.operator]
               match      = false unless test_value.send(operator, value)
             else

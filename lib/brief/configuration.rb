@@ -15,7 +15,9 @@ module Brief
     def current
       @current ||= {
         docs_path: 'docs',
-        models_path: 'models'
+        models_path: 'models',
+        templates_path: 'templates',
+        data_path: 'data'
       }.to_mash
     end
 

@@ -80,6 +80,14 @@ module Brief
       end
     end
 
+    def data
+      @data ||= data!
+    end
+
+    def data!
+      @data = Brief::Data::Wrapper.new(root: data_path)
+    end
+
     def config(&block)
       Brief::Configuration.instance.tap do |cfg|
         cfg.instance_eval(&block) if block.respond_to?(:call)
@@ -169,6 +177,10 @@ module Brief
 
     def docs_path
       root.join options.fetch(:docs_path) { config.docs_path }
+    end
+
+    def data_path
+      root.join options.fetch(:data_path) { config.data_path }
     end
 
     def models_path
