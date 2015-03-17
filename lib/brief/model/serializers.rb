@@ -18,6 +18,7 @@ module Brief::Model::Serializers
       group: type.to_s.pluralize,
       title: document_title,
       actions: self.class.defined_actions,
+      updated_at: File.mtime(path).to_i,
       urls: {
         view_content_url: "/view/content/#{ doc_path }",
         view_rendered_url: "/view/rendered/#{ doc_path }",
