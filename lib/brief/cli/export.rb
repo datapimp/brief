@@ -12,10 +12,10 @@ command 'export' do |c|
 
     briefcase = Brief::Briefcase.new(config_path: Pathname(options.config_path))
 
-    json = briefcase.present("default", content: !!options.include_content, rendered: !!options.include_rendered)
+    dump = briefcase.as_full_export()
 
-    output = args.first || "briefcase.json"
+    output = args.first || "#{ briefcase.cache_key }.json"
 
-    Pathname(Dir.pwd).join(output).open("w+") {|fh| fh.write(json.to_json) }
+    Pathname(Dir.pwd).join(output).open("w+") {|fh| fh.write(dump.to_json) }
   end
 end

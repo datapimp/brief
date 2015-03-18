@@ -125,3 +125,7 @@ attributes.
 ### 1.6.0
   - Introducing the apps repository for shared model code
   - Added capability to pull out yaml blocks from the document as deserialized hashes on our models
+
+### 1.8.3
+  - General improvements to models & documents api
+  - Added support for cache key 

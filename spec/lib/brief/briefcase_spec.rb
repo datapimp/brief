@@ -7,6 +7,14 @@ describe "The Briefcase" do
     expect(briefcase.root).to be_exist
   end
 
+  it "has a cache key" do
+    expect(briefcase.cache_key).not_to be_nil
+  end
+
+  it "has a slug" do
+    expect(briefcase.slug).to eq("example")
+  end
+
   it "points to a file repository" do
     expect(briefcase.repository).to be_a(Brief::Repository)
   end

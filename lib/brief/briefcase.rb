@@ -29,6 +29,14 @@ module Brief
       end
     end
 
+    def cache_key
+      "#{slug}:#{repository.cache_key}"
+    end
+
+    def slug
+      options.fetch(:slug) { root.basename.to_s.parameterize }
+    end
+
     def settings
       @settings ||= settings!
     end
@@ -64,7 +72,8 @@ module Brief
         name: briefcase.folder_name.to_s.titlecase,
         schema: schema,
         models: models,
-        settings: settings
+        settings: settings,
+        cache_key: briefcase.cache_key
       }
     end
 

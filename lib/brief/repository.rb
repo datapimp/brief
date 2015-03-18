@@ -16,6 +16,10 @@ module Brief
       load_documents
     end
 
+    def cache_key
+      "#{documents.count}-#{documents.map {|d| d.path.mtime.to_i }.max}"
+    end
+
     def respond_to?(meth)
       super || model_groups.include?(meth.to_s)
     end
