@@ -82,7 +82,9 @@ module Brief
         models: models,
         settings: settings,
         cache_key: briefcase.cache_key
-      }
+      }.tap do |hash|
+        hash[:table_of_contents] = briefcase.table_of_contents.as_json() rescue {}
+      end
     end
 
     def as_full_export
