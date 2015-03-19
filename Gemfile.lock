@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    brief (1.8.3)
+    brief (1.8.4)
       activemodel
       activesupport (>= 4.0)
       commander (>= 4.2.1)

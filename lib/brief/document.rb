@@ -4,7 +4,7 @@ module Brief
     include Brief::Document::FrontMatter
     include Brief::Document::Templating
 
-    attr_accessor :path, :content, :frontmatter, :raw_content
+    attr_accessor :path, :content, :frontmatter, :raw_content, :options
 
     def document
       self
@@ -214,6 +214,10 @@ module Brief
     end
 
     def document_type
+      options.fetch(:type) { document_type! }
+    end
+
+    def document_type!
       existing = data && data.type
       return existing if existing
       parent_folder_name.try(:singularize)

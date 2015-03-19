@@ -6,7 +6,7 @@ describe "Brief HTML Rendering" do
   end
 
   it "wraps the document with some identifying details" do
-    expect(sample.to_html).to include("docs/epics/epic.html.md")
+    expect(sample.to_html).to include("epics/epic.html.md")
   end
 
   it "wraps the higher level headings under section elements" do

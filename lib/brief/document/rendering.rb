@@ -25,9 +25,33 @@ module Brief
                                                  fenced_code_blocks: true,
                                                  footnotes: true)
 
-                          ::Redcarpet::Markdown.new(r, :tables => true, :autolink => true, :gh_blockcode => true, :fenced_code_blocks => true, :footnotes => true)
+                          ::Redcarpet::Markdown.new(r, :tables => true,
+                                                       :autolink => true,
+                                                       :gh_blockcode => true,
+                                                       :fenced_code_blocks => true,
+                                                       :footnotes => true)
                         end
         end
+      end
+
+      def script_preamble
+        <<-EOF
+        <script type="text/javascript">
+        if(typeof(global)==="undefined"){
+          global = window
+        }
+        global.Brief = global.Brief || {}
+        Brief.documents = Brief.documents || {}
+        </script>
+        EOF
+      end
+
+      def script_contents(options={})
+        <<-EOF
+        <script type="text/javascript">
+        Brief.documents['#{ self.relative_path }'] = #{ to_model.as_json(options).to_json };
+        </script>
+        EOF
       end
 
       # Documents can be rendered into HTML.
@@ -41,7 +65,7 @@ module Brief
           unwrapped_html
         else
           wrapper = options.fetch(:wrapper, 'div')
-          "<#{ wrapper } data-brief-model='#{ model_class.type_alias }' data-brief-path='#{ relative_path_identifier }'>#{ unwrapped_html }</#{wrapper}>"
+          "#{script_preamble if options[:script] && !options[:skip_preamble]}<#{ wrapper } data-brief-model='#{ model_class.type_alias }' data-brief-path='#{ relative_path }'>#{ unwrapped_html }</#{wrapper}>#{ script_contents(options) if options[:script]}"
         end
 
         html.respond_to?(:html_safe) ? html.html_safe : html.to_s
