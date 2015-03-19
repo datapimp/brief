@@ -15,6 +15,15 @@ describe "The Briefcase" do
     expect(briefcase.slug).to eq("example")
   end
 
+  it "has settings" do
+    expect(briefcase.settings).not_to be_empty
+  end
+
+  it "has a table of contents" do
+    expect(briefcase.table_of_contents).to be_present
+    expect(briefcase.table_of_contents.headings).not_to be_empty
+  end
+
   it "points to a file repository" do
     expect(briefcase.repository).to be_a(Brief::Repository)
   end
@@ -46,7 +55,7 @@ describe "The Briefcase" do
   context "Document Mappings" do
     it "has all of the documents" do
       expect(briefcase.epics.length).to eq(1)
-      expect(briefcase.documents.length).to eq(8)
+      expect(briefcase.documents.length).to eq(9)
     end
   end
 end
