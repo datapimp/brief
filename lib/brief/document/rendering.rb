@@ -63,7 +63,6 @@ module Brief
       protected
 
       def to_raw_html
-        binding.pry
         renderer.render_gfm(content)
       end
 
