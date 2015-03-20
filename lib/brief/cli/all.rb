@@ -21,10 +21,19 @@ command 'init' do |c|
   c.description = 'Create a new brief project, aka a briefcase'
 
   c.option '--root', String, 'The root folder for the new project.'
+  c.option '--app', String, 'Which existing app would you like to use?'
 
   c.action do |args, options|
-    # TODO
-    # Implement
+    options.default :root => (args.first || Brief.pwd)
+
+    root = Pathname(options.root)
+
+    if root.join('brief.rb').exist?
+      puts "A Brief project already exists in this folder"
+    else
+      require 'brief/briefcase/initializer'
+      Brief::Briefcase.create_new_briefcase(root: root, app: options.app)
+    end
   end
 end
 command 'info' do |c|

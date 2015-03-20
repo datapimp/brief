@@ -94,9 +94,7 @@ module Brief
     def use(module_type=:app, module_id)
       options[:app] = module_id.to_s
 
-      if app_path && app_path.exist?
-        instance_eval(app_config_path.read)
-      end
+      run(app_config_path) if app_path.try(&:exist?)
     end
 
     def data
@@ -132,9 +130,12 @@ module Brief
         config_path = root.join(config_path)
       end
 
-      if config_path.exist?
-        instance_eval(config_path.read) rescue nil
-      end
+      run(config_path) if config_path.exist?
+    end
+
+    def run(code_or_file)
+      code = code_or_file.is_a?(Pathame) ? code.read : code
+      instance_eval(code)
     end
 
     def uses_app?
@@ -227,6 +228,10 @@ module Brief
       else
         super
       end
+    end
+
+    def self.create_new_briefcase(options={})
+      Brief::Briefcase::Initializer.new(options).run
     end
   end
 end

@@ -1,28 +1,23 @@
-# configuration options for this briefcase
+root = Pathname(Dir.pwd)
+
 config do
-  set(:models_path => Pathname(__FILE__).parent.join("models"))
+  # You can put any special brief configuration here
+  # set(models_path: root.join('models')) if root.join('models').exist?
+  # set(templates_path: root.join('templates')) if root.join('templates').exist?
+  # set(docs_path: root.join('documents')) if root.join('documents').exist?
 end
 
-# define a Post model
-define("Post") do
 
-  # the post model will have YAML frontmatter
-  # with values for 'status' and 'date'
+define "Post" do
   meta do
-    status
-    date DateTime, :default => lambda {|post, attr| post.document.created_at }
+    title
+    status :in => %w(draft published)
+    tags Array
   end
+  
 
-  # the post model will have a 'title' method which returns the text
-  # from the first h1 heading
   content do
-    title "h1"
-    has_many :subheadings, "h2"
-  end
-
-  actions do
-    def publish(options={})
-      puts "The publish action"
-    end
+    title "h1:first-of-type"
+    subheading "h2:first-of-type"
   end
 end
