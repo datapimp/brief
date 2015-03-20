@@ -19,7 +19,7 @@ module Brief
       attr_accessor :sources, :root
 
       def initialize(options={})
-        @root = options.fetch(:root) { Pathname(Dir.pwd).join('data') }
+        @root = options.fetch(:root) { Pathname(Brief.pwd).join('data') }
         @sources = {}.to_mash
 
         load_files.each do |source, data|

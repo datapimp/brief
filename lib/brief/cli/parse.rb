@@ -9,7 +9,7 @@ command 'parse' do |c|
   c.option '--type TYPE', String, 'Valid options: hash, array; Output as a hash keyed by path, or an array. Defaults to array.'
 
   c.action do |args, options|
-    options.default(root: Pathname(Dir.pwd), type: "array")
+    options.default(root: Pathname(Brief.pwd), type: "array")
 
     o = {
       root: options.root

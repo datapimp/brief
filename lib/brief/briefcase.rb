@@ -191,7 +191,7 @@ module Brief
     end
 
     def root
-      Pathname(options.fetch(:root) { Dir.pwd })
+      Pathname(options.fetch(:root) { Brief.pwd })
     end
 
     def docs_path
@@ -206,7 +206,7 @@ module Brief
       value = options.fetch(:models_path) { config.models_path }
 
       if value.to_s.match(/\./)
-        Pathname(Dir.pwd).join(value)
+        Pathname(Brief.pwd).join(value)
       elsif value.to_s.match(/\//)
         Pathname(value)
       else

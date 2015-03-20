@@ -1,4 +1,3 @@
 # the test suite writes to this
-spec/fixtures/example/docs
-spec/fixtures/example/docs
 tests/middleman/build
+distro/

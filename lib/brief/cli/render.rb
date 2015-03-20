@@ -9,7 +9,7 @@ command 'render' do |c|
   c.option '--include-raw', nil, 'Whether or not to include the raw content'
 
   c.action do |args, options|
-    options.default(root: Pathname(Dir.pwd))
+    options.default(root: Pathname(Brief.pwd))
 
     o = {
       root: options.root
