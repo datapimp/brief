@@ -1,38 +1,23 @@
+module GitHub
+  class Markdown
+
+    def self.render(content)
+      html = self.to_html(content, :markdown)
+      html = add_level_and_heading(html)
+      html
+    end
+
+    def self.add_level_and_heading(html)
+      html.gsub(/<h([1-6])>(.+?)<\/h\1>/,"<h\\1 data-level='\\1' data-heading='\\2'>\\2<\/h\\1>")
+    end
+
+  end
+end
+
 module Brief
   class Document
     module Rendering
       extend ActiveSupport::Concern
-
-      # Uses a custom Redcarpet::Render::HTML subclass
-      # which simply inserts data attributes on each heading element
-      # so that they can be queried with CSS more deliberately.
-      class HeadingWrapper < ::Redcarpet::Render::HTML
-        def header(text, level)
-          "<h#{level} data-level='#{level}' data-heading='#{ text }'>#{text}</h#{level}>"
-        end
-      end
-
-      module ClassMethods
-        def renderer_class
-          HeadingWrapper
-        end
-
-        def renderer
-          @renderer ||= begin
-                          r = renderer_class.new(tables: true,
-                                                 autolink: true,
-                                                 gh_blockcode: true,
-                                                 fenced_code_blocks: true,
-                                                 footnotes: true)
-
-                          ::Redcarpet::Markdown.new(r, :tables => true,
-                                                       :autolink => true,
-                                                       :gh_blockcode => true,
-                                                       :fenced_code_blocks => true,
-                                                       :footnotes => true)
-                        end
-        end
-      end
 
       def script_preamble
         <<-EOF
@@ -82,7 +67,7 @@ module Brief
       end
 
       def renderer
-        @renderer ||= self.class.renderer
+        @renderer ||= GitHub::Markdown
       end
 
       attr_writer :renderer
