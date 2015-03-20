@@ -1,8 +1,8 @@
 module GitHub
   class Markdown
 
-    def self.render(content)
-      html = self.to_html(content, :markdown)
+    def self.render_gfm(content)
+      html = self.to_html(content, :gfm)
       html = add_level_and_heading(html)
       html
     end
@@ -63,7 +63,8 @@ module Brief
       protected
 
       def to_raw_html
-        renderer.render(content)
+        binding.pry
+        renderer.render_gfm(content)
       end
 
       def renderer
