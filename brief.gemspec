@@ -25,8 +25,14 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'inflecto'
   spec.add_dependency 'activemodel'
   spec.add_dependency 'activesupport', '>= 4.0'
-  spec.add_dependency 'github-markdown'
-  spec.add_dependency 'nokogiri'
+  spec.add_dependency 'nokogiri', '1.6.5'
+
+  #spec.add_dependency 'github-markup',       '~> 1.3.1'
+  #spec.add_dependency 'github-linguist',     '~> 4.2.5'
+  #spec.add_dependency 'html-pipeline',       '~> 1.11.0'
+  #spec.add_dependency 'sanitize',            '~> 3.1.0'
+  spec.add_dependency 'github-markdown',     '~> 0.6.8'
+ 
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
@@ -34,7 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry-nav"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "rack-test"
-
+  spec.add_development_dependency 'octokit'
 end
 
 

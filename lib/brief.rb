@@ -11,6 +11,12 @@ require 'yaml'
 require 'erb'
 
 module Brief
+  # When packaging this up through the traveling ruby system
+  # Dir.pwd is not accurate because of the wrapper. We shim it
+  # by setting a special ENV variable in that file
+  def self.pwd
+    ENV.fetch('BRIEF_PWD') { Dir.pwd }
+  end
 
   def self.cases
     @cases ||= {}

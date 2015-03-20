@@ -6,17 +6,17 @@ require 'rubygems'
 require 'brief'
 require 'brief/dsl'
 
-$briefcase = Brief::Briefcase.new(root: Dir.pwd())
 
 if ARGV[0] == "console"
   require 'pry'
+  $briefcase = Brief::Briefcase.new(root: Brief.pwd)
   Pry.start($briefcase)
 else
   require 'commander/import'
 
   program :name, "Brief"
-  program :description, "Brief makes writing markdown more productive"
-  program :version, "0.0.1"
+  program :description, "Brief lets you treat your markdown files like active record objects"
+  program :version, Brief::VERSION 
 
   Brief.load_commands()
 end
