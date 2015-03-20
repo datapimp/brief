@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'inflecto'
   spec.add_dependency 'activemodel'
   spec.add_dependency 'activesupport', '>= 4.0'
-  spec.add_dependency 'redcarpet', '>= 3.2.2'
+  spec.add_dependency 'github-markdown'
   spec.add_dependency 'nokogiri'
 
   spec.add_development_dependency "bundler", "~> 1.3"
