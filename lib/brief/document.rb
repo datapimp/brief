@@ -4,23 +4,10 @@ module Brief
     include Brief::Document::FrontMatter
     include Brief::Document::Templating
 
+    def self.from_contents(content, frontmatter, &block)
+    end
+
     attr_accessor :path, :content, :frontmatter, :raw_content, :options
-
-    def document
-      self
-    end
-
-    def to_s
-      "#{ model_class }.at_path(#{relative_path})"
-    end
-
-    def inspect
-      "#{ model_class }.at_path(#{relative_path})"
-    end
-
-    def relative_path
-      briefcase.present? ? path.relative_path_from(briefcase.docs_path) : path
-    end
 
     def initialize(path, options = {})
       if path.respond_to?(:key?) && options.empty?
@@ -37,6 +24,22 @@ module Brief
       elsif options[:contents]
         @raw_content = options[:contents]
       end
+    end
+
+    def document
+      self
+    end
+
+    def to_s
+      "#{ model_class }.at_path(#{relative_path})"
+    end
+
+    def inspect
+      "#{ model_class }.at_path(#{relative_path})"
+    end
+
+    def relative_path
+      briefcase.present? ? path.relative_path_from(briefcase.docs_path) : path
     end
 
     def content_hash

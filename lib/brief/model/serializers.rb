@@ -19,8 +19,8 @@ module Brief::Model::Serializers
       title: document_title,
       actions: self.class.defined_actions,
       updated_at: File.mtime(path).to_i,
-      id: (doc_id = file_hash),
-      hash: doc_id,
+      id: Digest::MD5.hexdigest(path.to_s),
+      hash: file_hash,
       urls: {
         view_content_url: "/view/content/#{ doc_path }",
         view_rendered_url: "/view/rendered/#{ doc_path }",
