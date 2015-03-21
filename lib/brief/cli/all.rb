@@ -2,17 +2,33 @@ command 'change' do |c|
   c.syntax = 'brief change ATTRIBUTE [OPTIONS]'
   c.description = 'change attributes of brief documents'
 
-  c.option '--from', String, 'Only apply when the attributes current value matches.'
-  c.option '--to', String, 'Only apply when the attributes current value matches.'
-  c.option '--files', String, 'The files you want to change'
-  c.option '--on', String, 'alias for --files. The files you want to change'
+  c.option '--from VALUE', String, 'Only apply when the attributes current value matches.'
+  c.option '--to VALUE', String, 'Only apply when the attributes current value matches.'
+  c.option '--root PATH', String, 'The root directory for the briefcase'
+  c.option '--operator VALUE', String, 'What operator to use in matching the from value. (eq,neq,gt,gte,lt,lte). defaults: eq'
+  c.option '--dry-run', nil, "Don't actually save"
 
   c.action do |args, options|
-    # TODO
-    # Implement
-    #
-    # Should be able to use the Dir[docs_path.join(whatever)]
-    # to support a wide range of file inputs
+    options.default(root: Pathname(Brief.pwd), operator: "eq")
+    attribute = args.shift
+    paths     = args.map {|a| Dir[options.root.join(a)] }.flatten
+
+    briefcase = Brief::Briefcase.new(root: options.root)
+    documents = briefcase.documents_at(*paths)
+
+    if options.from
+      #attribute = attribute.to_sym.send(options.operator)
+      attribute = attribute.to_sym
+      documents = Brief::DocumentMapper::Query.new(documents).where({attribute => options.from}).all
+    end
+
+    if documents.length == 0
+      puts "No documents match this selection"
+    end
+
+    if options.dry_run
+      puts documents
+    end
   end
 end
 

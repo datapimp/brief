@@ -134,7 +134,7 @@ module Brief
     end
 
     def run(code_or_file)
-      code = code_or_file.is_a?(Pathame) ? code.read : code
+      code = code_or_file.is_a?(Pathname) ? code_or_file.read : code
       instance_eval(code)
     end
 
