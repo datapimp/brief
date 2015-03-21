@@ -8,6 +8,7 @@ class Brief::Page
   content do
     title "h1:first-of-type"
     paragraph "p:first-of-type"
-    yaml_data "pre[lang='yaml']:first-of-type code", :serialize => :yaml
+    yaml_data "pre[lang='yaml'] code", :serialize => :yaml
+    yaml "pre[lang='yaml'] code", :serialize => :yaml
   end
 end

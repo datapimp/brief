@@ -71,7 +71,7 @@ module Brief::DocumentMapper
 
     def run_query
       if query_is_empty?
-        select
+        model.to_a
       else
         model.select do |obj|
           match = true

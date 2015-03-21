@@ -38,16 +38,16 @@ module Brief
     Brief::Configuration.instance
   end
 
-  def self.gem_root
+  def self.lib_root
     Pathname(File.dirname(__FILE__))
   end
 
   def self.apps_path
-    gem_root.join("..","apps")
+    lib_root.join("..","apps")
   end
 
   def self.load_commands
-    Dir[gem_root.join('brief', 'cli', '**/*.rb')].each { |f| require(f) }
+    Dir[lib_root.join('brief', 'cli', '**/*.rb')].each { |f| require(f) }
 
     # the instance methods which get defined with the helper
     Brief::Model.classes.each do |klass|

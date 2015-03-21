@@ -1,7 +1,7 @@
 module Brief
   class Apps
     def self.default_path
-      Brief.gem_root.join("..","apps")
+      Brief.lib_root.join("..","apps")
     end
 
     def self.search_paths

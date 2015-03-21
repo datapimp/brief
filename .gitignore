@@ -1,4 +1,5 @@
 spec/fixtures/example/docs/concept.html.md
 tests/middleman/build
 distro/
+pkg/
 .DS_Store
