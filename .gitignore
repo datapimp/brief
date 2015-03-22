@@ -3,3 +3,4 @@ tests/middleman/build
 distro/
 pkg/
 .DS_Store
+node_modules/
