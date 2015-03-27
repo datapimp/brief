@@ -52,16 +52,18 @@ command 'init' do |c|
     end
   end
 end
+
 command 'info' do |c|
   c.syntax = 'brief info'
   c.description = 'View info about the brief environment'
 
   c.action do |args, options|
     # traveling ruby is reporting this incorrectly
+    puts "\n-- Paths:"
     puts "Dir.pwd = #{ Dir.pwd }"
     puts "Brief.pwd = #{ Brief.pwd }"
 
-    puts "\n\n-- Available apps:"
+    puts "\n-- Available apps:"
     puts Brief::Apps.available_apps.join("\n")
   end
 end

@@ -23,7 +23,6 @@ command 'export' do |c|
     if options.output
       output = Pathname(options.output)
       output = output.join(briefcase.slug + ".json") if output.directory?
-
       output.open("w+") {|fh| fh.write(export) }
     else
       puts export
