@@ -87,7 +87,11 @@ module Brief
         [level, [fragment]]
       end
 
-      self.fragment = Brief::Document::Section::Builder.run(mapping, low: lowest_level, high: highest_level)
+      begin
+        self.fragment = Brief::Document::Section::Builder.run(mapping, low: lowest_level, high: highest_level)
+      rescue Brief::Document::Section::BuilderError
+        @fragment
+      end
     end
 
     def levels

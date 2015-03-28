@@ -1,4 +1,6 @@
 class Brief::Document::Section
+  BuilderError = Class.new(Exception)
+
   class Builder
     def self.run(source, options = {})
       new(source, options).to_fragment
@@ -17,7 +19,11 @@ class Brief::Document::Section
       @nodes = []
       @cycles = 0
 
-      run
+      begin
+        run
+      rescue
+        raise BuilderError
+      end
     end
 
     def run
