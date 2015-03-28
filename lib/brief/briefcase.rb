@@ -68,10 +68,7 @@ module Brief
 
       all = all_models.compact
 
-      schema = all.map(&:class).uniq.compact
-                 .map(&:to_schema)
-                 .reduce({}) {|m, k| m[k[:type_alias]] = k; m }
-
+      schema = schema_map
       models = all.map {|m| m.as_json(model_settings) }
 
       {
@@ -95,6 +92,12 @@ module Brief
       options[:app] = module_id.to_s
 
       run(app_config_path) if app_path.try(&:exist?)
+    end
+
+    def schema_map(include_all=false)
+      list = include_all ? Brief::Model.classes : model_classes
+      list.map(&:to_schema)
+        .reduce({}) {|m, k| m[k[:type_alias]] = k; m }
     end
 
     def data

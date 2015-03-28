@@ -7,6 +7,8 @@ command 'render' do |c|
   c.option '--app APP', String, 'Use the specified app to get our models etc'
   c.option '--config PATH', String, 'Use the specified config file'
   c.option '--include-raw', nil, 'Whether or not to include the raw content'
+  c.option '--type STRING', String, 'What type of document should this be?'
+  c.option '--all', 'Render all of the things'
 
   c.action do |args, options|
     options.default(root: Pathname(Brief.pwd))
@@ -22,10 +24,12 @@ command 'render' do |c|
 
     index = 0
 
-    rendered = if args.empty?
+    rendered = if options.all
       briefcase.all_models.map do |model|
         model.document.to_html(script: true, content: !!(options.include_raw), skip_preamble: (index += 1) > 1)
       end
+    elsif args.empty? && stdin = STDIN.read
+      stdin
     else
       args.map do |a|
         Dir[briefcase.root.join(a)].map do |f|

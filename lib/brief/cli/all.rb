@@ -57,13 +57,25 @@ command 'info' do |c|
   c.syntax = 'brief info'
   c.description = 'View info about the brief environment'
 
-  c.action do |args, options|
-    # traveling ruby is reporting this incorrectly
-    puts "\n-- Paths:"
-    puts "Dir.pwd = #{ Dir.pwd }"
-    puts "Brief.pwd = #{ Brief.pwd }"
+  c.option '--print', 'Print output to the terminal'
 
-    puts "\n-- Available apps:"
-    puts Brief::Apps.available_apps.join("\n")
+  c.action do |args, options|
+    if options.print
+      # traveling ruby is reporting this incorrectly
+      puts "\n-- Paths:"
+      puts "Dir.pwd = #{ Dir.pwd }"
+      puts "Brief.pwd = #{ Brief.pwd }"
+
+      puts "\n-- Available apps:"
+      puts Brief::Apps.available_apps.join("\n")
+    else
+      json = {
+        version: Brief::VERSION,
+        available_apps: Brief::Apps.available_apps,
+        pwd: Brief.pwd
+      }.to_json
+
+      puts json
+    end
   end
 end

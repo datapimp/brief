@@ -114,6 +114,10 @@ module Brief
       Dir[docs_path.join('**/*.md').to_s].map { |p| Pathname(p) }
     end
 
+    def model_classes
+      all_models.compact.map(&:class).uniq
+    end
+
     def all_models
       @all_models ||= begin
                         list = documents.select(&:refresh!).map(&:to_model)
