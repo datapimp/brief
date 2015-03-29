@@ -1,4 +1,6 @@
 # Brief 
+[![Build
+Status](https://travis-ci.org/datapimp/brief.svg?branch=master)](https://travis-ci.org/datapimp/brief)
 
 Brief is a tool for building applications on top of collections of
 documents written in markdown.  
