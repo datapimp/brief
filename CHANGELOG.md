@@ -129,3 +129,8 @@ attributes.
 ### 1.8.3
   - General improvements to models & documents api
   - Added support for cache key 
+
+### 1.9.0
+  - Cleaned up some implementations
+  - Fully implemented the command set
+  - CLI can be used to generate JSON data

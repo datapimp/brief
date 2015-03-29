@@ -9,7 +9,12 @@ module Brief::Server::Handlers
 
       if available_handlers.include?(model_type)
         models = briefcase.send(model_type.to_s)
-        [200, {"Content-Type"=>"application/json"}, models.map(&:as_json)]
+
+        presented_models = models.map do |model|
+          model.as_json(options.symbolize_keys)
+        end
+
+        [200, {"Content-Type"=>"application/json"}, presented_models]
       else
         [403, {"Content-Type"=>"application/json"}, {error: "Invalid model type"}]
       end

@@ -4,14 +4,22 @@ view(:summary) do |*args|
 
   briefcase.present(:default, params).tap do |hash|
     if summary = briefcase.pages.find {|p| p.title == "Summary" }
-      hash.merge!(summary: summary.to_model.as_json(:rendered=>true, :content=>true))
+      hash[:summary] = summary.to_model.as_json(params)
+    end
+
+    if briefcase.has_table_of_contents?
+      hash[:table_of_contents] = table_of_contents.as_json(params)
     end
   end
 end
 
-view(:table_of_contents) do |*args|
-  briefcase = args.first
+class Brief::Briefcase
+  def has_table_of_contents?
+    docs_path.join('index.md').exist?
+  end
 
-  doc = Brief::Document.new(briefcase.docs_path.join("index.md"), document_type: "outline")
-  doc && doc.to_model
+  def table_of_contents
+    doc = Brief::Document.new(briefcase.docs_path.join("index.md"), document_type: "outline")
+    doc && doc.to_model
+  end
 end

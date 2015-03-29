@@ -53,29 +53,44 @@ command 'init' do |c|
   end
 end
 
-command 'info' do |c|
-  c.syntax = 'brief info'
-  c.description = 'View info about the brief environment'
+command "browse" do |c|
+  c.syntax = "brief browse FOLDER"
+  c.description = "Lists information about each of the briefcases in FOLDER"
 
-  c.option '--print', 'Print output to the terminal'
+  c.option '--format FORMAT', String, 'Which format to render the output in? default: printed, or json'
+  c.option '--presenter-format FORMAT', String, 'Which presenter to use?'
+  c.option '--config-filename FILENAME', String, 'Which filename has the briefcase config? default(brief.rb)'
+  c.option '--include-schema', 'Include schema information'
+  c.option '--include-models', 'Include individual models as well'
+  c.option '--include-content', 'Gets passed to the model renderers if present'
+  c.option '--include-rendered', 'Gets passed to the model renderers if present'
+  c.option '--include-urls', 'Gets passed to the model renderers if present'
 
-  c.action do |args, options|
-    if options.print
-      # traveling ruby is reporting this incorrectly
-      puts "\n-- Paths:"
-      puts "Dir.pwd = #{ Dir.pwd }"
-      puts "Brief.pwd = #{ Brief.pwd }"
+  c.when_called do |args, options|
+    folder = Pathname(args.first)
 
-      puts "\n-- Available apps:"
-      puts Brief::Apps.available_apps.join("\n")
+    options.default(config_filename:'brief.rb', presenter_format: 'default')
+
+    roots = folder.children.select do |root|
+      root.join(options.config_filename).exist?
+    end
+
+    briefcases = roots.map {|root| Brief::Briefcase.new(root: Pathname(root).realpath) }
+
+    if options.format == 'json'
+      output = briefcases.map do |b|
+        b.present(options.presenter_format, rendered: options.include_rendered,
+                                            content: options.include_content,
+                                            urls: options.include_urls,
+                                            schema: options.include_schema,
+                                            models: options.include_models)
+      end
+
+      puts output.to_json
     else
-      json = {
-        version: Brief::VERSION,
-        available_apps: Brief::Apps.available_apps,
-        pwd: Brief.pwd
-      }.to_json
-
-      puts json
+      briefcases.each do |bc|
+        puts bc
+      end
     end
   end
 end

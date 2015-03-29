@@ -51,32 +51,35 @@ module Brief
     def as_default(params={})
       params.symbolize_keys!
 
-      model_settings = {
-        docs_path: docs_path
-      }
-
-      model_settings[:rendered] = !!(params.key?(:rendered))
-      model_settings[:content] = !!(params.key?(:content))
-
-      all = all_models.compact
-
-      schema = schema_map
-      models = all.map {|m| m.as_json(model_settings) }
-
-      {
+      base = {
         views: Brief.views.keys,
         key: briefcase.folder_name.to_s.parameterize,
         name: briefcase.folder_name.to_s.titlecase,
-        schema: schema,
-        models: models,
         settings: settings,
         cache_key: briefcase.cache_key
-      }.tap do |hash|
-        hash[:table_of_contents] = briefcase.table_of_contents.as_json() rescue {}
+      }
+
+      if params[:include_schema]
+        base[:schema] = schema_map
       end
+
+      if params[:include_models]
+        model_settings = {
+          docs_path: docs_path
+        }
+
+        %w(urls content rendered).each do |opt|
+          model_settings[opt.to_sym] = !!(params[opt.to_sym] || params["include_#{opt}".to_sym])
+        end
+
+        all = all_models.compact
+        base[:models] = all.map {|m| m.as_json(model_settings) }
+      end
+
+      base
     end
 
-    def as_full_export
+    def as_full_export(options={})
       as_default(content: true, rendered: true)
     end
 

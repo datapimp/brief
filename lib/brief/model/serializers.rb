@@ -23,7 +23,11 @@ module Brief::Model::Serializers
       hash: file_hash,
       sections: {},
       section_headings: [],
-      urls: {
+    }.tap do |h|
+      h[:content] = document.combined_data_and_content if options[:content]
+      h[:rendered] = document.to_html if options[:rendered]
+
+      h[:urls] = {
         view_content_url: "/view/content/#{ doc_path }",
         view_rendered_url: "/view/rendered/#{ doc_path }",
         view_details_url: "/view/details/#{ doc_path }",
@@ -31,10 +35,7 @@ module Brief::Model::Serializers
         remove_url: "/remove/#{ doc_path }",
         schema_url: "/schema/#{ type }",
         actions_url: "/actions/:action/#{ doc_path }"
-      }
-    }.tap do |h|
-      h[:content] = document.combined_data_and_content if options[:content]
-      h[:rendered] = document.to_html if options[:rendered]
+      } if options[:urls]
     end.tap do |h|
       if document.has_sections?
         h[:section_headings] = document.section_headings
