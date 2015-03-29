@@ -33,14 +33,6 @@ module Brief
       "#{slug}:#{repository.cache_key}"
     end
 
-    def table_of_contents
-      table_of_contents_document.to_model
-    end
-
-    def table_of_contents_document
-      Brief::Document.new(docs_path.join("index.md"), document_type: "outline")
-    end
-
     def slug
       options.fetch(:slug) { root.basename.to_s.parameterize }
     end

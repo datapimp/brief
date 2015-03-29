@@ -8,3 +8,10 @@ view(:summary) do |*args|
     end
   end
 end
+
+view(:table_of_contents) do |*args|
+  briefcase = args.first
+
+  doc = Brief::Document.new(briefcase.docs_path.join("index.md"), document_type: "outline")
+  doc && doc.to_model
+end

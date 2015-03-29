@@ -37,6 +37,10 @@ RSpec.configure do |config|
   config.mock_with :rspec
   config.include Rack::Test::Methods
   config.include TestHelpers
+
+  config.after(:suite) do
+    `git checkout spec/fixtures/example/docs` rescue nil
+  end
 end
 
 ENV['BRIEF_APPS_PATH'] = Brief.spec_root.join("fixtures","apps").to_s
