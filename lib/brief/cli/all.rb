@@ -29,6 +29,8 @@ command 'change' do |c|
     if options.dry_run
       puts documents
     end
+
+    documents
   end
 end
 
@@ -50,6 +52,8 @@ command 'init' do |c|
       require 'brief/briefcase/initializer'
       Brief::Briefcase.create_new_briefcase(root: root, app: options.app)
     end
+
+    false
   end
 end
 
@@ -57,16 +61,15 @@ command "browse" do |c|
   c.syntax = "brief browse FOLDER"
   c.description = "Lists information about each of the briefcases in FOLDER"
 
-  c.option '--format FORMAT', String, 'Which format to render the output in? default: printed, or json'
-  c.option '--presenter-format FORMAT', String, 'Which presenter to use?'
   c.option '--config-filename FILENAME', String, 'Which filename has the briefcase config? default(brief.rb)'
+  c.option '--presenter-format FORMAT', String, 'Which presenter to use?'
   c.option '--include-schema', 'Include schema information'
   c.option '--include-models', 'Include individual models as well'
   c.option '--include-content', 'Gets passed to the model renderers if present'
   c.option '--include-rendered', 'Gets passed to the model renderers if present'
   c.option '--include-urls', 'Gets passed to the model renderers if present'
 
-  c.when_called do |args, options|
+  c.action do |args, options|
     folder = Pathname(args.first)
 
     options.default(config_filename:'brief.rb', presenter_format: 'default')
@@ -77,20 +80,12 @@ command "browse" do |c|
 
     briefcases = roots.map {|root| Brief::Briefcase.new(root: Pathname(root).realpath) }
 
-    if options.format == 'json'
-      output = briefcases.map do |b|
-        b.present(options.presenter_format, rendered: options.include_rendered,
-                                            content: options.include_content,
-                                            urls: options.include_urls,
-                                            schema: options.include_schema,
-                                            models: options.include_models)
-      end
-
-      puts output.to_json
-    else
-      briefcases.each do |bc|
-        puts bc
-      end
+    briefcases.map do |b|
+      b.present(options.presenter_format, rendered: options.include_rendered,
+                                          content: options.include_content,
+                                          urls: options.include_urls,
+                                          schema: options.include_schema,
+                                          models: options.include_models)
     end
   end
 end

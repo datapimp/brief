@@ -2,21 +2,17 @@ command 'parse' do |c|
   c.syntax = 'brief parse PATH [OPTIONS]'
   c.description = 'parse the briefcase path'
 
-  c.option '--root PATH', String, 'The briefcase root'
-  c.option '--output PATH', String, 'Save the output to the specified path'
-  c.option '--app APP', String, 'Use the specified app to get our models etc'
-  c.option '--config PATH', String, 'Use the specified config file'
-  c.option '--type TYPE', String, 'Valid options: hash, array; Output as a hash keyed by path, or an array. Defaults to array.'
+  c.option '--output-type TYPE', String, 'Valid options: hash, array; Output as a hash keyed by path, or an array. Defaults to array.'
+  c.option '--config-path FILE', String, 'Path to the config file for the briefcase'
 
   c.action do |args, options|
-    options.default(root: Pathname(Brief.pwd), type: "array")
+    options.default(root: Pathname(Brief.pwd), output_type: "array")
 
     o = {
       root: options.root
     }
 
-    o[:app] = options.app if options.app
-    o[:config_path] = options.config if options.config
+    o[:config_path] = options.config_path if options.config_path
 
     briefcase = Brief::Briefcase.new(o)
 
@@ -33,7 +29,7 @@ command 'parse' do |c|
       end.flatten
     end
 
-    if options.type == "hash"
+    if options.output_type == "hash"
       parsed = parsed.inject({}) do |memo, obj|
         path = obj[:path]
         memo[path] = obj
@@ -41,10 +37,6 @@ command 'parse' do |c|
       end
     end
 
-    if options.output
-      Pathname(options.output).open("w+") {|fh| fh.write(parsed.to_json) }
-    else
-      puts parsed.to_json
-    end
+    parsed
   end
 end

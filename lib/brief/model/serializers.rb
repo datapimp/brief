@@ -24,8 +24,8 @@ module Brief::Model::Serializers
       sections: {},
       section_headings: [],
     }.tap do |h|
-      h[:content] = document.combined_data_and_content if options[:content]
-      h[:rendered] = document.to_html if options[:rendered]
+      h[:content] = document.combined_data_and_content if options[:content] || options[:include_content]
+      h[:rendered] = document.to_html if options[:rendered] || options[:include_rendered]
 
       h[:urls] = {
         view_content_url: "/view/content/#{ doc_path }",
@@ -35,7 +35,7 @@ module Brief::Model::Serializers
         remove_url: "/remove/#{ doc_path }",
         schema_url: "/schema/#{ type }",
         actions_url: "/actions/:action/#{ doc_path }"
-      } if options[:urls]
+      } if options[:urls] || options[:include_urls]
     end.tap do |h|
       if document.has_sections?
         h[:section_headings] = document.section_headings

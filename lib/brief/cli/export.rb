@@ -2,31 +2,24 @@ command 'export' do |c|
   c.syntax = 'brief export PATH [OPTIONS]'
   c.description = 'export the briefcase found in PATH'
 
-  c.option '--output PATH', String, 'Save the output to the specified path'
-  c.option '--app APP', String, 'Use the specified app to get our models etc'
-  c.option '--config PATH', String, 'Use the specified config file'
+  c.option '--presenter-format FORMAT', String, 'Which presenter to use?'
+  c.option '--include-schema', 'Include schema information'
+  c.option '--include-models', 'Include individual models as well'
+  c.option '--include-content', 'Gets passed to the model renderers if present'
+  c.option '--include-rendered', 'Gets passed to the model renderers if present'
+  c.option '--include-urls', 'Gets passed to the model renderers if present'
 
   c.action do |args, options|
-    root = Pathname(args.first || Brief.pwd)
+    options.default(presenter_format: "full_export")
 
-    o = {
-      root: root
-    }
+    root = Pathname(args.first)
+    briefcase = Brief::Briefcase.new(root: root)
+    briefcase.present(options.presenter_format, rendered: options.include_rendered,
+                                                content: options.include_content,
+                                                urls: options.include_urls,
+                                                schema: options.include_schema,
+                                                models: options.include_models)
 
-    o[:app] = options.app if options.app
-    o[:config_path] = options.config if options.config
-
-    briefcase = Brief::Briefcase.new(o)
-
-    export = briefcase.as_full_export.to_json
-
-    if options.output
-      output = Pathname(options.output)
-      output = output.join(briefcase.slug + ".json") if output.directory?
-      output.open("w+") {|fh| fh.write(export) }
-    else
-      puts export
-    end
   end
 end
 

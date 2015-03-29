@@ -59,11 +59,11 @@ module Brief
         cache_key: briefcase.cache_key
       }
 
-      if params[:include_schema]
+      if params[:include_schema] || params[:schema]
         base[:schema] = schema_map
       end
 
-      if params[:include_models]
+      if params[:include_models] || params[:models]
         model_settings = {
           docs_path: docs_path
         }
@@ -73,6 +73,7 @@ module Brief
         end
 
         all = all_models.compact
+
         base[:models] = all.map {|m| m.as_json(model_settings) }
       end
 
@@ -80,7 +81,8 @@ module Brief
     end
 
     def as_full_export(options={})
-      as_default(content: true, rendered: true)
+      options.reverse_merge!(content: true, rendered: true, models: true, schema: true)
+      as_default(options)
     end
 
     def use(module_type=:app, module_id)
