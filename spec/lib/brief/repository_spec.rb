@@ -26,12 +26,12 @@ describe "The Brief Document Repository" do
     end
 
     it "finds the first document matching a query" do
-      query = repository.where(state:"active")
+      query = repository.where(state:"active", type: "epic")
       expect(query.first.type).to eq("epic")
     end
 
     it "finds the last document matching a query" do
-      query = repository.where(state:"active")
+      query = repository.where(state:"active", type:"user_story")
       expect(query.last.type).to eq("user_story")
     end
 
