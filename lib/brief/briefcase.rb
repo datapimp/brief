@@ -97,7 +97,7 @@ module Brief
     def schema_map(include_all=false)
       list = include_all ? Brief::Model.classes : model_classes
       list.map(&:to_schema)
-        .reduce({}) {|m, k| m[k[:type_alias]] = k; m }
+        .reduce({}.to_mash) {|m, k| m[k[:type_alias]] = k; m }
     end
 
     def data
