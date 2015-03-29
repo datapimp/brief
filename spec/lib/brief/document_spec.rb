@@ -54,6 +54,18 @@ describe "The Brief Document" do
   end
 
   context "defining sections" do
+    it "has sections" do
+      expect(sample).to be_has_sections
+    end
+
+    it "gives me info about the section headings" do
+      expect(sample.section_headings).to include("user_stories")
+    end
+
+    it "has the information from the sections" do
+      expect(sample.sections_data).not_to be_empty
+    end
+
     it "lets me define content sections" do
       expect(sample.sections).not_to be_empty
       expect(sample.sections.user_stories).to be_present

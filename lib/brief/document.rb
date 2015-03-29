@@ -121,6 +121,23 @@ module Brief
       (@briefcase_root && Brief.cases[@briefcase_root]) || Brief.case
     end
 
+    def has_sections?
+      model_class.section_mappings.length > 0
+    end
+
+    def section_headings
+      sections.keys
+    end
+
+    def sections_data
+      section_headings.reduce({}) do |memo, heading|
+        section = sections.send(heading)
+        items = section.items rescue nil
+        memo[heading] = items if items
+        memo
+      end
+    end
+
     def sections
       mappings = model_class.section_mappings
 

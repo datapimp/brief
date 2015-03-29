@@ -21,6 +21,8 @@ module Brief::Model::Serializers
       updated_at: File.mtime(path).to_i,
       id: Digest::MD5.hexdigest(path.to_s),
       hash: file_hash,
+      sections: {},
+      section_headings: [],
       urls: {
         view_content_url: "/view/content/#{ doc_path }",
         view_rendered_url: "/view/rendered/#{ doc_path }",
@@ -33,6 +35,11 @@ module Brief::Model::Serializers
     }.tap do |h|
       h[:content] = document.combined_data_and_content if options[:content]
       h[:rendered] = document.to_html if options[:rendered]
+    end.tap do |h|
+      if document.has_sections?
+        h[:section_headings] = document.section_headings
+        h[:sections] = document.sections_data
+      end
     end
   end
 end
