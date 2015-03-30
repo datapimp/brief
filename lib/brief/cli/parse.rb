@@ -2,8 +2,14 @@ command 'parse' do |c|
   c.syntax = 'brief parse PATH [OPTIONS]'
   c.description = 'parse the briefcase path'
 
-  c.option '--output-type TYPE', String, 'Valid options: hash, array; Output as a hash keyed by path, or an array. Defaults to array.'
-  c.option '--config-path FILE', String, 'Path to the config file for the briefcase'
+  c.option '--presenter-format FORMAT', String, 'Which presenter to use?'
+  c.option '--include-schema', 'Include schema information'
+  c.option '--include-models', 'Include individual models as well'
+  c.option '--include-content', 'Gets passed to the model renderers if present'
+  c.option '--include-rendered', 'Gets passed to the model renderers if present'
+  c.option '--include-urls', 'Gets passed to the model renderers if present'
+
+  c.example "Parsing an arbitrary selection of documents", "brief parse ./blueprint/docs/epics ./blueprint/docs/user_stories --root=./blueprint --format json --include-rendered --include-content"
 
   c.action do |args, options|
     options.default(root: Pathname(Brief.pwd), output_type: "array")
@@ -16,17 +22,32 @@ command 'parse' do |c|
 
     briefcase = Brief::Briefcase.new(o)
 
-    parsed = if args.empty?
-      briefcase.all_models.map do |model|
-        model.as_json(content:true, rendered: true)
+    args.map! do |arg|
+      arg = Pathname(arg)
+
+      if arg.directory?
+        Dir[arg.join('**/*')].map {|f| Pathname(f) }
+      else
+        arg
       end
-    else
-      args.map do |a|
-        Dir[briefcase.root.join(a)].map do |f|
-          doc = Brief::Document.new(f).in_briefcase(briefcase)
-          doc.to_model.as_json(content: true, rendered: true)
-        end
-      end.flatten
+    end
+
+    args.flatten!
+
+    args.select! {|arg| Brief::Util.ensure_child_path(briefcase.docs_path, arg) }
+    #args.map! {|arg| Brief::Document.new(arg.realpath).in_briefcase(briefcase) }
+
+    model_params = {
+      rendered: !!options.include_rendered,
+      content: !!options.include_content,
+      urls: !!options.include_urls
+    }
+
+    parsed = args.map do |path|
+      Brief::Document.new(path)
+        .in_briefcase(briefcase)
+        .to_model
+        .as_json(model_params)
     end
 
     if options.output_type == "hash"
