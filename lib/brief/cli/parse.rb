@@ -3,8 +3,6 @@ command 'parse' do |c|
   c.description = 'parse the briefcase path'
 
   c.option '--presenter-format FORMAT', String, 'Which presenter to use?'
-  c.option '--include-schema', 'Include schema information'
-  c.option '--include-models', 'Include individual models as well'
   c.option '--include-content', 'Gets passed to the model renderers if present'
   c.option '--include-rendered', 'Gets passed to the model renderers if present'
   c.option '--include-urls', 'Gets passed to the model renderers if present'

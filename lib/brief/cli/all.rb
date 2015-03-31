@@ -56,36 +56,3 @@ command 'init' do |c|
     false
   end
 end
-
-command "browse" do |c|
-  c.syntax = "brief browse FOLDER"
-  c.description = "Lists information about each of the briefcases in FOLDER"
-
-  c.option '--config-filename FILENAME', String, 'Which filename has the briefcase config? default(brief.rb)'
-  c.option '--presenter-format FORMAT', String, 'Which presenter to use?'
-  c.option '--include-schema', 'Include schema information'
-  c.option '--include-models', 'Include individual models as well'
-  c.option '--include-content', 'Gets passed to the model renderers if present'
-  c.option '--include-rendered', 'Gets passed to the model renderers if present'
-  c.option '--include-urls', 'Gets passed to the model renderers if present'
-
-  c.action do |args, options|
-    folder = Pathname(args.first)
-
-    options.default(config_filename:'brief.rb', presenter_format: 'default')
-
-    roots = folder.children.select do |root|
-      root.join(options.config_filename).exist?
-    end
-
-    briefcases = roots.map {|root| Brief::Briefcase.new(root: Pathname(root).realpath) }
-
-    briefcases.map do |b|
-      b.present(options.presenter_format, rendered: options.include_rendered,
-                                          content: options.include_content,
-                                          urls: options.include_urls,
-                                          schema: options.include_schema,
-                                          models: options.include_models)
-    end
-  end
-end
