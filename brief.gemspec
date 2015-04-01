@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'virtus', '~> 1.0'
   spec.add_dependency 'inflecto', '~> 0'
   spec.add_dependency 'activesupport', '~> 4.0'
+  spec.add_dependency 'hike', '~> 0'
 
   #spec.add_dependency 'github-markup',       '~> 1.3.1'
   #spec.add_dependency 'github-linguist',     '~> 4.2.5'

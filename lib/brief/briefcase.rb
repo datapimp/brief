@@ -13,7 +13,7 @@ module Brief
 
       load_model_definitions
 
-      if Brief.case.nil?
+      if Brief.case(false).nil?
         Brief.case = self
       end
 
@@ -59,6 +59,10 @@ module Brief
         cache_key: briefcase.cache_key
       }
 
+      if params[:include_data] || params[:data]
+        base[:data] = data.as_json
+      end
+
       if params[:include_schema] || params[:schema]
         base[:schema] = schema_map
       end
@@ -68,7 +72,7 @@ module Brief
           docs_path: docs_path
         }
 
-        %w(urls content rendered).each do |opt|
+        %w(urls content rendered attachments).each do |opt|
           model_settings[opt.to_sym] = !!(params[opt.to_sym] || params["include_#{opt}".to_sym])
         end
 
@@ -201,6 +205,10 @@ module Brief
 
     def data_path
       root.join options.fetch(:data_path) { config.data_path }
+    end
+
+    def assets_path
+      root.join options.fetch(:assets_path) { config.assets_path }
     end
 
     def models_path

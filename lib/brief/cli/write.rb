@@ -3,7 +3,7 @@ command 'write' do |c|
   c.description = 'Create a new document for a given model type'
 
   c.action do |args, options|
-    schema_map = Brief.case.schema_map(true)
+    schema_map = Brief.case(true).schema_map(true)
     type_alias = args.first
 
     model_class = schema_map.fetch(type_alias) do
@@ -21,7 +21,7 @@ command 'write' do |c|
       file = "new-#{ type_alias }-#{ rand_token }.md"
     end
 
-    folder = Brief.case.docs_path.join(type_alias.pluralize)
+    folder = Brief.case(true).docs_path.join(type_alias.pluralize)
     folder = folder.exist? ? folder : Brief.case.docs_path
 
     folder.join(file).open("w+") do |fh|

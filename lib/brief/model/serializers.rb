@@ -1,10 +1,14 @@
 module Brief::Model::Serializers
   def as_json(options={})
     options.symbolize_keys!
-    docs_path = options.fetch(:docs_path) { briefcase.docs_path }
-    docs_path = docs_path.to_pathname if docs_path.is_a?(String)
+    briefcase_docs_path = options.fetch(:docs_path) { briefcase.docs_path }
+    briefcase_docs_path = briefcase_docs_path.to_pathname if briefcase_docs_path.is_a?(String)
 
-    doc_path  = path.relative_path_from(docs_path).to_s
+    begin
+      doc_path  = path.relative_path_from(briefcase_docs_path).to_s
+    rescue
+      doc_path = path.realpath.relative_path_from(briefcase_docs_path).to_s
+    end
 
     # TEMP
     title = data.try(:[], :title) || extracted_content_data.try(:title) || (send(:title) rescue nil) || path.basename.to_s.gsub(/\.html.md/,'')
@@ -26,7 +30,7 @@ module Brief::Model::Serializers
     }.tap do |h|
       h[:content] = document.combined_data_and_content if options[:content] || options[:include_content]
       h[:rendered] = document.to_html if options[:rendered] || options[:include_rendered]
-
+      h[:attachments] = document.render_attachments if options[:attachments] || options[:include_attachments]
       h[:urls] = {
         view_content_url: "/view/content/#{ doc_path }",
         view_rendered_url: "/view/rendered/#{ doc_path }",

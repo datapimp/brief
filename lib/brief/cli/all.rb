@@ -1,30 +1,3 @@
-command 'start socket gateway' do |c|
-  c.option '--host HOSTNAME', String, 'What hostname to listen on'
-  c.option '--port PORT', String, 'What port to listen on'
-
-  c.action do |args, options|
-    options.default(root: Brief.pwd)
-
-    require 'em-websocket'
-    require 'brief/server/gateway'
-    require 'brief/server/socket'
-    Brief::Server::Socket.start(port: options.port, host: options.host, root: Pathname(options.root))
-  end
-end
-
-command 'start gateway server' do |c|
-  c.option '--host HOSTNAME', String, 'What hostname to listen on'
-  c.option '--port PORT', String, 'What port to listen on'
-
-  c.action do |args, options|
-    options.default(root: Brief.pwd)
-
-    require 'thin'
-    require 'brief/server/gateway'
-    Brief::Server::Gateway.start(port: options.port, host: options.host, root: Pathname(options.root))
-  end
-end
-
 command 'change' do |c|
   c.syntax = 'brief change ATTRIBUTE [OPTIONS]'
   c.description = 'change attributes of brief documents'
@@ -40,7 +13,7 @@ command 'change' do |c|
     attribute = args.shift
     paths     = args.map {|a| Dir[options.root.join(a)] }.flatten
 
-    briefcase = Brief::Briefcase.new(root: options.root)
+    briefcase = Brief.case(true)
     documents = briefcase.documents_at(*paths)
 
     if options.from

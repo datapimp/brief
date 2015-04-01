@@ -3,12 +3,14 @@ class Commander::Command
     Brief.default_cli_options(self)
 
     when_called do |args, options|
-      options.default(root: Brief.pwd, config_filename: 'brief.rb', format: :printed)
+      options.default(root: Brief.pwd, config_filename: 'brief.rb', format: :printed, prefix_output: "")
 
       root = Pathname(options.root)
 
       if root.join(options.config_filename).exist?
-        Brief.case = Brief::Briefcase.new(root: root)
+        Brief.case = lambda do
+          Brief::Briefcase.new(root: Pathname(options.root))
+        end
       end
 
       result = block.call(args, options)
@@ -16,10 +18,10 @@ class Commander::Command
       case
       when options.output && options.format.to_sym == :json
         Pathname(options.output).open("w+") do |fh|
-          fh.write(result.to_json)
+          fh.write("#{options.prefix_output}#{result.to_json}")
         end
       when options.format.to_sym == :json
-        puts result.to_json
+        puts "#{options.prefix_output}#{result.to_json}"
       when options.format.to_sym == :printed
         puts result
       end
@@ -35,5 +37,6 @@ module Brief
     c.option '--config-filename', String, 'The default filename for a briefcase config: brief.rb'
     c.option '--output FILE', String, 'Save the output in the specified path'
     c.option '--format FORMAT', String, 'How to format the CLI output: defaults to printed, accepts printed,json'
+    c.option '--prefix-output CONTENT', String, 'Prefix the generated output with the following content'
   end
 end
