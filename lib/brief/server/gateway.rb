@@ -1,6 +1,13 @@
 class Brief::Server::Gateway
   attr_reader :root, :briefcases
 
+  def self.start(options={})
+    app = new(root: Pathname(options[:root]))
+    port = options.fetch(:port, 9094)
+    host = options.fetch(:host, '0.0.0.0')
+    Rack::Handler::Thin.run(app, Port: port, Host: host)
+  end
+
   def initialize(options={})
     @root = options.fetch(:root)
     @briefcases = {}.to_mash

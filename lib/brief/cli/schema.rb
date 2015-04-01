@@ -5,7 +5,7 @@ command 'schema' do |c|
   c.option '--all-models', 'Include all models, not just those that have documents'
 
   c.action do |args, options|
-    schema_map = Brief.case.schema_map(options.all_models)
+    schema_map = Brief.case(true).schema_map(options.all_models)
 
     output = if args.empty?
       schema_map.to_json

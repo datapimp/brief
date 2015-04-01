@@ -27,8 +27,16 @@ module Brief
     @briefcase = value
   end
 
-  def self.case
-    @briefcase
+  require 'pry'
+
+  def self.case(fire=false)
+    if @briefcase.is_a?(Brief::Briefcase)
+      @briefcase
+    elsif fire && @briefcase.respond_to?(:call)
+      @briefcase = @briefcase.call()
+    else
+      @briefcase
+    end
   end
 
   def self.views

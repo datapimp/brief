@@ -3,6 +3,7 @@ module Brief
     include Brief::Document::Rendering
     include Brief::Document::FrontMatter
     include Brief::Document::Templating
+    include Brief::Document::Attachments
 
     def self.from_contents(content, frontmatter, &block)
     end
@@ -105,6 +106,14 @@ module Brief
 
     def data
       frontmatter
+    end
+
+    def include_attachments?
+      attachments.length > 0
+    end
+
+    def attachments
+      Array(data.attachments)
     end
 
     def in_briefcase(briefcase)

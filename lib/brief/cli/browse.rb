@@ -58,6 +58,7 @@ command 'browse documents' do |c|
     parsed
   end
 end
+
 command "browse projects" do |c|
   c.syntax = "brief browse projects FOLDER"
   c.description = "Lists information about each of the briefcases in FOLDER"

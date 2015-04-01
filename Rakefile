@@ -19,6 +19,9 @@ Distribution.configure do |config|
     #'nokogumbo-1.3.0',
     #'rugged-0.21.4',
     'nokogiri-1.6.5',
+    'eventmachine-1.0.6',
+    'thin-1.6.3',
+    'unf_ext-0.0.6'
   ]
 end
 

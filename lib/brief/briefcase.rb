@@ -13,7 +13,7 @@ module Brief
 
       load_model_definitions
 
-      if Brief.case.nil?
+      if Brief.case(false).nil?
         Brief.case = self
       end
 
@@ -59,6 +59,10 @@ module Brief
         cache_key: briefcase.cache_key
       }
 
+      if params[:include_data] || params[:data]
+        base[:data] = data.as_json
+      end
+
       if params[:include_schema] || params[:schema]
         base[:schema] = schema_map
       end
@@ -68,7 +72,7 @@ module Brief
           docs_path: docs_path
         }
 
-        %w(urls content rendered).each do |opt|
+        %w(urls content rendered attachments).each do |opt|
           model_settings[opt.to_sym] = !!(params[opt.to_sym] || params["include_#{opt}".to_sym])
         end
 
@@ -214,7 +218,7 @@ module Brief
     def docs_trail
       @docs_trail ||= Hike::Trail.new(docs_path).tap do |trail|
         trail.append_extensions '.md', '.html.md', '.markdown'
-        docs_path.children.select(&:directory?).each {|dir| trail.append_path(docs_path.join(dir)) }
+        docs_path.children.select(&:directory?).each {|dir| trail.prepend_path(docs_path); trail.append_path(docs_path.join(dir)) }
       end
     end
 
@@ -229,6 +233,7 @@ module Brief
     def data_trail
       @docs_trail ||= Hike::Trail.new(data_path).tap do |trail|
         trail.append_extensions '.yaml', '.js', '.json', '.xls', '.xlsx', '.csv', '.txt'
+        trail.append_path(data_path)
       end
     end
 

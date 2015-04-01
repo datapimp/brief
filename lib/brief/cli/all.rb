@@ -13,7 +13,7 @@ command 'change' do |c|
     attribute = args.shift
     paths     = args.map {|a| Dir[options.root.join(a)] }.flatten
 
-    briefcase = Brief::Briefcase.new(root: options.root)
+    briefcase = Brief.case(true)
     documents = briefcase.documents_at(*paths)
 
     if options.from
