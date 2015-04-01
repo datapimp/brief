@@ -31,7 +31,6 @@ Gem::Specification.new do |spec|
   #spec.add_dependency 'github-linguist',     '~> 4.2.5'
   #spec.add_dependency 'html-pipeline',       '~> 1.11.0'
   #spec.add_dependency 'sanitize',            '~> 3.1.0'
-  spec.add_dependency 'nokogiri', '1.6.5'
   spec.add_dependency 'github-markdown',     '0.6.8'
   spec.add_dependency 'eventmachine', '1.0.6'
   spec.add_dependency 'em-websocket', '0.5.1'
