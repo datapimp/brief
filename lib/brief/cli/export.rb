@@ -12,9 +12,10 @@ command 'export' do |c|
   c.option '--include-urls', 'Gets passed to the model renderers if present'
 
   c.action do |args, options|
-    options.default(presenter_format: "full_export")
+    options.default(presenter_format: "full_export", root: Pathname(args.first || Brief.pwd))
 
-    briefcase = Brief.case(true)
+    briefcase = Brief.case = Brief::Briefcase.new(root: Pathname(args.first || options.root))
+
     briefcase.present(options.presenter_format, rendered: options.include_rendered,
                                                 content: options.include_content,
                                                 urls: options.include_urls,

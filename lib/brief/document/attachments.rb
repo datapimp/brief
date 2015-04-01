@@ -12,7 +12,7 @@ module Brief
       def render_attachments
         attachments.reduce({}.to_mash) do |memo, name|
           if asset = briefcase.find_asset(name)
-            memo[asset.basename] = asset.read
+            memo[name] = IO.read(asset)
             memo
           end
         end

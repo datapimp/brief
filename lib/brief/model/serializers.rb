@@ -30,7 +30,11 @@ module Brief::Model::Serializers
     }.tap do |h|
       h[:content] = document.combined_data_and_content if options[:content] || options[:include_content]
       h[:rendered] = document.to_html if options[:rendered] || options[:include_rendered]
-      h[:attachments] = document.render_attachments if options[:attachments] || options[:include_attachments]
+
+      if options[:attachments] || options[:include_attachments]
+        h[:attachments] = document.render_attachments
+      end
+
       h[:urls] = {
         view_content_url: "/view/content/#{ doc_path }",
         view_rendered_url: "/view/rendered/#{ doc_path }",
