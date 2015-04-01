@@ -135,7 +135,7 @@ module Brief
 
     def run(code_or_file)
       code = code_or_file.is_a?(Pathname) ? code_or_file.read : code
-      instance_eval(code)
+      instance_eval(code) rescue nil
     end
 
     def uses_app?
@@ -195,12 +195,41 @@ module Brief
       Pathname(options.fetch(:root) { Brief.pwd })
     end
 
+    def find_asset(needle)
+      found = assets_trail.find(needle)
+      found && Pathname(found)
+    end
+
+    def assets_path
+      root.join options.fetch(:assets_path) { config.assets_path }
+    end
+
+    def assets_trail
+      @assets_trail ||= Hike::Trail.new(assets_path).tap do |trail|
+        trail.append_extensions '.svg', '.png', '.pdf', '.jpg', '.gif', '.mov'
+        assets_path.children.select(&:directory?).each {|dir| trail.prepend_path(assets_path); trail.append_path(assets_path.join(dir)) }
+      end
+    end
+
+    def docs_trail
+      @docs_trail ||= Hike::Trail.new(docs_path).tap do |trail|
+        trail.append_extensions '.md', '.html.md', '.markdown'
+        docs_path.children.select(&:directory?).each {|dir| trail.append_path(docs_path.join(dir)) }
+      end
+    end
+
     def docs_path
       root.join options.fetch(:docs_path) { config.docs_path }
     end
 
     def data_path
       root.join options.fetch(:data_path) { config.data_path }
+    end
+
+    def data_trail
+      @docs_trail ||= Hike::Trail.new(data_path).tap do |trail|
+        trail.append_extensions '.yaml', '.js', '.json', '.xls', '.xlsx', '.csv', '.txt'
+      end
     end
 
     def models_path

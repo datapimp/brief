@@ -9,6 +9,7 @@ require 'github/markdown'
 require 'nokogiri'
 require 'yaml'
 require 'erb'
+require 'hike'
 
 module Brief
   # When packaging this up through the traveling ruby system

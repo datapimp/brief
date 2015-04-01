@@ -2,10 +2,15 @@
 
 $:.unshift File.join(File.dirname(__FILE__),'..','lib')
 
-require 'rubygems'
+begin
+  require 'bundler'
+  Bundler.require
+rescue
+  require 'rubygems'
+end
+
 require 'brief'
 require 'brief/dsl'
-
 
 if ARGV[0] == "console"
   require 'pry'
