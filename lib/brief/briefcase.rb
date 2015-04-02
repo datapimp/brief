@@ -53,10 +53,10 @@ module Brief
 
       base = {
         views: Brief.views.keys,
-        key: briefcase.folder_name.to_s.parameterize,
-        name: briefcase.folder_name.to_s.titlecase,
+        key: folder_name.to_s.parameterize,
+        name: folder_name.to_s.titlecase,
         settings: settings,
-        cache_key: briefcase.cache_key
+        cache_key: cache_key
       }
 
       if params[:include_data] || params[:data]
@@ -196,7 +196,7 @@ module Brief
     end
 
     def root
-      Pathname(options.fetch(:root) { Brief.pwd })
+      Pathname(options.fetch(:root) { Brief.pwd }).expand_path
     end
 
     def find_asset(needle)
@@ -205,7 +205,15 @@ module Brief
     end
 
     def assets_path
-      root.join options.fetch(:assets_path) { config.assets_path }
+      root.join(options.fetch(:assets_path) { config.assets_path }).expand_path
+    end
+
+    def docs_path
+      root.join(options.fetch(:docs_path) { config.docs_path }).expand_path
+    end
+
+    def data_path
+      root.join(options.fetch(:data_path) { config.data_path }).expand_path
     end
 
     def assets_trail
@@ -222,13 +230,6 @@ module Brief
       end
     end
 
-    def docs_path
-      root.join options.fetch(:docs_path) { config.docs_path }
-    end
-
-    def data_path
-      root.join options.fetch(:data_path) { config.data_path }
-    end
 
     def data_trail
       @docs_trail ||= Hike::Trail.new(data_path).tap do |trail|

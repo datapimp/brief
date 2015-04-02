@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    brief (1.9.6)
+    brief (1.9.7)
       activesupport (~> 4.0)
       commander (~> 4.3)
       em-websocket (= 0.5.1)
@@ -11,7 +11,6 @@ PATH
       hashie (~> 2.0, < 3.0)
       hike (~> 2.1)
       inflecto (~> 0)
-      nokogiri (= 1.6.5)
       nokogiri (= 1.6.5)
       thin (= 1.6.3)
       virtus (~> 1.0)
