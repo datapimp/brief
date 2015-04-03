@@ -10,6 +10,14 @@ class Brief::Document::Section
     @config = config
   end
 
+  def to_html
+    fragment.to_html
+  end
+
+  def text
+    fragment.text
+  end
+
   def items
     return @items if @items
 

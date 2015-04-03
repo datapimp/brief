@@ -13,7 +13,7 @@ module Brief
       @briefcase = briefcase
       @options = options
 
-      load_documents
+      load_documents if options[:eager]
     end
 
     def cache_key
