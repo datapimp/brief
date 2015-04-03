@@ -21,6 +21,8 @@ module Brief
     end
 
     def present(style="default", params={})
+      style = "default" if style.nil?
+
       if respond_to?("as_#{style}")
         send("as_#{style}", params)
       elsif Brief.views.key?(style.to_sym)

@@ -127,7 +127,7 @@ module Brief
     end
 
     def briefcase
-      (@briefcase_root && Brief.cases[@briefcase_root]) || Brief.case
+      (@briefcase_root && Brief.cases[@briefcase_root]) || Brief.case(true)
     end
 
     def has_sections?
@@ -265,7 +265,8 @@ module Brief
       end
     end
 
-    def respond_to?(method)
+    def respond_to?(*args)
+      method = args.first
       super || (data && data.respond_to?(method)) || (data && data.key?(method))
     end
 

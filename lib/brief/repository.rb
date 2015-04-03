@@ -20,7 +20,8 @@ module Brief
       "#{documents.count}-#{documents.map {|d| d.path.mtime.to_i }.max}"
     end
 
-    def respond_to?(meth)
+    def respond_to?(*args)
+      meth = args.first
       super || model_groups.include?(meth.to_s)
     end
 

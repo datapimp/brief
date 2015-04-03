@@ -8,6 +8,8 @@ class Brief::Server::Gateway
     Rack::Handler::Thin.run(app, Port: port, Host: host)
   end
 
+  attr_reader :briefcases
+
   def initialize(options={})
     @root = options.fetch(:root)
     @briefcases = {}.to_mash
