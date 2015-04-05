@@ -34,19 +34,6 @@ command 'dispatch export' do |c|
                                              data: options.include_data,
                                              attachments: options.include_attachments,
                                              models: options.include_models).as_json
-
-      case
-      when options.output && options.format.to_sym == :json
-        Pathname(options.output).open("w+") do |fh|
-          fh.write("#{options.prefix_output}#{result.to_json}")
-        end
-      when options.format.to_sym == :json
-        puts "#{options.prefix_output}#{result.to_json}"
-      when options.format.to_sym == :printed
-        puts result
-      end
-
-
   end
 end
 

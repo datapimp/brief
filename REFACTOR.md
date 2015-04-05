@@ -1,0 +1,4 @@
+- `YAML.load_file(file)` will load frontmatter and discard the rest
+- `File.basename(file, '.*')` gets the basename with no extensions
+- Merge document and model classes
+- Use ActiveModel
