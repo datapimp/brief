@@ -18,6 +18,8 @@ if ARGV[0] == "console"
   Pry.start($briefcase)
 else
   require 'commander/import'
+  
+  $terminal.wrap_at = 120
 
   program :name, "Brief"
   program :description, "Brief lets you treat your markdown files like active record objects"
