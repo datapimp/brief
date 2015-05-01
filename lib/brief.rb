@@ -43,6 +43,17 @@ module Brief
     @views ||= {}
   end
 
+  def self.environment_info
+    {
+      VERSION: Brief::VERSION,
+      lib_root: Brief.lib_root.to_s,
+      apps: {
+        search_paths: Brief::Apps.search_paths.map(&:to_s),
+        available: Brief::Apps.available_apps
+      }
+    }
+  end
+
   def self.configuration
     Brief::Configuration.instance
   end

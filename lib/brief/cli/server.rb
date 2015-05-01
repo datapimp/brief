@@ -24,17 +24,9 @@ command 'start socket server' do |c|
 
     EM.run {
       EM::WebSocket.run(:host=>"0.0.0.0",:port => 8089) do |ws|
+        Brief::Server::Socket.new(root: options.root, websocket: ws)
 
-        socket = Brief::Server::Socket.new(root: options.root)
-
-        ws.onopen do |handshake|
-          ws.send ({:briefcases=> socket.briefcases.keys}.to_json)
-        end
-
-        ws.onmessage do |raw|
-          if message = (JSON.parse(raw) rescue nil)
-            socket.receive(message, ws)
-          end
+        ws.onopen do
         end
       end
     }
