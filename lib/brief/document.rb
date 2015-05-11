@@ -127,7 +127,7 @@ module Brief
     end
 
     def briefcase
-      (@briefcase_root && Brief.cases[@briefcase_root]) || Brief.case(true)
+      (@briefcase_root && Brief.cases[@briefcase_root.basename.to_s]) || Brief.case(true)
     end
 
     def has_sections?

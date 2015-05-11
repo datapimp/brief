@@ -4,7 +4,6 @@ PATH
     brief (1.9.8)
       activesupport (~> 4.0)
       commander (~> 4.3)
-      dnode
       em-websocket (= 0.5.1)
       eventmachine (= 1.0.6)
       github-fs (~> 0)
@@ -39,15 +38,11 @@ GEM
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
-    dnode (0.0.2)
-      eventmachine
-      events
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
     equalizer (0.0.11)
     eventmachine (1.0.6)
-    events (0.9.8)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
     github-fs (0.0.1)

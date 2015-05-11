@@ -1,5 +1,4 @@
-module Brief
-  class Server
+module Brief class Server
     class Socket
       attr_reader :briefcases, :root, :websocket
 
@@ -22,7 +21,11 @@ module Brief
 
         when action == "brief:info"
           respond_to(message_id) do
-            Brief.environment_info
+            {
+              environment: Brief.environment_info,
+              root: root.to_s,
+              briefcases: briefcases.keys
+            }
           end
 
         when action == "list:briefcases"
@@ -41,7 +44,7 @@ module Brief
           briefcase = briefcases.fetch(message[:briefcase])
 
           respond_to(message_id) do
-            briefcase.present(presenter, options)
+            briefcase.present(presenter.to_sym, options)
           end
 
         when action == "view:document"

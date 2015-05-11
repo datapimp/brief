@@ -2,9 +2,6 @@ Dir[File.join(Dir.pwd, 'tasks', '**', '*.rb')].each { |f| require f }
 Dir[File.join(Dir.pwd, 'tasks', '*.rake')].each { |f| load f }
 
 require "bundler/gem_tasks"
-require 'rspec/core/rake_task'
-
-RSpec::Core::RakeTask.new(:spec)
 
 Distribution.configure do |config|
   config.package_name = 'brief'
@@ -24,5 +21,3 @@ Distribution.configure do |config|
     'unf_ext-0.0.6'
   ]
 end
-
-task :default => :spec

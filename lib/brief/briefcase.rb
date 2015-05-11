@@ -58,7 +58,12 @@ module Brief
         key: folder_name.to_s.parameterize,
         name: folder_name.to_s.titlecase,
         settings: settings,
-        cache_key: cache_key
+        cache_key: cache_key,
+        root: root.to_s,
+        docs_path: docs_path.to_s,
+        assets_path: assets_path.to_s,
+        models_path: models_path.to_s,
+        data_path: data_path.to_s
       }
 
       if params[:include_data] || params[:data]
@@ -87,7 +92,11 @@ module Brief
     end
 
     def as_full_export(options={})
-      options.reverse_merge!(content: true, rendered: true, models: true, schema: true)
+      options.reverse_merge!(content: true,
+                             rendered: true,
+                             models: true,
+                             schema: true,
+                             attachments: true)
       as_default(options)
     end
 

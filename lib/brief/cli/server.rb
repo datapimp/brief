@@ -25,35 +25,7 @@ command 'start socket server' do |c|
     EM.run {
       EM::WebSocket.run(:host=>"0.0.0.0",:port => 8089) do |ws|
         Brief::Server::Socket.new(root: options.root, websocket: ws)
-
-        ws.onopen do
-        end
       end
     }
-  end
-end
-
-command 'start drb server' do |c|
-  c.option '--host HOSTNAME', String, 'What hostname to listen on'
-  c.option '--port PORT', String, 'What port to listen on'
-  c.option '--gateway', 'Create a gateway instead of a briefcase'
-
-  c.action do |args, options|
-    options.default(root: Brief.pwd)
-
-    require 'drb'
-
-    root = Pathname(options.root)
-
-    object = if options.gateway
-               Brief::Server::Distributed.new(root: root, briefcase_options: {eager: true})
-             else
-               Brief::Briefcase.new(root: root, eager: true)
-             end
-
-    puts "== starting distributed service"
-    DRb.start_service "druby://:#{ options.port || 9000 }", object
-    trap("INT") { DRb.stop_service }
-    DRb.thread.join()
   end
 end
