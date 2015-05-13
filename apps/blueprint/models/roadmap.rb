@@ -1,6 +1,8 @@
 class Brief::Apps::Blueprint::Roadmap
   include Brief::Model
 
+  defined_in Pathname(__FILE__)
+
   meta do
     title
     subheading

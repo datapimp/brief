@@ -6,7 +6,12 @@ describe "Packaged Apps" do
   end
 
   let(:blueprint) do
-    Brief::Briefcase.new(app: "blueprint")
+    Brief::Briefcase.new(app: "blueprint", root: Brief.spec_root.join('fixtures','example'))
+  end
+
+  it "renders documentation for the app" do
+    rendered = blueprint.render_documentation.epic.rendered
+    expect(rendered).to include("h1")
   end
 
   it "should find the right path for an app name" do

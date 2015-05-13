@@ -1,6 +1,8 @@
 class Brief::Apps::Blueprint::Diagram
   include Brief::Model
 
+  defined_in Pathname(__FILE__)
+
   meta do
     title
     subheading
@@ -13,7 +15,7 @@ class Brief::Apps::Blueprint::Diagram
     subheading "h2:first-of-type"
 
     define_section "Annotations" do
-      each("h2").has(:title => "h3",
+      each("h2").has(:title => "h2",
                      :paragraphs => "p",
                      :settings => "code")
     end

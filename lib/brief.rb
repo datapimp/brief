@@ -69,7 +69,9 @@ module Brief
   def self.load_commands
     Dir[lib_root.join('brief', 'cli', '**/*.rb')].each { |f| require(f) }
 
-    # the instance methods which get defined with the helper
+    # Each Brief::Model can define certain "actions" which can be called on the documents.
+    #
+    # The Brief CLI interface lets users dispatch these actions to the documents specified by the PATH args.
     Brief::Model.classes.each do |klass|
       Array(klass.defined_actions).uniq.each do |action|
         Brief::Util.create_method_dispatcher_command_for(action, klass)
@@ -125,6 +127,7 @@ require 'brief/model/serializers'
 require 'brief/data'
 require 'brief/dsl'
 require 'brief/server'
+require 'brief/briefcase/documentation'
 require 'brief/briefcase'
 require 'brief/apps'
 

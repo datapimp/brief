@@ -1,6 +1,8 @@
 class Brief::Apps::Blueprint::Release
   include Brief::Model
 
+  defined_in Pathname(__FILE__)
+
   meta do
     title
     status

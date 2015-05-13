@@ -1,6 +1,7 @@
 module Brief
   class Briefcase
     include Brief::DSL
+    include Brief::Briefcase::Documentation
 
     attr_reader :options,
                 :model_definitions
@@ -50,6 +51,9 @@ module Brief
       end
     end
 
+    # TODO
+    # The serialization of an entire briefcase at once
+    # is important enough to be its own module
     def as_default(params={})
       params.symbolize_keys!
 
@@ -72,6 +76,10 @@ module Brief
 
       if params[:include_schema] || params[:schema]
         base[:schema] = schema_map
+      end
+
+      if params[:include_documentation] || params[:documentation]
+        base[:documentation] = render_documentation
       end
 
       if params[:include_models] || params[:models]
@@ -104,12 +112,6 @@ module Brief
       options[:app] = module_id.to_s
 
       run(app_config_path) if app_path.try(&:exist?)
-    end
-
-    def schema_map(include_all=false)
-      list = include_all ? Brief::Model.classes : model_classes
-      list.map(&:to_schema)
-        .reduce({}.to_mash) {|m, k| m[k[:type_alias]] = k; m }
     end
 
     def data

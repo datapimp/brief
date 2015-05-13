@@ -19,6 +19,8 @@ module Brief
       @section_mappings = {}.to_mash
       @content_schema   = { attributes: {} }.to_mash
       @model_class      = options[:model_class]
+
+      @doc_options = {}.to_mash
     end
 
     def valid?
@@ -59,6 +61,23 @@ module Brief
 
     def model_namespace
       Brief.configuration.model_namespace || Brief::Model
+    end
+
+    # TODO
+    # There is probably a way to inspect the filename of the code calling you
+    # which would be a better way of handling this that doesn't require
+    def defined_in(filename=nil)
+      if filename
+        filename = Pathname(filename)
+        @doc_options[:defined_in] = filename
+      end
+
+      @doc_options[:defined_in]
+    end
+
+    def documentation(options={}, &block)
+      @doc_options.merge!(options) if options
+      @doc_options
     end
 
     def meta(_options = {}, &block)

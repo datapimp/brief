@@ -1,5 +1,7 @@
-class Brief::Apps::Blueprint::Milestones
+class Brief::Apps::Blueprint::Milestone
   include Brief::Model
+
+  defined_in Pathname(__FILE__)
 
   meta do
     title

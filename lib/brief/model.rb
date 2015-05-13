@@ -124,12 +124,36 @@ module Brief
         (definition.content_schema.attributes.keys + definition.metadata_schema.keys).uniq
       end
 
+      def to_documentation
+        docs = definition.documentation
+
+        path = if docs.markdown
+                 Pathname(docs.markdown)
+               elsif defined_in
+                 basename = defined_in.basename.to_s.gsub(/.rb/,'')
+                 defined_in.parent.join('..','documentation',"#{basename}.md")
+               end
+
+        if path
+          model_doc = Brief::Briefcase::Documentation::ModelDoc.new(path)
+
+          {
+            content: model_doc.content,
+            rendered: model_doc.rendered
+          }
+        else
+          {
+          }
+        end
+      end
+
       def to_schema
         {
           schema: {
             content: definition.content_schema,
             metadata: definition.metadata_schema,
           },
+          documentation: to_documentation,
           class_name: to_s,
           type_alias: type_alias,
           name: name,
@@ -236,10 +260,22 @@ module Brief
         definition.send(:example_body, *args).to_s.strip
       end
 
+      def documentation(*args)
+        definition.send(:documentation, *args)
+      end
+
+      def defined_in(*args)
+        definition.send(:defined_in, *args)
+      end
+
       def method_missing(meth, *args, &block)
+        # these methods when called at a class level inside of
+        # a class definition body will modify the schema settings for that model
         if %w(meta content template example actions helpers).include?(meth.to_s)
           definition.send(meth, *args, &block)
           finalize
+        # these methods allow the model class to inspect itself and report
+        # whatever methods and actions are defined on the model class
         elsif %w(defined_helper_methods defined_actions).include?(meth.to_s)
           definition.send(meth)
         elsif meth.to_s.match(/^on_(.*)_change$/)

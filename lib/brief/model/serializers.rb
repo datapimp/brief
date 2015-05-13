@@ -33,6 +33,7 @@ module Brief::Model::Serializers
 
       if options[:attachments] || options[:include_attachments]
         h[:attachments] = document.render_attachments
+        h[:attachment_paths] = document.attachment_paths
       end
 
       h[:urls] = {
