@@ -51,24 +51,31 @@ module Brief
       end
     end
 
-    # TODO
-    # The serialization of an entire briefcase at once
-    # is important enough to be its own module
-    def as_default(params={})
-      params.symbolize_keys!
-
-      base = {
+    def info_hash
+      {
+        BRIEF_VERSION: Brief::VERSION,
         views: Brief.views.keys,
         key: folder_name.to_s.parameterize,
         name: folder_name.to_s.titlecase,
         settings: settings,
         cache_key: cache_key,
         root: root.to_s,
-        docs_path: docs_path.to_s,
-        assets_path: assets_path.to_s,
-        models_path: models_path.to_s,
-        data_path: data_path.to_s
+        paths:{
+          docs_path: docs_path.to_s,
+          assets_path: assets_path.to_s,
+          models_path: models_path.to_s,
+          data_path: data_path.to_s
+        }
       }
+    end
+
+    # TODO
+    # The serialization of an entire briefcase at once
+    # is important enough to be its own module
+    def as_default(params={})
+      params.symbolize_keys!
+
+      base = info_hash
 
       if params[:include_data] || params[:data]
         base[:data] = data.as_json
@@ -104,6 +111,7 @@ module Brief
                              rendered: true,
                              models: true,
                              schema: true,
+                             documentation: true,
                              attachments: true)
       as_default(options)
     end

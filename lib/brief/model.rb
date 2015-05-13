@@ -142,18 +142,48 @@ module Brief
             rendered: model_doc.rendered
           }
         else
-          {
-          }
+          { }
+        end
+      end
+
+      def content_schema_summary
+        base = definition.content_schema.attributes
+
+        base.keys.inject({}) do |memo, key|
+          val = base[key]
+          args = Array(val[:args])
+          first = args.first
+          memo[key] = first if first
+          memo
+        end
+      end
+
+      def metadata_schema_summary
+        base = definition.metadata_schema
+
+        base.keys.inject({}) do |memo, key|
+          val = base[key]
+          args = Array(val[:args])
+          first = args.first.to_s
+
+          if args.length == 1 && first == key.to_s
+            memo[key] = "string"
+          elsif args.length >= 2
+            memo[key] = args.last
+          end
+
+          memo
         end
       end
 
       def to_schema
         {
           schema: {
-            content: definition.content_schema,
-            metadata: definition.metadata_schema,
+            content: content_schema_summary,
+            metadata: metadata_schema_summary,
           },
           documentation: to_documentation,
+          defined_in: defined_in,
           class_name: to_s,
           type_alias: type_alias,
           name: name,
