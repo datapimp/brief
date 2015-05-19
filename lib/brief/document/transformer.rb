@@ -27,7 +27,7 @@ module Brief
             img.replace("<div class='svg-wrapper'>#{ asset.read }</div>")
           end
         rescue
-          binding.pry
+          nil
         end
       end
     end
@@ -49,7 +49,7 @@ module Brief
               node['href'] = "brief://document-not-found"
             end
           rescue
-            binding.pry
+            nil
           end
         end
       end
@@ -73,7 +73,7 @@ module Brief
         end
       end
     rescue
-      binding.pry
+      nil
     end
 
     private
