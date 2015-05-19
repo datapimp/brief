@@ -11,7 +11,7 @@ describe "Packaged Apps" do
 
   it "renders documentation for the app" do
     rendered = blueprint.render_documentation.epic.rendered
-    expect(rendered).to include("h1")
+    expect(rendered).to include("Feature Epics")
   end
 
   it "should find the right path for an app name" do
