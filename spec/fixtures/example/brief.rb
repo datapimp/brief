@@ -18,6 +18,12 @@ define "Release" do
   end
 end
 
+define "Outline" do
+  meta do
+    title
+  end
+end
+
 define "User Story" do
   meta do
     title

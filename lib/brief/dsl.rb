@@ -10,6 +10,7 @@ module Brief
       Brief.views[name.to_sym] = block
     end
 
+    # Extends an existing class
     def extend(*args, &block)
       options     = args.dup.extract_options!
       name        = args.first
@@ -27,6 +28,7 @@ module Brief
       klass.definition.validate!
     end
 
+    # defines a new model class
     def define(*args, &block)
       options     = args.dup.extract_options!
       name        = args.first

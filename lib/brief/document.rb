@@ -270,15 +270,35 @@ module Brief
       super || (data && data.respond_to?(method)) || (data && data.key?(method))
     end
 
+    # The structure analyzer of the document is responsible for grouping
+    # the content under the headings by wrapping them in divs, and creating
+    # relationships between the nodes. This is what lets us provide an easy
+    # iteration API on top of the parsed document
     def structure
       @structure_analyzer ||= Brief::Document::Structure.new(fragment, raw_content.lines.to_a)
     end
 
+    # The Parser wraps the rendered HTML in a nokogiri element so we can easily manipulate it.
+    # Prior to doing so, we use the structure analyzer to build more metadata into the markup
     def parser
       @parser ||= begin
                     structure.prescan
-                    structure.create_wrappers
+
+                    structure.create_wrappers.tap do |f|
+                      transformer_for(f).all if data.transform
+                    end
                   end
+    end
+
+    # The transformer is responsible for performing content modifications
+    # on the rendered document.  This is useful for supporting extensions that
+    # are driven by the markdown language.
+    #
+    # TODO: This is hidden behind a feature flag, and requires the document
+    # to have metadata that specifies transform = true
+    def transformer_for(doc_fragment=nil)
+      doc_fragment ||= fragment
+      @transformer ||= Brief::Document::Transformer.new(doc_fragment, self)
     end
 
     def fragment

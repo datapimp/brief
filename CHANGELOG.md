@@ -134,3 +134,13 @@ attributes.
   - Cleaned up some implementations
   - Fully implemented the command set
   - CLI can be used to generate JSON data
+
+### 1.9.4
+  - Added support for including asset attachments inline as data
+
+### 1.9.10
+  - Added a websocket server for easy on the fly parsing / querying
+
+### 1.9.12
+  - Included ability to transform content using special markdown link syntax
+  - Included ability to inline svg assets

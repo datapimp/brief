@@ -1,16 +1,10 @@
 module GitHub
   class Markdown
-
     def self.render_gfm(content)
-      html = self.to_html(content, :gfm)
-      html = add_level_and_heading(html)
-      html
+      self.to_html(content, :gfm).tap do |html|
+        html.gsub!(/<h([1-6])>(.+?)<\/h\1>/,"<h\\1 data-level='\\1' data-heading='\\2'>\\2<\/h\\1>")
+      end
     end
-
-    def self.add_level_and_heading(html)
-      html.gsub(/<h([1-6])>(.+?)<\/h\1>/,"<h\\1 data-level='\\1' data-heading='\\2'>\\2<\/h\\1>")
-    end
-
   end
 end
 
