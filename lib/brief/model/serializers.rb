@@ -10,10 +10,6 @@ module Brief::Model::Serializers
       doc_path = path.realpath.relative_path_from(briefcase_docs_path).to_s
     end
 
-    # TEMP
-    title = data.try(:[], :title) || extracted_content_data.try(:title) || (send(:title) rescue nil) || path.basename.to_s.gsub(/\.html.md/,'')
-    title = title.to_s.gsub(/\.md/,'')
-
     {
       data: data,
       extracted: extracted_content_data,

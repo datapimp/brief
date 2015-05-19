@@ -14,10 +14,20 @@ module Brief
 
     def inline_svg_content
       inline_svg_images.each do |img|
-        _, value = img['src'].to_s.split("=")
+        src = img['src'].to_s
 
-        if asset = document.briefcase.find_asset(value)
-          img.replace("<div class='svg-wrapper'>#{ asset.read }</div>")
+        if src.match(/=/)
+          _, value = img['src'].to_s.split("=")
+        else
+          value = src
+        end
+
+        begin
+          if asset = document.briefcase.find_asset(value)
+            img.replace("<div class='svg-wrapper'>#{ asset.read }</div>")
+          end
+        rescue
+          binding.pry
         end
       end
     end
@@ -30,11 +40,16 @@ module Brief
         if instruction == "link" && attribute == "path"
           begin
             link_to_doc = document.briefcase.document_at(value)
-            text = link_to_doc.send(strategy)
-            node.inner_html = text
-            node['href'] = "brief://#{ link_to_doc.path }"
+
+            if link_to_doc.exist?
+              text = link_to_doc.send(strategy)
+              node.inner_html = text
+              node['href'] = "brief://#{ link_to_doc.path }"
+            else
+              node['href'] = "brief://document-not-found"
+            end
           rescue
-            nil
+            binding.pry
           end
         end
       end
@@ -57,6 +72,8 @@ module Brief
           node.replace(replacement) if replacement
         end
       end
+    rescue
+      binding.pry
     end
 
     private

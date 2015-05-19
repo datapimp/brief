@@ -65,6 +65,9 @@ module Brief
     InvalidPath = Class.new(Exception)
 
     def normalize_path(p)
+      p = p.to_s
+      p = p + '.md' unless p.match(/\.\w+$/)
+
       docs_path.join(p).tap do |normalized|
         if normalized.to_s.split("/").length < docs_path.realpath.to_s.split("/").length
           raise InvalidPath

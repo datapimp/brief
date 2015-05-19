@@ -31,6 +31,10 @@ module Brief
       self
     end
 
+    def title
+      (data && data.title) || css('h1:first-of-type').text || path.to_s.split("/").last.gsub(/\..*/,'')
+    end
+
     def to_s
       "#{ model_class }.at_path(#{relative_path})"
     end

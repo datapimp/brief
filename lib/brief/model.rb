@@ -29,6 +29,10 @@ module Brief
     end
 
     module AccessorMethods
+      def title
+        document_title
+      end
+
       def document_title
         data.try(:[], :title) ||
         extracted_content_data.try(:title) ||
@@ -265,7 +269,7 @@ module Brief
         definition.send(:section_mappings, *args)
       end
 
-      def generate_template_content_from(object, include_frontmatter = true)
+      def generate_template_content_from(object={}, include_frontmatter = true)
         @erb ||= ERB.new(template_body)
         content = @erb.result(binding)
         frontmatter = object.slice(*attribute_names)
