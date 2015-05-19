@@ -100,7 +100,10 @@ module Brief
 
         all = all_models.compact
 
-        base[:models] = all.map {|m| m.as_json(model_settings) }
+        base[:models] = all.map do |m|
+          m.document.refresh! if params[:refresh_models]
+          m.as_json(model_settings)
+        end
       end
 
       base
