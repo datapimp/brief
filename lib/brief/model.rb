@@ -128,6 +128,8 @@ module Brief
         (definition.content_schema.attributes.keys + definition.metadata_schema.keys).uniq
       end
 
+      # Looks to see if there is a documentation markdown file for the model
+      # and if so, will return the documentation info as a Hash
       def to_documentation
         docs = definition.documentation
 
@@ -143,7 +145,8 @@ module Brief
 
           {
             content: model_doc.content,
-            rendered: model_doc.rendered
+            rendered: model_doc.rendered,
+            path: path
           }
         else
           { }
