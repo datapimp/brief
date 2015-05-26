@@ -1,3 +1,27 @@
+# # Structured Documents
+#
+# Normal markdown is rendered flat.  While there may be hierarchy,
+# it was difficult to parse it in a way which made the headings
+# collapsible.
+#
+# The Document Structure is responsible for grouping
+# blocks of content under their nearest previous heading element
+# acting as a parent.  It does this by wrapping them in `<section>`
+# and <article> tags, and through the use of data-attributes on the elements.
+#
+# ```
+# - h1
+#   - h2
+#     - h3
+#     - h3
+#   - h2
+# - h1
+#   - h2
+# ```
+#
+# This class allows for us to define rules based on headings, for how
+# we might interpret the meaning of the content that is written.  It allows
+# us to say: all level 2 headings are 'TodoItems' if they exist under the level 1 heading 'Tasks'
 module Brief
   class Document::Structure
     attr_accessor :fragment, :content_lines
