@@ -1,6 +1,6 @@
 ---
-type: user_story
-title: Blueprint User Story Example
+type: feature
+title: Blueprint Feature Example
 subheading: A way of describing desired behavior of the software, from the perspective of a persona who has a goal 
 epic: Blueprint Epic Example 
 release: Blueprint Release Example

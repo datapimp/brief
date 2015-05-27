@@ -4,7 +4,7 @@ title: Table of Contents
 transform: true
 ---
 
-[include:content](path=user_story.html.md)
+[include:content](path=feature.html.md)
 
 # Table of contents
 
