@@ -6,7 +6,7 @@ describe "Document Templates" do
       title: "Epic Example",
       status: "published",
       type: "epic",
-      user_stories:[{
+      features:[{
         title: "A user wants to do something",
         paragraph: "As a user I would like to do something so that I can succeed",
         goal: "I can succeed",
@@ -35,7 +35,7 @@ describe "Document Templates" do
     doc = Brief::Document.create_from_data(data)
     content = doc.content
 
-    expect(content).to include("# User Stories")
+    expect(content).to include("# Features")
     expect(content).to include("# Epic Example")
     expect(content).to include("## A user wants to do something")
     expect(content).to include("## A user wants to do something else")

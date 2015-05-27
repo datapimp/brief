@@ -19,7 +19,7 @@ This is a list:
 # SOME CODE
 ```
 
-# User Stories
+# Features
 
 ## Story Title One
 

@@ -1,4 +1,4 @@
-class Brief::Apps::Blueprint::UserStory
+class Brief::Apps::Blueprint::Feature
   include Brief::Model
 
   defined_in Pathname(__FILE__)
@@ -9,7 +9,7 @@ class Brief::Apps::Blueprint::UserStory
     epic_title
   end
 
-  template :file => "user_story.md.erb"
+  template :file => "feature.md.erb"
 
   content do
     persona "p strong:first-child"

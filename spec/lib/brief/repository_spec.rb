@@ -31,8 +31,8 @@ describe "The Brief Document Repository" do
     end
 
     it "finds the last document matching a query" do
-      query = repository.where(state:"active", type:"user_story")
-      expect(query.last.type).to eq("user_story")
+      query = repository.where(state:"active", type:"feature")
+      expect(query.last.type).to eq("feature")
     end
 
     it "respects the ordering" do

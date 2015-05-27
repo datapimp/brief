@@ -109,7 +109,7 @@ which is implemented by:
 ```ruby
 # brief.rb
 
-define "User Story" do
+define "Feature" do
   meta do
     status
   end
@@ -131,12 +131,12 @@ define "User Story" do
 end
 
 action "publish user stories" do |briefcase, models, options|
-  user_stories = models
+  features = models
 
-  user_stories.each do |user_story|
-    if user_story.create_github_issue()
-      user_story.status = "published"
-      user_story.save
+  features.each do |feature|
+    if feature.create_github_issue()
+      feature.status = "published"
+      feature.save
     end
   end
 end

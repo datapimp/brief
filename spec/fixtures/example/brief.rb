@@ -24,14 +24,14 @@ define "Outline" do
   end
 end
 
-define "User Story" do
+define "Feature" do
   meta do
     title
     status :in => %w(draft published)
     epic_title
   end
 
-  template :file => "user_story.md.erb"
+  template :file => "feature.md.erb"
 
   content do
     persona "p strong:first-child"

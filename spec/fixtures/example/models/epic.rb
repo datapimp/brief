@@ -17,37 +17,37 @@ status: draft
 
 Write a description for your epic.
 
-# User Stories
+# Features
 
-## User Story Title
+## Feature Title
 
 As a **PERSONA** I would like to **BEHAVIOR** so that I can **GOAL**
   EOF
 
   template <<-EOF
 # <%= object.title %>
-# User Stories
-<% Array(object.user_stories).each do |user_story| %>
-## <%= user_story.title %>
+# Features
+<% Array(object.features).each do |feature| %>
+## <%= feature.title %>
 As a **User** I would like to **Do this** so that I can **succeed**
 <% end %>
   EOF
 
   content do
     title "h1:first-of-type"
-    define_section "User Stories" do
+    define_section "Features" do
       each("h2").has(:title     => "h2",
                      :paragraph => "p:first-of-type",
                      :components   => "p:first-of-type strong"
                     )
 
-      each("h2").is_a :user_story
+      each("h2").is_a :feature
     end
   end
 
   helpers do
-    def user_stories
-      sections.user_stories.items.map do |item|
+    def features
+      sections.features.items.map do |item|
         item.components = Array(item.components)
 
         item.merge(goal: item.components[2],

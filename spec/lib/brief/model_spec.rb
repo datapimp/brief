@@ -3,41 +3,41 @@ require "spec_helper"
 describe "The Brief Model" do
   let(:briefcase) { Brief.testcase }
   let(:epic) { briefcase.epics.first }
-  let(:user_story) { briefcase.user_stories.first }
+  let(:feature) { briefcase.features.first }
 
   it "exposes information about its schema" do
     expect(epic.class.to_schema.keys).to include(:schema, :name, :class_name, :type_alias)
   end
 
   context "DSL Style Declarations" do
-    it "picks up a definition of 'User Story'" do
-      expect(briefcase.model("User Story")).to be_present
+    it "picks up a definition of 'Feature'" do
+      expect(briefcase.model("Feature")).to be_present
     end
 
     it "defines a class for us" do
-      expect((Brief::Model::UserStory rescue nil)).to be_present
+      expect((Brief::Model::Feature rescue nil)).to be_present
     end
 
     it "shows up in the model definitions table" do
-      expect(Brief::Model.table.user_story).to be_present
+      expect(Brief::Model.table.feature).to be_present
     end
 
     it "has a definition" do
-      expect(Brief::Model::UserStory.definition).to be_a(Brief::Model::Definition)
+      expect(Brief::Model::Feature.definition).to be_a(Brief::Model::Definition)
     end
 
     it "has paths and document attributes by default" do
-      set = Brief::Model::UserStory.attribute_set.map(&:name)
+      set = Brief::Model::Feature.attribute_set.map(&:name)
       expect(set).to include(:path, :document)
     end
 
     it "has the attributes defined in the DSL" do
-      set = Brief::Model::UserStory.attribute_set.map(&:name)
+      set = Brief::Model::Feature.attribute_set.map(&:name)
       expect(set).to include(:title, :status, :epic_title)
     end
 
     it "has attribute setters" do
-      story = Brief::Model::UserStory.new
+      story = Brief::Model::Feature.new
       expect(story).to respond_to(:title=)
     end
   end
@@ -75,7 +75,7 @@ describe "The Brief Model" do
   context "Briefcase Finders" do
     it "creates methods on the briefcase for each class" do
       expect(briefcase.epics).not_to be_empty
-      expect(briefcase.user_stories).not_to be_empty
+      expect(briefcase.features).not_to be_empty
     end
 
     it "finds instances of the desired model" do
@@ -103,18 +103,18 @@ describe "The Brief Model" do
     end
 
     it "users the actions block to define CLI dispatchers (dsl)" do
-      expect(user_story.class.defined_actions).to include(:custom_action)
+      expect(feature.class.defined_actions).to include(:custom_action)
     end
 
     it "lets me define a helper method which utilizes all the extracted data and content structure" do
-      expect(epic.user_stories.length).to eq(3)
-      expect(epic.user_stories.map(&:persona)).to include("User")
+      expect(epic.features.length).to eq(3)
+      expect(epic.features.map(&:persona)).to include("User")
     end
   end
 
   context "Section Mappings" do
-    it "defines a section mapping for User Stories" do
-      mapping = epic.class.section_mapping("User Stories")
+    it "defines a section mapping for Features" do
+      mapping = epic.class.section_mapping("Features")
       expect(mapping).to be_a(Brief::Document::Section::Mapping)
     end
   end

@@ -7,7 +7,7 @@ command 'parse' do |c|
   c.option '--include-rendered', 'Gets passed to the model renderers if present'
   c.option '--include-urls', 'Gets passed to the model renderers if present'
 
-  c.example "Parsing an arbitrary selection of documents", "brief parse ./blueprint/docs/epics ./blueprint/docs/user_stories --root=./blueprint --format json --include-rendered --include-content"
+  c.example "Parsing an arbitrary selection of documents", "brief parse ./blueprint/docs/epics ./blueprint/docs/features --root=./blueprint --format json --include-rendered --include-content"
 
   c.action do |args, options|
     options.default(root: Pathname(Brief.pwd), output_type: "array")

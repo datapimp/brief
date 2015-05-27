@@ -83,11 +83,11 @@ attributes.
   so for example, given a model:
 
   ```
-  define "User Story" do
+  define "Feature" do
 
   example <<- EOF
   ---
-  type: user_story
+  type: feature
   status: draft
   ---
 

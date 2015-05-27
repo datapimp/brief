@@ -23,7 +23,7 @@ describe "The Brief Document" do
   end
 
   it "renders html" do
-    expect(sample.to_html).to match(/h1.*User Stories.*h1\>/)
+    expect(sample.to_html).to match(/h1.*Features.*h1\>/)
   end
 
   it "renders html" do
@@ -59,7 +59,7 @@ describe "The Brief Document" do
     end
 
     it "gives me info about the section headings" do
-      expect(sample.section_headings).to include("user_stories")
+      expect(sample.section_headings).to include("features")
     end
 
     it "has the information from the sections" do
@@ -68,13 +68,13 @@ describe "The Brief Document" do
 
     it "lets me define content sections" do
       expect(sample.sections).not_to be_empty
-      expect(sample.sections.user_stories).to be_present
-      expect(sample.sections.user_stories.fragment.name).to eq("section")
-      expect(sample.sections.user_stories.fragment.css("article").length).to eq(3)
+      expect(sample.sections.features).to be_present
+      expect(sample.sections.features.fragment.name).to eq("section")
+      expect(sample.sections.features.fragment.css("article").length).to eq(3)
     end
 
     it "gives me an array of items underneath the section filled with the key value mappings i laid out" do
-      items = sample.sections.user_stories.items
+      items = sample.sections.features.items
       expect(items.length).to eq(3)
       expect(items.map(&:components).map(&:first).uniq).to eq(["User"])
     end
