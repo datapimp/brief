@@ -105,3 +105,51 @@ That is powerful stuff.
 gem install brief
 brief --help
 ```
+
+### Structure of a Briefcase
+
+- `docs/` contain diferent markdown files with YAML frontmatter.
+- `models/` define your own model classes.
+- `data/` dump data sources as JSON in here to use them in the renderer 
+- `assets/` you can include / reference assets like PNG or SVG images
+- `brief.rb` the brief config file
+
+### Servers
+
+Brief ships with a number of different "servers" which can sit on top of
+a single `briefcase` or a folder with a bunch of different briefcases.
+
+These servers provide an interface for common things like searching a
+collection of documents, rendering documents, or adding,editing,removing
+documents.
+
+Currently there is a standard REST interface, and a Websockets
+interface.
+
+### Apps
+
+The brief gem ships with a couple of `apps`.  These `apps` are
+collections of models and represent a sample application you can use.
+
+You can use an `app` by saying so in your config file:
+
+```ruby
+# brief.rb
+use "blueprint" # => $BRIEF_GEM/apps/blueprint
+```
+
+## Other neat features (TODO)
+
+### Special Link & Image Tags
+
+You can include the content from other documents pretty easily
+
+  ```markdown
+  [include:content](path=feature.html.md)
+  ```
+
+- You can inline SVG assets pretty easily:
+
+  ```markdown
+  ![inline:svg](path=diagrams/test.svg)
+  ```
