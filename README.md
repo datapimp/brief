@@ -142,11 +142,20 @@ use "blueprint" # => $BRIEF_GEM/apps/blueprint
 
 ### Special Link & Image Tags
 
-You can include the content from other documents pretty easily
+- You can include the content from other documents pretty easily
 
   ```markdown
   [include:content](path=feature.html.md)
   ```
+
+- You can create links to other documents pretty easily
+
+  ```
+  [link:title](path=feature.html.md)
+  ```
+
+  This will find the document at the specified path, and link to it with
+  the title attribute from that document
 
 - You can inline SVG assets pretty easily:
 
