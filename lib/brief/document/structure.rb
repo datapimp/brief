@@ -98,11 +98,16 @@ module Brief
         level, group = item
         group.reject! { |i| i.text == "\n" }
 
+        #puts "Mapping! #{ level } group length: #{ group.length }"
+
         if level == 0
+          #puts "== Condition A"
           base_fragment = fragment = Nokogiri::HTML.fragment("<div class='brief top level'>#{ group.map(&:to_html).join('') }</div>")
         elsif level <= lowest_level
+          #puts "== Condition B"
           fragment = Nokogiri::HTML.fragment("<section>#{ group.map(&:to_html).join('') }</section>")
         elsif level > lowest_level
+          #puts "== Condition C"
           # should be able to look at the document section mappings and
           # apply custom css classes to these based on the name of the section
           fragment = Nokogiri::HTML.fragment("<article>#{ group.map(&:to_html).join('') }</article>")
@@ -114,6 +119,7 @@ module Brief
       begin
         self.fragment = Brief::Document::Section::Builder.run(mapping, low: lowest_level, high: highest_level)
       rescue Brief::Document::Section::BuilderError
+        ##puts "== Error, returning default fragment: #{ $! }"
         @fragment
       end
     end

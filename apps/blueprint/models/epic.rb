@@ -43,7 +43,8 @@ As a **User** I would like to **Do this** so that I can **succeed**
     define_section "Features" do
       each("h2").has(:title     => "h2",
                      :paragraph => "p:first-of-type",
-                     :components   => "p:first-of-type strong"
+                     :components   => "p:first-of-type strong",
+                     :tasks => "ul li"
                     )
 
       each("h2").is_a :feature

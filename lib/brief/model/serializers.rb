@@ -24,7 +24,9 @@ module Brief::Model::Serializers
       sections: {},
       section_headings: [],
     }.tap do |h|
+
       h[:content] = document.combined_data_and_content if options[:content] || options[:include_content]
+
       h[:rendered] = document.to_html if options[:rendered] || options[:include_rendered]
 
       if options[:attachments] || options[:include_attachments]
@@ -41,10 +43,22 @@ module Brief::Model::Serializers
         schema_url: "/schema/#{ type }",
         actions_url: "/actions/:action/#{ doc_path }"
       } if options[:urls] || options[:include_urls]
-    end.tap do |h|
+
       if document.has_sections?
         h[:section_headings] = document.section_headings
         h[:sections] = document.sections_data
+
+        structure = document.structure
+
+        h[:structure] = {
+          highest_level: structure.highest_level,
+          lowest_level: structure.lowest_level,
+          headings_by_level: (structure.levels.reduce({}) do |m, l|
+            headings = structure.headings_at_level(l.to_i)
+            m[l.to_s] = headings.map(&:heading)
+            m
+          end)
+        }
       end
     end
   end

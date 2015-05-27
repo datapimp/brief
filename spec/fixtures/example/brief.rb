@@ -24,6 +24,12 @@ define "Outline" do
   end
 end
 
+define "CustomModel" do
+  meta do
+    title
+  end
+end
+
 define "Feature" do
   meta do
     title

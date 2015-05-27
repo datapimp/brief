@@ -1,3 +1,13 @@
+class Fixnum
+  def greater_than?(other)
+    self > other
+  end
+
+  def greater_than_or_equal_to?(other)
+    self >= other
+  end
+end
+
 module TestHelpers
   def app
     Brief.testcase.server

@@ -47,7 +47,7 @@ describe "The Brief Document Repository" do
 
     it "supports different operators" do
       query = repository.where(:type.neq => "epic")
-      expect(query.length).to eq(8)
+      expect(query.length).to be_greater_than(8)
     end
 
     it "limits the results to the specified size" do

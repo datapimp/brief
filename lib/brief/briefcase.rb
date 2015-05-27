@@ -192,7 +192,7 @@ module Brief
 
     def model_class_for(document)
       return generic_model_class_for(document) unless uses_app?
-      app_models.find {|k| k.type_alias == document.document_type }
+      app_models.find {|k| k.type_alias == document.document_type } || generic_model_class_for(document)
     end
 
     def generic_model_class_for(document)

@@ -22,7 +22,7 @@ class Brief::Document::Section
       begin
         run
       rescue
-        raise BuilderError
+        raise BuilderError, $!
       end
     end
 
@@ -46,7 +46,12 @@ class Brief::Document::Section
       until even? || maxed_out?
         source.map! do |item|
           level, fragments = item
-          [level, fragments.first]
+
+          [level, (fragments && fragments.first)]
+        end
+
+        if source.any? {|i| i[1].nil? }
+          raise BuilderError, 'Fragments by level seems invalid'
         end
 
         source.each_with_index do |item, index|
