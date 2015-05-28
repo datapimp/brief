@@ -1,4 +1,4 @@
-class Brief::Apps::Blueprint::Wireframe
+class Brief::Apps::Blueprint::Mockup
   include Brief::Model
 
   defined_in Pathname(__FILE__)

@@ -9,7 +9,10 @@ module Brief
                   :defined_actions,
                   :section_mappings,
                   :template_body,
-                  :example_body
+                  :example_body,
+                  :documentation_path,
+                  :example_path,
+                  :template_path
 
     def initialize(name, options = {})
       @name             = name
@@ -66,10 +69,18 @@ module Brief
     # TODO
     # There is probably a way to inspect the filename of the code calling you
     # which would be a better way of handling this that doesn't require
-    def defined_in(filename=nil)
+    def defined_in(filename=nil, options={})
       if filename
         filename = Pathname(filename)
         @doc_options[:defined_in] = filename
+
+        self.example_path ||= options.fetch(:example_path) do
+          filename.parent.join("..","examples", filename.basename.to_s.gsub('.rb','.md'))
+        end
+
+        self.documentation_path ||= options.fetch(:documentation_path) do
+          filename.parent.join("..","documentation", filename.basename.to_s.gsub('.rb','.md'))
+        end
       end
 
       @doc_options[:defined_in]

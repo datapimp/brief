@@ -183,6 +183,28 @@ module Brief
         end
       end
 
+      def example_content
+        if example_path && example_path.exist?
+          return example_path.read.to_s
+        end
+
+        definition.example_body.to_s
+      end
+
+      def template_content
+        if template_path && template_path.exist?
+          return template_path.read.to_s
+        end
+
+        definition.template_body.to_s
+      end
+
+      def documentation_content
+        if documentation_path && documentation_path.exist?
+          return documentation_path.read.to_s
+        end
+      end
+
       def to_schema
         {
           schema: {
@@ -196,8 +218,8 @@ module Brief
           name: name,
           group: name.to_s.pluralize,
           actions: defined_actions,
-          example: definition.example_body.to_s,
-          template: definition.template_body.to_s,
+          example: example_content,
+          template: template_content,
           urls: {
             browse_url: "browse/#{ type_alias.to_s.pluralize }",
             schema_url: "schema/#{ type_alias }"
@@ -305,14 +327,28 @@ module Brief
         definition.send(:defined_in, *args)
       end
 
+      def template_path(*args)
+        definition.send(:template_path=, *args) unless args.empty?
+        definition.send(:template_path)
+      end
+
+      def example_path(*args)
+        definition.send(:example_path=, *args) unless args.empty?
+        definition.send(:example_path)
+      end
+
+      def documentation_path(*args)
+        definition.send(:documentation_path=, *args) unless args.empty?
+        definition.send(:documentation_path)
+      end
+
       def method_missing(meth, *args, &block)
-        # these methods when called at a class level inside of
-        # a class definition body will modify the schema settings for that model
+        # these methods have a special effect on the behavior of the
+        # model definition.  we need to make sure we call finalize after
+        # them
         if %w(meta content template example actions helpers).include?(meth.to_s)
           definition.send(meth, *args, &block)
           finalize
-        # these methods allow the model class to inspect itself and report
-        # whatever methods and actions are defined on the model class
         elsif %w(defined_helper_methods defined_actions).include?(meth.to_s)
           definition.send(meth)
         elsif meth.to_s.match(/^on_(.*)_change$/)

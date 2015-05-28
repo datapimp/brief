@@ -1,4 +1,4 @@
-class Brief::Apps::Blueprint::Persona
+class Brief::Apps::Blueprint::Concept
   include Brief::Model
 
   defined_in Pathname(__FILE__)
