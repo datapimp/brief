@@ -1,3 +1,5 @@
+require 'github/markdown'
+
 module GitHub
   class Markdown
     def self.render_gfm(content)

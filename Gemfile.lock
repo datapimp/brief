@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    brief (1.11.0)
+    brief (1.11.1)
       activesupport (~> 4.0)
       commander (~> 4.3)
       em-websocket (= 0.5.1)
@@ -60,7 +60,7 @@ GEM
     json (1.8.2)
     method_source (0.8.2)
     mini_portile (0.6.2)
-    minitest (5.6.1)
+    minitest (5.7.0)
     multipart-post (2.0.0)
     nokogiri (1.6.5)
       mini_portile (~> 0.6.0)
