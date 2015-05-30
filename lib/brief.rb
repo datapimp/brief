@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'pathname'
 require 'set'
 require 'hashie'
