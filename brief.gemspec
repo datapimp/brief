@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'hashie', '>= 2.0', '< 3.0'
+  spec.add_dependency 'hashie', '>= 3.0.4' 
   spec.add_dependency 'commander', '~> 4.3'
   spec.add_dependency 'github-fs', '~> 0'
   spec.add_dependency 'virtus', '~> 1.0'
