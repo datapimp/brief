@@ -1,17 +1,17 @@
 PATH
   remote: .
   specs:
-    brief (1.11.3)
-      activesupport (~> 4.0)
+    brief (1.11.4)
+      activesupport (> 4.0)
       commander (~> 4.3)
-      em-websocket (= 0.5.1)
-      eventmachine (= 1.0.6)
+      em-websocket (~> 0.5)
+      eventmachine (~> 1.0)
       github-fs (~> 0)
       github-markdown (= 0.6.8)
       hashie (>= 3.0.4)
-      hike (~> 2.1)
+      hike (>= 2.1)
       inflecto (~> 0)
-      nokogiri (= 1.6.5)
+      nokogiri (~> 1.6)
       thin (= 1.6.3)
       virtus (~> 1.0)
 

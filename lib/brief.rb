@@ -9,6 +9,7 @@ require 'nokogiri'
 require 'yaml'
 require 'erb'
 require 'hike'
+require 'pry'
 
 module Brief
   # When packaging this up through the traveling ruby system
@@ -18,6 +19,14 @@ module Brief
     ENV.fetch('BRIEF_PWD') { Dir.pwd }
   end
 
+  def self.home
+    Pathname(ENV['HOME']).join(".brief")
+  end
+
+  def self.initialize_home!
+    FileUtils.mkdir_p(home)
+  end
+
   def self.cases
     @cases ||= {}
   end
@@ -25,8 +34,6 @@ module Brief
   def self.case=(value)
     @briefcase = value
   end
-
-  require 'pry'
 
   def self.case(fire=false)
     if @briefcase.is_a?(Brief::Briefcase)

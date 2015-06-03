@@ -4,6 +4,10 @@ module Brief
       Brief.lib_root.join("..","apps")
     end
 
+    def self.home_apps_path
+      Brief.home.join("apps")
+    end
+
     def self.search_paths
       paths = [default_path]
 
