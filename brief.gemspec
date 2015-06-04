@@ -23,8 +23,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'github-fs', '~> 0'
   spec.add_dependency 'virtus', '~> 1.0'
   spec.add_dependency 'inflecto', '~> 0'
-  spec.add_dependency 'activesupport', '> 4.0'
-  spec.add_dependency 'hike', '>= 2.1'
+  spec.add_dependency 'activesupport', '> 3.2'
+  spec.add_dependency 'hike', '>= 1.2'
   spec.add_dependency 'nokogiri', '~> 1.6'
 
   #spec.add_dependency 'github-markup',       '~> 1.3.1'
