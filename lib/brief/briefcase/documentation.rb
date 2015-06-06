@@ -4,7 +4,7 @@ module Brief
 
       class ModelDoc
         def initialize(path)
-          @content = Pathname(path).read
+          @content = Pathname(path).read rescue ""
         end
 
         def content

@@ -1,3 +1,18 @@
+command 'browse apps' do |c|
+  c.syntax = "brief browse apps"
+  c.description = "browse the available apps"
+
+  c.action do |args, options|
+    require 'terminal-table'
+    rows = Brief::Apps.app_paths.map do |folder|
+      [folder.basename, folder.to_s]
+    end
+
+    table = Terminal::Table.new(:rows => rows, :headings => %w(Name Found-In-Path))
+    puts table
+  end
+end
+
 command 'browse documents' do |c|
   c.syntax = 'brief browse documents PATHS [OPTIONS]'
   c.description = 'browse documents in the briefcase path'

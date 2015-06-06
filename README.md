@@ -138,6 +138,19 @@ You can use an `app` by saying so in your config file:
 use "blueprint" # => $BRIEF_GEM/apps/blueprint
 ```
 
+This will give you access to all of the models and document types from
+that app.
+
+#### Creating your own app
+
+```bash
+brief help create app
+brief create app cookbook # => $HOME/.brief/apps/cookbook 
+```
+
+This will let you start defining models, and then re-using this app
+across different writing projects.
+
 ## Other neat features (TODO)
 
 ### Special Link & Image Tags

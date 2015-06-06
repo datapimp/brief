@@ -15,5 +15,6 @@ describe "The Page Document Type" do
     expect(page.extracted_content_data.title).to eq("Summary")
     expect(page.extracted_content_data.paragraph).not_to be_nil
   end
+
 end
 

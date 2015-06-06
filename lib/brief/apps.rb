@@ -11,6 +11,8 @@ module Brief
     def self.search_paths
       paths = [default_path]
 
+      paths << home_apps_path if home_apps_path.exist?
+
       if custom_path = ENV['BRIEF_APPS_PATH']
         custom_path = custom_path.to_s.to_pathname
         paths << custom_path if (custom_path.exist? rescue nil)

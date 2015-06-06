@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'hashie', '>= 3.0.4' 
   spec.add_dependency 'commander', '~> 4.3'
+  spec.add_dependency 'terminal-table'
   spec.add_dependency 'github-fs', '~> 0'
   spec.add_dependency 'virtus', '~> 1.0'
   spec.add_dependency 'inflecto', '~> 0'

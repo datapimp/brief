@@ -82,7 +82,7 @@ module Brief
       end
 
       if params[:include_schema] || params[:schema]
-        base[:schema] = schema_map
+        base[:schema] = schema_map(!!(params[:include_schema] == "full"))
       end
 
       if params[:include_documentation] || params[:documentation]
