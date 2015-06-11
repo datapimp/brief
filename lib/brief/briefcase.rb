@@ -21,6 +21,27 @@ module Brief
       Brief.cases[root.basename.to_s] ||= self
     end
 
+    # Runs a command
+    #
+    # Commands are defined in the briefcase configuration.
+    #
+    # You define a command by passing a block. This block will
+    # get called with the briefcase, and whatever other arguments
+    def run_command(name, *args)
+      if handler = Brief.commands.fetch(name.to_sym)
+        block = handler[:handler]
+        args.unshift(self)
+        block.call(*args)
+      else
+        raise 'Command not found'
+      end
+    end
+
+    # Returns a Hash object which presents some
+    # view of the briefcase. Accepts a params hash
+    # of options that will be passed to the presenter.
+    #
+    # The default presenter is Brief::Briefcase#as_default
     def present(style="default", params={})
       style = "default" if style.nil?
 

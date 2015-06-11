@@ -45,8 +45,13 @@ module Brief
     end
   end
 
+
   def self.views
     @views ||= {}
+  end
+
+  def self.commands
+    @commands ||= {}
   end
 
   def self.environment_info

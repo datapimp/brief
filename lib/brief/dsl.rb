@@ -6,8 +6,25 @@ module Brief
       Brief::Configuration.instance.instance_eval(&block) if block_given?
     end
 
+    # Define a view of the briefcase.  Pass a block
+    # which returns a hash that displays the desired
+    # content
     def view(name, &block)
       Brief.views[name.to_sym] = block
+    end
+
+    # Register a new command for this briefcase.
+    #
+    # Pass the name of the command, options, and a block.
+    #
+    # The block will get called with the briefcase, and any arguments
+    #
+    # currently doesn't accept any options
+    def command(name, options={}, &block)
+      Brief.commands[name.to_sym] = {
+        options: options,
+        handler: block
+      }
     end
 
     # Extends an existing class
