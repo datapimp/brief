@@ -2,8 +2,12 @@ require 'github/markdown'
 
 module GitHub
   class Markdown
+    def self.render_pure_gfm(content)
+      self.to_html(content, :gfm)
+    end
+
     def self.render_gfm(content)
-      self.to_html(content, :gfm).tap do |html|
+      render_pure_gfm(content).tap do |html|
         html.gsub!(/<h([1-6])>(.+?)<\/h\1>/,"<h\\1 data-level='\\1' data-heading='\\2'>\\2<\/h\\1>")
       end
     end
