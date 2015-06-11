@@ -144,3 +144,7 @@ attributes.
 ### 1.9.12
   - Included ability to transform content using special markdown link syntax
   - Included ability to inline svg assets
+
+### 1.11.7
+  - Added ability to define briefcase commands and dispatch these
+    commands from the CLI
