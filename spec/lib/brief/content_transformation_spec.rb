@@ -15,4 +15,12 @@ describe "Content Transformation" do
     expect(html).to include("svg-wrapper")
     expect(html).to include("svg version")
   end
+
+  describe "HREF Generation" do
+    it "does nothing by default" do
+      expect(Brief.testcase.get_href_for("brief://me")).to eq("brief://me")
+    end
+  end
 end
+
+

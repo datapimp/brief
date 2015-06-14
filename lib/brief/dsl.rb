@@ -13,6 +13,10 @@ module Brief
       Brief.views[name.to_sym] = block
     end
 
+    def href_builder(&block)
+      Brief.href_builder = block
+    end
+
     # Register a new command for this briefcase.
     #
     # Pass the name of the command, options, and a block.

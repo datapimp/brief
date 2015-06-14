@@ -142,9 +142,13 @@ attributes.
   - Added a websocket server for easy on the fly parsing / querying
 
 ### 1.9.12
-  - Included ability to transform content using special markdown link syntax
+  - Included ability to embed content using special markdown link syntax
   - Included ability to inline svg assets
 
 ### 1.11.7
   - Added ability to define briefcase commands and dispatch these
     commands from the CLI
+
+### 1.11.9
+  - By Setting `Brief.href_builder` to a Proc, you can control the URI
+    that are generated through the brief markdown link syntax

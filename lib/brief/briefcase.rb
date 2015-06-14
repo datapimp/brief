@@ -90,6 +90,10 @@ module Brief
       }
     end
 
+    def get_href_for(brief_uri)
+      Brief.href_builder.call(brief_uri)
+    end
+
     # TODO
     # The serialization of an entire briefcase at once
     # is important enough to be its own module

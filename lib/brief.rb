@@ -45,7 +45,6 @@ module Brief
     end
   end
 
-
   def self.views
     @views ||= {}
   end
@@ -111,6 +110,16 @@ module Brief
     (Brief::Adapters.const_get(identifier.camelize) rescue nil).tap do |adapter|
       raise "Invalid adapter: #{ identifier }" unless adapter
     end
+  end
+
+  # This can be overridden so that you can generate uri values
+  # in the renderings that fit within the medium (e.g. website, electron app)
+  def self.href_builder
+    @href_builder || ->(o){o}
+  end
+
+  def self.href_builder= value
+    @href_builder = value
   end
 end
 

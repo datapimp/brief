@@ -1,3 +1,6 @@
+# The Document Transformer allows for special usage of markdown
+# link and image embedding syntax.  This lets us piggy back on these syntax
+# and use them as include directives to embed other documents, or SVG diagrams.
 module Brief
   class Document::Transformer
     attr_reader :document, :fragment
@@ -12,6 +15,10 @@ module Brief
       inline_svg_content
     end
 
+    def briefcase
+      @briefcase ||= document.briefcase
+    end
+
     def inline_svg_content
       inline_svg_images.each do |img|
         src = img['src'].to_s
@@ -23,7 +30,7 @@ module Brief
         end
 
         begin
-          if asset = document.briefcase.find_asset(value)
+          if asset = briefcase.find_asset(value)
             img.replace("<div class='svg-wrapper'>#{ asset.read }</div>")
           end
         rescue
@@ -39,14 +46,14 @@ module Brief
 
         if instruction == "link" && attribute == "path"
           begin
-            link_to_doc = document.briefcase.document_at(value)
+            link_to_doc = briefcase.document_at(value)
 
             if link_to_doc.exist?
               text = link_to_doc.send(strategy)
               node.inner_html = text
-              node['href'] = "brief://#{ link_to_doc.path }"
+              node['href'] = briefcase.get_href_for("brief://#{ link_to_doc.path }")
             else
-              node['href'] = "brief://document-not-found"
+              node['href'] = briefcase.get_href_for("brief://document-not-found")
             end
           rescue
             nil
@@ -59,7 +66,7 @@ module Brief
         instruction, strategy = node.text.to_s.split(':')
 
         if instruction == "include" && attribute == "path"
-          include_doc = document.briefcase.document_at(value)
+          include_doc = briefcase.document_at(value)
 
           replacement = nil
 
