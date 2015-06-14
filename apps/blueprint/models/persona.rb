@@ -5,6 +5,7 @@ class Brief::Apps::Blueprint::Persona
 
   meta do
     title
+    projects
   end
 
   content do

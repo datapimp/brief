@@ -6,6 +6,8 @@ class Brief::Apps::Blueprint::Epic
   meta do
     title
     subheading
+    project
+    owner
     status String, :in => %w(draft published)
   end
 

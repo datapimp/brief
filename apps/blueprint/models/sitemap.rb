@@ -7,6 +7,8 @@ class Brief::Apps::Blueprint::Sitemap
     title
     status
     revision
+    project
+    personas
   end
 
   content do

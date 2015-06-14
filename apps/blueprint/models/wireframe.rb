@@ -8,8 +8,15 @@ class Brief::Apps::Blueprint::Wireframe
     parent_title
     sitemap
     project
+    features
     category
     tags
     annotations Hash
+  end
+
+  content do
+    define_section("System Interactions") do
+      each("h2").has(:title => "h2", :paragraph => "p:first-of-type", :link => "a")
+    end
   end
 end

@@ -6,6 +6,8 @@ class Brief::Apps::Blueprint::Milestone
   meta do
     title
     number
+    projects
+    personas
     due_date
   end
 

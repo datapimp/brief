@@ -6,6 +6,8 @@ class Brief::Apps::Blueprint::Release
   meta do
     title
     status
+    projects
+    personas
     tags Array
   end
 
