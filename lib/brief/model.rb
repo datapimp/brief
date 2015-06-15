@@ -319,6 +319,12 @@ module Brief
         definition.send(:example_body, *args).to_s.strip
       end
 
+      def writing_prompt(*args)
+        _prompt = definition._prompt
+        return _prompt.call(*args) if _prompt && _prompt.respond_to?(:call)
+        example_body
+      end
+
       def documentation(*args)
         definition.send(:documentation, *args)
       end
@@ -346,7 +352,7 @@ module Brief
         # these methods have a special effect on the behavior of the
         # model definition.  we need to make sure we call finalize after
         # them
-        if %w(meta content template example actions helpers).include?(meth.to_s)
+        if %w(meta content template example actions helpers prompt).include?(meth.to_s)
           definition.send(meth, *args, &block)
           finalize
         elsif %w(defined_helper_methods defined_actions).include?(meth.to_s)

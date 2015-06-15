@@ -11,4 +11,8 @@ class Brief::Concept
   content do
     title "h1:first-of-type"
   end
+
+  prompt do
+    "asdf"
+  end
 end
