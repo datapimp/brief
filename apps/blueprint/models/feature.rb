@@ -8,7 +8,11 @@ class Brief::Apps::Blueprint::Feature
     project
     owner
     status :in => %w(draft published)
+    persona
+    goal
+    behavior
     epic_title
+    remote_id
   end
 
   template :file => "feature.md.erb"
@@ -17,6 +21,7 @@ class Brief::Apps::Blueprint::Feature
     persona "p strong:first-child"
     behavior "p strong:second-child"
     goal "p strong:third-child"
+    settings "pre[lang='yaml'] code:first-of-type", :serialize => :yaml, :hide => true
   end
 
   actions do

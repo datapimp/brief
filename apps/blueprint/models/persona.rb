@@ -13,7 +13,7 @@ class Brief::Apps::Blueprint::Persona
     summary "p:first-of-type"
 
     define_section("Requirements") do
-      each(:li).has(:content => "li")
+      each("li").has(:content => "p")
     end
   end
 end
