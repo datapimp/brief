@@ -12,7 +12,7 @@ class Brief::Apps::Blueprint::Persona
     title "h1:first-of-type"
     summary "p:first-of-type"
 
-    create_section("Requirements") do
+    define_section("Requirements") do
       each(:li).has(:content => "li")
     end
   end
