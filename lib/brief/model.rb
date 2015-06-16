@@ -322,7 +322,7 @@ module Brief
       def writing_prompt(*args)
         _prompt = definition._prompt
         return _prompt.call(*args) if _prompt && _prompt.respond_to?(:call)
-        example_body
+        example_content
       end
 
       def documentation(*args)

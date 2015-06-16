@@ -7,8 +7,8 @@ command 'write' do |c|
   # and determine which CLI arguments those model classes may ask for.
   c.action do |args, options|
     options.default(root: Pathname(Brief.pwd))
-    briefcase = Brief.case = Brief::Briefcase.new(root: Pathname(args.first || options.root))
-    schema_map = briefcase.schema_map(true)
+    briefcase = Brief.case = Brief::Briefcase.new(root: options.root)
+    schema_map = briefcase.schema_map()
 
     type_alias = args.first
 
