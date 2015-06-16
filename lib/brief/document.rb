@@ -31,6 +31,10 @@ module Brief
       self
     end
 
+    def clone
+      new(path, options)
+    end
+
     def title
       (data && data.title) || css('h1:first-of-type').text || path.to_s.split("/").last.gsub(/\..*/,'')
     end
