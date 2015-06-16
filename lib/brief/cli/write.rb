@@ -8,15 +8,19 @@ command 'write' do |c|
   c.action do |args, options|
     options.default(root: Pathname(Brief.pwd))
     briefcase = Brief.case = Brief::Briefcase.new(root: options.root)
-    schema_map = briefcase.schema_map()
-
     type_alias = args.first
 
-    model_class = schema_map.fetch(type_alias) do
-      raise "Unknown model type: #{ type_alias }. Available types are: #{ schema_map.keys.join(',') }"
+    model_class = briefcase.model_classes.find {|c| c.type_alias == type_alias }
+
+    if !model_class.nil?
+      content = ask_editor model_class.writing_prompt()
+    else
+      model_class = briefcase.schema_map.fetch(type_alias, nil)
+      content = ask_editor(model_class.example)
     end
 
-    content = ask_editor model_class.writing_prompt()
+    raise "Inavlid model class. Run the schema command to see what is available." if model_class.nil?
+
 
     file = ask("Enter a filename")
 
