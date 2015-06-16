@@ -5,11 +5,15 @@ class Brief::Apps::Blueprint::Persona
 
   meta do
     title
-    projects
+    icon
   end
 
   content do
     title "h1:first-of-type"
-    paragraph "p:first-of-type"
+    summary "p:first-of-type"
+
+    create_section("Requirements") do
+      each(:li).has(:content => "li")
+    end
   end
 end
