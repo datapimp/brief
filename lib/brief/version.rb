@@ -1,3 +1,3 @@
 module Brief
-  VERSION = '1.11.10'
+  VERSION = '1.12.0'
 end
