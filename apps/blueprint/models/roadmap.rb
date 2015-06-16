@@ -9,8 +9,11 @@ class Brief::Apps::Blueprint::Roadmap
   end
 
   content do
+    title "h1:first-of-type"
+    subheading "h2:first-of-type"
+
     define_section "Milestones" do
-      each("h2").has(:title => "h2", :due_date => "li:first-of-type", :paragraph => "p:first-of-type")
+      each("h2").has(:title => "h2", :due_date => "h3:first-of-type", :paragraph => "p:first-of-type")
     end
   end
 end
