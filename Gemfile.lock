@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    brief (1.12.7)
+    brief (1.12.8)
       activesupport (> 3.2)
       commander (~> 4.3)
       em-websocket (~> 0.5)
@@ -19,7 +19,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (4.2.1)
+    activesupport (4.2.2)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
