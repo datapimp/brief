@@ -6,6 +6,7 @@ class Brief::Apps::Blueprint::Persona
   meta do
     title
     icon
+    tags Array
   end
 
   content do
@@ -13,7 +14,7 @@ class Brief::Apps::Blueprint::Persona
     summary "p:first-of-type"
 
     define_section("Requirements") do
-      each("li").has(:content => "p")
+      each("li").has(:content => "li")
     end
   end
 end

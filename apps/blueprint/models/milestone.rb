@@ -9,6 +9,7 @@ class Brief::Apps::Blueprint::Milestone
     projects
     personas
     due_date
+    tags Array
   end
 
   content do

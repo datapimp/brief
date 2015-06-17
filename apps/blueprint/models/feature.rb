@@ -13,6 +13,7 @@ class Brief::Apps::Blueprint::Feature
     behavior
     epic_title
     remote_id
+    tags Array
   end
 
   template :file => "feature.md.erb"

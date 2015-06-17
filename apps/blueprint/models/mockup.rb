@@ -11,5 +11,6 @@ class Brief::Apps::Blueprint::Mockup
     category
     tags
     annotations Hash
+    tags Array
   end
 end

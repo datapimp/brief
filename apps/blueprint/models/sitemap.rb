@@ -9,6 +9,7 @@ class Brief::Apps::Blueprint::Sitemap
     revision
     project
     personas
+    tags Array
   end
 
   content do

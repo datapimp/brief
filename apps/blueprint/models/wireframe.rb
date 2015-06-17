@@ -10,7 +10,7 @@ class Brief::Apps::Blueprint::Wireframe
     project
     features
     category
-    tags
+    tags Array
     annotations Hash
   end
 

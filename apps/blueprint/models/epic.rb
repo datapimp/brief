@@ -9,6 +9,7 @@ class Brief::Apps::Blueprint::Epic
     project
     owner
     status String, :in => %w(draft published)
+    tags Array
   end
 
   example <<-EOF

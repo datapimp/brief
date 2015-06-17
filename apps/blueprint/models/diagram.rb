@@ -6,9 +6,11 @@ class Brief::Apps::Blueprint::Diagram
   meta do
     title
     subheading
+    project
     projects
     personas
     status String, :in => "draft published"
+    tags Array
   end
 
   content do

@@ -7,6 +7,7 @@ class Brief::Apps::Blueprint::Concept
     title
     projects
     personas
+    tags Array
   end
 
   content do

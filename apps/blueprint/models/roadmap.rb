@@ -6,6 +6,7 @@ class Brief::Apps::Blueprint::Roadmap
   meta do
     title
     subheading
+    tags Array
   end
 
   content do
