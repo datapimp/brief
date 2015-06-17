@@ -6,11 +6,17 @@ class Brief::Apps::Blueprint::Mockup
   meta do
     title
     parent_title
+    image
     sitemap
     project
     category
-    tags
     annotations Hash
     tags Array
+  end
+
+  content do
+    define_section("System Interactions") do
+      each("h2").has(:title => "h2", :paragraph => "p:first-of-type", :link => "a")
+    end
   end
 end

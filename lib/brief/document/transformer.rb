@@ -12,6 +12,7 @@ module Brief
 
     def all
       transform_dynamic_links
+      include_images
       inline_svg_content
     end
 
@@ -20,7 +21,15 @@ module Brief
     end
 
     def inline_svg_content
-      inline_svg_images.each do |img|
+      process_image_paths(inline_svg_images)
+    end
+
+    def include_images
+      process_image_paths(inline_image_tags)
+    end
+
+    def process_image_paths(set_of_tags)
+      set_of_tags.each do |img|
         src = img['src'].to_s
 
         if src.match(/=/)
@@ -30,8 +39,19 @@ module Brief
         end
 
         begin
-          if asset = briefcase.find_asset(value)
+          asset = briefcase.find_asset(value)
+
+          if !asset
+
+          end
+
+          if asset && asset.extname == ".svg"
             img.replace("<div class='svg-wrapper'>#{ asset.read }</div>")
+          end
+
+          if asset && %w(.gif .jpg .jpeg .png).include?(asset.extname.to_s.downcase)
+            src = briefcase.get_external_url_for(asset)
+            img['src'] = src
           end
         rescue
           nil
@@ -84,6 +104,10 @@ module Brief
     end
 
     private
+
+    def inline_image_tags
+      fragment.css('img[alt="include"]')
+    end
 
     def inline_svg_images
       fragment.css('img[alt="inline:svg"]')

@@ -293,7 +293,7 @@ module Brief
                     structure.prescan
 
                     structure.create_wrappers.tap do |f|
-                      transformer_for(f).all if data.transform
+                      transformer_for(f).all
                     end
                   end
     end

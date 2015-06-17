@@ -6,6 +6,9 @@ module Brief
     attr_reader :options,
                 :model_definitions
 
+    attr_accessor :asset_finder,
+                  :href_builder
+
     def initialize(options = {})
       @options = options.to_mash
 
@@ -17,6 +20,9 @@ module Brief
       if Brief.case(false).nil?
         Brief.case = self
       end
+
+      @href_builder = options.fetch(:href_builder) { Brief.href_builder }
+      @asset_finder = options.fetch(:asset_finder) { method(:find_asset) }
 
       Brief.cases[root.basename.to_s] ||= self
     end
@@ -91,7 +97,11 @@ module Brief
     end
 
     def get_href_for(brief_uri)
-      Brief.href_builder.call(brief_uri)
+      href_builder.call(brief_uri)
+    end
+
+    def get_external_url_for(asset_path)
+      asset_finder.call(asset_path)
     end
 
     # TODO

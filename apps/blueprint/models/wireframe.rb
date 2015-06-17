@@ -6,6 +6,7 @@ class Brief::Apps::Blueprint::Wireframe
   meta do
     title
     parent_title
+    image
     sitemap
     project
     features
