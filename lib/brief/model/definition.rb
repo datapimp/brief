@@ -10,7 +10,8 @@ module Brief
                   :section_mappings,
                   :template_body,
                   :example_body,
-                  :_prompt,
+                  :new_doc_name_block,
+                  :new_doc_template_block,
                   :documentation_path,
                   :example_path,
                   :template_path
@@ -116,10 +117,6 @@ module Brief
       elsif body.is_a?(String)
         self.template_body = body
       end
-    end
-
-    def prompt(&block)
-      self._prompt = block
     end
 
     def has_actions?

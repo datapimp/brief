@@ -12,17 +12,17 @@ command 'write' do |c|
 
     model_class = briefcase.model_classes.find {|c| c.type_alias == type_alias }
 
-    if !model_class.nil?
-      content = ask_editor model_class.writing_prompt()
-    else
+    content = if model_class.nil?
       model_class = briefcase.schema_map.fetch(type_alias, nil)
-      content = ask_editor(model_class.example)
+      ask_editor(model_class.example)
+    else
+      ask_editor(model_class.new_doc_template)
     end
 
     raise "Inavlid model class. Run the schema command to see what is available." if model_class.nil?
 
 
-    file = ask("Enter a filename")
+    file = ask("Enter a filename: ") { |q| q.default = model_class.new_doc_name }
 
     if file.to_s.length == 0
       rand_token = rand(36**36).to_s(36).slice(0,3)

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    brief (1.12.9)
+    brief (1.13.0)
       activesupport (> 3.2)
       commander (~> 4.3)
       em-websocket (~> 0.5)
@@ -30,9 +30,12 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
+    byebug (5.0.0)
+      columnize (= 0.9.0)
     coderay (1.1.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
+    columnize (0.9.0)
     commander (4.3.4)
       highline (~> 1.7.2)
     daemons (1.2.2)
@@ -112,6 +115,7 @@ PLATFORMS
 DEPENDENCIES
   brief!
   bundler (~> 1.3)
+  byebug (~> 5.0.0)
   octokit (~> 3.0)
   pry (~> 0.10)
   rack-test (~> 0.6)

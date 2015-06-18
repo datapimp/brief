@@ -319,10 +319,24 @@ module Brief
         definition.send(:example_body, *args).to_s.strip
       end
 
-      def writing_prompt(*args)
-        _prompt = definition._prompt
-        return _prompt.call(*args) if _prompt && _prompt.respond_to?(:call)
-        example_content
+      def new_doc_template(&block)
+        if block
+          definition.new_doc_template_block = block
+        elsif definition.new_doc_template_block
+          definition.new_doc_template_block.call
+        else
+          example_content
+        end
+      end
+
+      def new_doc_name(&block)
+        if block
+          definition.new_doc_name_block = block
+        elsif definition.new_doc_name_block
+          definition.new_doc_name_block.call
+        else
+          "#{ self.type_alias }-#{ DateTime.now.strftime("%Y-%m-%d") }.md"
+        end
       end
 
       def documentation(*args)
@@ -352,7 +366,7 @@ module Brief
         # these methods have a special effect on the behavior of the
         # model definition.  we need to make sure we call finalize after
         # them
-        if %w(meta content template example actions helpers prompt).include?(meth.to_s)
+        if %w(meta content template example actions helpers).include?(meth.to_s)
           definition.send(meth, *args, &block)
           finalize
         elsif %w(defined_helper_methods defined_actions).include?(meth.to_s)
