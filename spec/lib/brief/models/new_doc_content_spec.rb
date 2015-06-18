@@ -17,7 +17,7 @@ describe "The Page Document Type" do
   end
 
   it "should return the default document name because there's no new_doc_name defined" do
-    expect(page.new_doc_name).to eq "page-2015-06-17.md"
+    expect(page.new_doc_name).to eq "page-#{ DateTime.now.strftime("%Y-%m-%d") }.md"
   end
 
   it "should return the new document name if new_doc_name is defined" do

@@ -1,5 +1,4 @@
-class Brief::Apps
-  class Blueprint::MiddlemanExtension < ::Middleman::Extension
+  class BlueprintMiddlemanExtension < ::Middleman::Extension
 
     option :blueprint_root, nil, 'Which path to use for the blueprint?'
 
@@ -46,7 +45,6 @@ class Brief::Apps
         Brief::Briefcase.new(root: blueprint_root, caching: !development?)
       end
     end
-  end
-end if defined?(::Middleman)
+  end if defined?(::Middleman)
 
-::Middleman::Extensions.register(:blueprint, Brief::Apps::Blueprint::MiddlemanExtension) if defined?(::Middleman)
+::Middleman::Extensions.register(:blueprint, BlueprintMiddlemanExtension) if defined?(::Middleman)
