@@ -3,6 +3,6 @@ class Brief::Persona
 
   content do
     msg "[data-random-attr='value']"
-    rando "#rando pre[lang='yaml'] code", :serialize => :yaml
+    rando "#rando code", :serialize => :yaml
   end
 end

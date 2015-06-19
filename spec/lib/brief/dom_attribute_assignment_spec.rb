@@ -5,7 +5,7 @@ describe "DOM Attribute Assignment" do
   let(:model) { doc.to_model }
 
   it "should make targeting elements easier" do
-    binding.pry
+    expect(doc.css('#rando code').text).not_to be_empty
   end
 
   it "should assign attributes to the headings" do
