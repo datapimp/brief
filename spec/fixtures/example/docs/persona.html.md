@@ -10,6 +10,6 @@ subheading: A description of a typical user of the software
 
 what up son?
 
-```yaml
+```yaml(rando)
 setting: value
 ```
