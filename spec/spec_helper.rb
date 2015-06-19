@@ -18,6 +18,12 @@ module Brief
     testcase.document_at(path)
   end
 
+  def self.persona_document
+    path = Brief.example_path.join("docs","persona.html.md")
+    testcase.document_at(path)
+  end
+
+
   def self.page_document
     path = Brief.example_path.join("docs","page.html.md")
     testcase.document_at(path)

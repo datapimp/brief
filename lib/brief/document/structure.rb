@@ -32,18 +32,57 @@ module Brief
     end
 
     def prescan
+      set_markings_on_headers
+      assign_id_attributes_to_pre_tags
+    end
+
+    def assign_id_attributes_to_pre_tags
+      pres = fragment.css('pre[lang]')
+
+      pres.each do |pre|
+        lang = pre.attr('lang')
+
+        if match_data = lang.match(/\((\w+)\)/)
+          pre.set_attribute 'id', match_data.captures.first
+          pre.set_attribute 'lang', lang.gsub(/\((\w+)\)/,'')
+        end
+      end
+    end
+
+    def set_markings_on_headers
       content_lines.each_with_index do |line, index|
         if line.match(/^#/)
-          line = line.strip
-          level = line.count('#')
-          text = line.gsub('#', '').strip
+          line    = line.strip
+          level   = line.count('#')
+          text    = line.gsub('#', '').strip
 
           if level > 0 && text.length > 0
             line_number = index + 1
+
             heading = find_heading_by(level, text)
 
+            # If it is a heading element, we map it to a line number in
+            # the content that produced it. We also look for the special
+            # syntax {attribute: value; other-attribute: value} which
+            # lets us set attributes on the header
             if heading
-              heading.element.set_attribute('data-line-number', line_number)
+              set_attributes = {"data-line-number" => line_number}
+
+              if attribute_matchers = line.match(/\{(.*)\}/)
+                attributes = attribute_matchers.captures.first.strip
+                attributes.split(';').each do |pair|
+                  key, value = pair.split(':')
+                  set_attributes[key.to_s.strip] = value.to_s.strip
+                end
+
+                value = heading.element.text.to_s.split(/\{.*\}/).join("").strip
+                heading.element.inner_html = value
+                heading.element.set_attribute('data-heading', value)
+              end
+
+              set_attributes.each do |k,v|
+                heading.element.set_attribute(k, v)
+              end
             end
           end
         end
@@ -161,6 +200,10 @@ module Brief
       heading_elements.select do |el|
         el.heading.to_s.strip == text.to_s.strip
       end
+    end
+
+    def find_pre_by_lang(lang)
+      fragment.css("pre[lang='#{lang}']").first
     end
 
     def find_heading_by(level, heading)

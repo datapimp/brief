@@ -292,6 +292,8 @@ module Brief
       @parser ||= begin
                     structure.prescan
 
+                    structure.assign_id_attributes_to_pre_tags
+
                     structure.create_wrappers.tap do |f|
                       transformer_for(f).all
                     end
