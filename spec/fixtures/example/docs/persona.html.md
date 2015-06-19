@@ -10,6 +10,6 @@ subheading: A description of a typical user of the software
 
 what up son?
 
-```yaml {id: block1}
+```yaml
 setting: value
 ```
