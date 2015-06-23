@@ -19,9 +19,17 @@ describe "The Briefcase" do
     expect(briefcase.settings).not_to be_empty
   end
 
+  # TODO
+  # This is dependent on the blueprint app
+  # should be refactored
   it "has a table of contents" do
     expect(briefcase.table_of_contents).to be_present
     expect(briefcase.table_of_contents.headings).not_to be_empty
+  end
+
+  it "loads the files defined in the lib folder" do
+    expect(briefcase.briefcase_lib_path.entries).not_to be_empty
+    expect(defined?(ShouldBeDefined)).to be_truthy
   end
 
   it "points to a file repository" do

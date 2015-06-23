@@ -26,7 +26,16 @@ module Brief
 
       Brief.cases[root.basename.to_s] ||= self
 
-      Dir[lib_path.join("**/*.rb")].each {|f| require(f) } if lib_path.exist?
+      load_lib_entries()
+    end
+
+    def load_lib_entries
+      begin
+        etc = Dir[briefcase_lib_path.join("**/*.rb")]
+        etc.each {|f| require(f) } if briefcase_lib_path.exist?
+      rescue
+
+      end
     end
 
     # Runs a command
@@ -99,7 +108,7 @@ module Brief
           assets_path: assets_path.to_s,
           models_path: models_path.to_s,
           data_path: data_path.to_s,
-          lib_path: lib_path.to_s
+          lib_path: briefcase_lib_path.to_s
         }
       }
     end
@@ -283,7 +292,7 @@ module Brief
       root.join(options.fetch(:data_path) { config.data_path }).expand_path
     end
 
-    def lib_path
+    def briefcase_lib_path
       root.join(options.fetch(:lib_path) { config.lib_path }).expand_path
     end
 

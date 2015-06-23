@@ -1,5 +1,12 @@
 require "spec_helper"
 
+module Middleman
+  class Extension
+    def self.method_missing(*args); end
+    def method_missing(*args); end
+  end
+end
+
 describe "Packaged Apps" do
   let(:sample) do
     Brief::Briefcase.new(app: "sample")
