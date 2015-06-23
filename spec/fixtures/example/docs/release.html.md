@@ -6,6 +6,8 @@ status: Planned
 date: 2018-12-18
 attachments:
   - diagrams/test
+reports:
+  sample: SampleReport
 ---
 
 This is a release it is a simple file with no real structure.
