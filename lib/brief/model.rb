@@ -13,6 +13,7 @@ module Brief
       include AccessorMethods
       include Persistence
       include Serializers
+      include Reports
 
       class_attribute :models, :after_initialization_hooks
 
