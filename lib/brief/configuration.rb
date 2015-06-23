@@ -18,7 +18,8 @@ module Brief
         models_path: 'models',
         templates_path: 'templates',
         data_path: 'data',
-        assets_path: 'assets'
+        assets_path: 'assets',
+        lib_path: "lib"
       }.to_mash
     end
 

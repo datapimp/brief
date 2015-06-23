@@ -17,6 +17,9 @@ config do
   set(:documentation_path, File.join(File.dirname(__FILE__), 'documentation'))
 end
 
+command(:sync) do |*args|
+end
+
 class Brief::Briefcase
   def has_table_of_contents?
     docs_path.join('index.md').exist?

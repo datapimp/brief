@@ -25,6 +25,8 @@ module Brief
       @asset_finder = options.fetch(:asset_finder) { method(:find_asset) }
 
       Brief.cases[root.basename.to_s] ||= self
+
+      Dir[lib_path.join("**/*.rb")].each {|f| require(f) } if lib_path.exist?
     end
 
     # Runs a command
@@ -41,6 +43,11 @@ module Brief
       else
         raise 'Command not found'
       end
+    end
+
+    # runs a command but does not raise an error
+    def run_command!(name, *args)
+      run_command(name, *args) rescue nil
     end
 
     # Returns a Hash object which presents some
@@ -91,7 +98,8 @@ module Brief
           docs_path: docs_path.to_s,
           assets_path: assets_path.to_s,
           models_path: models_path.to_s,
-          data_path: data_path.to_s
+          data_path: data_path.to_s,
+          lib_path: lib_path.to_s
         }
       }
     end
@@ -273,6 +281,10 @@ module Brief
 
     def data_path
       root.join(options.fetch(:data_path) { config.data_path }).expand_path
+    end
+
+    def lib_path
+      root.join(options.fetch(:lib_path) { config.lib_path }).expand_path
     end
 
     def assets_trail
