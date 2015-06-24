@@ -57,7 +57,7 @@ module Brief
       def method_missing(meth, *args, &block)
         if args.empty?
           if document.respond_to?(meth)
-            document.send(meth)
+            document.send(meth, *args, &block)
           else
             document.data && document.data.key?(meth) ? data[meth] : extracted.send(meth)
           end
