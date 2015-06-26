@@ -57,6 +57,9 @@ module Brief
       end
 
       def unwrapped_html
+        # remove annoying linebreaks from paragraphs
+        parser.css("p br").remove() unless Brief.configuration.preserve_gfm_line_breaks
+
         parser.to_html
       end
 

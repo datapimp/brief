@@ -19,7 +19,11 @@ module Brief
         templates_path: 'templates',
         data_path: 'data',
         assets_path: 'assets',
-        lib_path: "lib"
+        lib_path: "lib",
+
+        # line wrapping in vim and other editors creates
+        # a bunch of extra br/ tags
+        preserve_gfm_line_breaks: false
       }.to_mash
     end
 
