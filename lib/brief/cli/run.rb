@@ -9,7 +9,7 @@ command "run command" do |c|
 
     command = args.first.to_s.to_sym
 
-    bc = Brief.case = Brief::Briefcase.new(root: Pathname(args.first || options.root))
+    bc = Brief.case = Brief::Briefcase.new(root: Pathname(options.root))
     bc = bc.call if bc.respond_to?(:call)
 
     if !Brief.commands[command.to_sym]
