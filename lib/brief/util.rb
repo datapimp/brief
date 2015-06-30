@@ -31,18 +31,17 @@ module Brief::Util
         c.description = "run the #{identifier} command"
 
         c.action do |args, _opts|
-          briefcase = Brief.case
+          briefcase = $briefcase || Brief.case
 
           path_args = args.select { |arg| arg.is_a?(String) && arg.match(/\.md$/) }
 
           path_args.select! do |arg|
-            path = briefcase.repository.root.join(arg)
-            path.exist?
+            briefcase.root.join(arg).exist?
           end
 
-          path_args.map! { |p| briefcase.repository.root.join(p) }
+          path_args.map! { |p| briefcase.root.join(p) }
 
-          models = path_args.map { |path| Brief::Document.new(path) }.map(&:to_model)
+          models = briefcase.documents_at(*path_args).map(&:to_model)
 
           if models.empty?
             model_finder = c.name.to_s.split(' ').last
