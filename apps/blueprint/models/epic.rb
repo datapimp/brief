@@ -65,13 +65,4 @@ As a **User** I would like to **Do this** so that I can **succeed**
       end
     end
   end
-
-  actions do
-    def publish_to_github
-    end
-
-    def custom_action
-    end
-  end
-
 end

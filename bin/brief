@@ -6,6 +6,7 @@ require 'rubygems'
 require 'brief'
 require 'brief/dsl'
 
+
 if ARGV[0] == "console"
   require 'pry'
   $briefcase = Brief::Briefcase.new(root: Brief.pwd)
@@ -19,6 +20,18 @@ else
   program :name, "Brief"
   program :description, "Brief lets you treat your markdown files like active record objects"
   program :version, Brief::VERSION 
+  
+  # Eager load the briefcase so that the call to Brief.load_commands()
+  # will pick up the briefcase app's model classes
+  if ARGV.include?('--root')
+    index = ARGV.index_of('--root')
+
+    if value = ARGV[index + 1]
+      $briefcase = Brief::Briefcase.new(root: value)
+    end
+  elsif Pathname(Brief.pwd).join("brief.rb").exist?
+    $briefcase = Brief::Briefcase.new(root: Brief.pwd)
+  end
 
   Brief.load_commands()
 end
