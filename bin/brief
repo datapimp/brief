@@ -13,6 +13,7 @@ if ARGV[0] == "console"
 else
   require 'commander/import'
   
+  $brief_cli = true
   $terminal.wrap_at = 120
 
   program :name, "Brief"

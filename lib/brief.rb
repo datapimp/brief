@@ -78,7 +78,10 @@ module Brief
 
   def self.load_commands
     Dir[lib_root.join('brief', 'cli', '**/*.rb')].each { |f| require(f) }
+    create_command_dispatchers
+  end
 
+  def self.create_command_dispatchers
     # Each Brief::Model can define certain "actions" which can be called on the documents.
     #
     # The Brief CLI interface lets users dispatch these actions to the documents specified by the PATH args.

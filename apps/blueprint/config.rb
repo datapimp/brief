@@ -18,6 +18,7 @@ config do
 end
 
 command(:sync) do |*args|
+  puts "== Sync command is empty.  Define in your brief.rb"
 end
 
 class Brief::Briefcase

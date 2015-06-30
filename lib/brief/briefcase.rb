@@ -258,6 +258,8 @@ module Brief
 
       Brief.load_modules_from(models_path) if models_path.exist?
       Brief::Model.finalize
+
+      Brief.create_command_dispatchers() if $brief_cli
     end
 
     # Returns a model name by its human readable description or its type alias
