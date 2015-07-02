@@ -99,7 +99,7 @@ class Brief::Apps::Blueprint::Epic
 
     def feature_file_for(feature_heading)
       folder = features_folder
-      filename = feature_heading.strip.parameterize
+      filename = feature_heading.strip.parameterize + '.md'
       folder.join(filename)
     end
 

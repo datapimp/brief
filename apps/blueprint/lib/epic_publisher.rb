@@ -13,7 +13,7 @@ class BlueprintEpicPublisher
     end
   end
 
-  def self.syn(epic, options={})
+  def self.sync(epic, options={})
     via = (options.fetch(:via, :github) || :github)
 
     if respond_to?("sync_via_#{via}")
