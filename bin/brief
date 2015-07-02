@@ -5,6 +5,7 @@ $:.unshift File.join(File.dirname(__FILE__),'..','lib')
 require 'rubygems'
 require 'brief'
 require 'brief/dsl'
+require 'colored'
 
 
 if ARGV[0] == "console"
