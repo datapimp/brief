@@ -4,6 +4,7 @@ module Brief
     include Brief::Document::FrontMatter
     include Brief::Document::Templating
     include Brief::Document::Attachments
+    include Brief::Document::SourceMap
 
     def self.from_contents(content, frontmatter, &block)
     end

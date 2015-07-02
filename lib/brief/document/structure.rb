@@ -89,6 +89,10 @@ module Brief
       end
     end
 
+    def heading_element_tags
+      css("h1,h2,h3,h4,h5,h6")
+    end
+
     # Markdown rendered HTML comes in the forms of a bunch of siblings,
     # and no parents.  We need to introduce the concept of ownership of
     # sections of the document, by using the heading level (h1 - h6) as
@@ -180,7 +184,7 @@ module Brief
     end
 
     def headings_at_level(level, options = {})
-      matches = heading_elements.select { |el| el.level.to_i == level.to_i }
+      matches = heading_details.select { |el| el.level.to_i == level.to_i }
 
       if options[:text]
         matches.map(&:text)
@@ -197,7 +201,7 @@ module Brief
     end
 
     def headings_with_text(text)
-      heading_elements.select do |el|
+      heading_details.select do |el|
         el.heading.to_s.strip == text.to_s.strip
       end
     end
@@ -207,17 +211,22 @@ module Brief
     end
 
     def find_heading_by(level, heading)
-      heading_elements.find do |el|
+      heading_details.find do |el|
         el.level.to_s == level.to_s && heading.to_s.strip == el.heading.to_s.strip
       end
     end
 
-    def heading_elements
-      @heading_elements ||= fragment.css('h1,h2,h3,h4,h5,h6').map do |el|
+    def heading_details
+      @heading_details ||= get_heading_details
+    end
+
+    def get_heading_details
+      fragment.css('h1,h2,h3,h4,h5,h6').map do |el|
         if el.attr('data-level').to_i > 0
           {
             level: el.attr('data-level'),
             heading: el.attr('data-heading'),
+            line_number: el.attr('data-line-number'),
             element: el
           }.to_mash
         end

@@ -27,8 +27,12 @@ class Brief::Document::Section
       settings = config.selector_config[selector]
 
       if Headings.include?(selector)
-        headings = fragment.css('article > h2')
-        articles = headings.map(&:parent)
+        headings = fragment.css("article > #{selector}")
+
+        articles = headings.map do |el|
+          el.parent.set_attribute('data-parent-heading', el.text)
+          el.parent
+        end
 
         unless settings.empty?
           articles.compact.each do |article|
