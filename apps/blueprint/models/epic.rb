@@ -58,6 +58,18 @@ class Brief::Apps::Blueprint::Epic
 
   helpers do
     def features
+      briefcase.features(project: project, epic: title)
+    end
+
+    def parent_project
+      briefcase.projects(project: project).first
+    end
+
+    def find_feature_by_title(feature_title)
+      briefcase.features(project: project, epic: title, title: feature_title)
+    end
+
+    def features_data
       sections.features.items.map do |item|
         item.components = Array(item.components)
 
@@ -68,8 +80,41 @@ class Brief::Apps::Blueprint::Epic
       end
     end
 
+    def generate_feature_content(feature_heading)
+      if feature_file_for(feature_heading).exist?
+        return feature_file_for(feature_heading).read
+      end
+
+      data = {
+        status: "published",
+        project: project,
+        epic: title,
+        title: feature_heading
+      }
+
+      content = raw_content_for_feature(feature_heading)
+
+      data.to_yaml + "\n---\n" + content
+    end
+
+    def feature_file_for(feature_heading)
+      folder = features_folder
+      filename = feature_heading.strip.parameterize
+      folder.join(filename)
+    end
+
+    def features_folder
+      briefcase.docs_path.join("features", project.parameterize, title.parameterize)
+    end
+
     def raw_content_for_feature(feature_heading, include_heading=true)
-      document.content_under_heading(feature_heading, include_heading)
+      document.content_under_heading(feature_heading, include_heading).tap do |v|
+
+        # UGLY
+        # Promotes the h2 heading to an h1 for this document
+        v.gsub! "## #{ feature_heading }", "# #{ feature_heading }"
+        v.gsub! "###{ feature_heading }", "##{ feature_heading }"
+      end
     end
 
     def estimate_cli

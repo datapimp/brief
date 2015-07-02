@@ -18,4 +18,14 @@ class Brief::Apps::Blueprint::Milestone
     paragraphs "p"
     yaml_data "code.yaml:first-of-type", :serialize => :yaml, :hide => true
   end
+
+  actions do
+    def publish
+      BlueprintMilestonePublisher.publish(self, via: briefcase.settings.try(:tracking_system))
+    end
+
+    def sync
+      BlueprintMilestonePublisher.sync(self, via: briefcase.settings.try(:tracking_system))
+    end
+  end
 end

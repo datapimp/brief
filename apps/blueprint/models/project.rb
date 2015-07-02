@@ -16,6 +16,16 @@ class Brief::Apps::Blueprint::Project
     yaml_data "code.yaml:first-of-type", :serialize => :yaml, :hide => true
   end
 
+  actions do
+    def publish
+      BlueprintProjectPublisher.publish(self, via: briefcase.settings.try(:tracking_system))
+    end
+
+    def sync
+      BlueprintProjectPublisher.sync(self, via: briefcase.settings.try(:tracking_system))
+    end
+  end
+
   def epics
     briefcase.epics(project: title)
   end

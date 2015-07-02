@@ -13,6 +13,17 @@ class BlueprintEpicPublisher
     end
   end
 
+  def self.syn(epic, options={})
+    via = (options.fetch(:via, :github) || :github)
+
+    if respond_to?("sync_via_#{via}")
+      send("sync_via_#{via}", epic,options)
+    else
+      raise "Invalid syncing source. Need to implement sync_via_#{via} method"
+    end
+  end
+
+
   # Epics get published to Pivotal
   # directly as epics, since Epics have first class support in pivotal
   def self.publish_via_pivotal(epic, options={})

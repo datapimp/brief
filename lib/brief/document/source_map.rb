@@ -34,15 +34,20 @@ module Brief::Document::SourceMap
   def content_under_heading(heading_element, include_heading=true)
     if heading_element.is_a?(String) && heading_element.length > 1
       heading_element = heading_element_tags.find do |el|
-        el.attr('data-heading').include?(heading_element) || el.text.to_s.include?(heading_element)
+        el.attr('data-heading').include?(heading_element.strip.downcase) || el.text.to_s.strip.downcase.include?(heading_element.strip.downcase)
       end
     end
 
+    if heading_element.nil?
+      return nil
+    end
+
     start_index = heading_element.attr('data-line-number').to_i
-    end_index = content.lines.length
 
     if next_heading = next_sibling_heading_for(heading_element)
       end_index = next_heading.attr('data-line-number').to_i
+    else
+      end_index = raw_content.lines.length + 1
     end
 
     end_index = end_index - start_index
@@ -50,6 +55,6 @@ module Brief::Document::SourceMap
 
     lines = raw_content.lines.dup.slice(start_index - 1, end_index)
 
-    (include_heading ? lines : lines.slice(1, lines.length)).join("")
+    Array(include_heading ? lines : lines.slice(1, lines.length)).join("")
   end
 end

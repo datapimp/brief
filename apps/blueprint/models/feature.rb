@@ -11,7 +11,7 @@ class Brief::Apps::Blueprint::Feature
     persona
     goal
     behavior
-    epic_title
+    epic
     remote_id
     tags Array
   end
@@ -26,7 +26,18 @@ class Brief::Apps::Blueprint::Feature
   end
 
   actions do
-    def sync_with_github
+    def publish
+      BlueprintFeaturePublisher.publish(self, via: briefcase.settings.try(:tracking_system))
+    end
+
+    def sync
+      BlueprintFeaturePublisher.sync(self, via: briefcase.settings.try(:tracking_system))
+    end
+  end
+
+  helpers do
+    def parent_epic
+      briefcase.epics(title: epic, project: data.project).first
     end
   end
 end
