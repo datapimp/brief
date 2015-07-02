@@ -26,10 +26,10 @@ module Brief
 
       Brief.cases[root.basename.to_s] ||= self
 
-      load_lib_entries()
+      load_briefcase_lib_entries()
     end
 
-    def load_lib_entries
+    def load_briefcase_lib_entries
       begin
         etc = Dir[briefcase_lib_path.join("**/*.rb")]
         etc.each {|f| require(f) } if briefcase_lib_path.exist?
@@ -254,6 +254,7 @@ module Brief
     def load_model_definitions
       if uses_app?
         Brief.load_modules_from(app_path.join("models"))
+        Dir[app_path.join("lib","**/*.rb")].each {|f| require(f) }
       end
 
       Brief.load_modules_from(models_path) if models_path.exist?
