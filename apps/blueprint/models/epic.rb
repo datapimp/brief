@@ -28,6 +28,16 @@ class Brief::Apps::Blueprint::Epic
     end
   end
 
+  template <<-EOF
+# <%= object.title %>
+# Features
+<% Array(object.features).each do |feature| %>
+## <%= feature.title %>
+<%= feature.paragraph %>
+<% end %>
+  EOF
+
+
   actions do
     def validate
       $brief_cli ? validate_cli : true
