@@ -1,5 +1,6 @@
 class Brief::Apps::Blueprint::Feature
   include Brief::Model
+  include Brief::RemoteSyncing
 
   defined_in Pathname(__FILE__)
 
@@ -27,11 +28,11 @@ class Brief::Apps::Blueprint::Feature
 
   actions do
     def publish
-      BlueprintFeaturePublisher.publish(self, via: briefcase.settings.try(:tracking_system))
+      publish_service.publish(self, via: briefcase.settings.try(:tracking_system))
     end
 
     def sync
-      BlueprintFeaturePublisher.sync(self, via: briefcase.settings.try(:tracking_system))
+      sync_service.sync(self, via: briefcase.settings.try(:tracking_system))
     end
   end
 

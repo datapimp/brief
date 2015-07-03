@@ -1,5 +1,6 @@
 class Brief::Apps::Blueprint::Epic
   include Brief::Model
+  include Brief::RemoteSyncing
 
   defined_in Pathname(__FILE__)
 
@@ -61,6 +62,18 @@ class Brief::Apps::Blueprint::Epic
       briefcase.features(project: project, epic: title)
     end
 
+    def active?
+      status.to_s.downcase == "active"
+    end
+
+    def published?
+      status.to_s.downcase == "published"
+    end
+
+    def draft?
+      status.to_s.downcase == "draft" || status.to_s == ""
+    end
+
     def parent_project
       briefcase.projects(project: project).first
     end
@@ -80,13 +93,24 @@ class Brief::Apps::Blueprint::Epic
       end
     end
 
+    def generate_feature(feature_heading)
+      path = feature_file_for(feature_heading)
+      FileUtils.mkdir_p(path.dirname)
+
+      c = generate_feature_content(c)
+
+      path.open("w+") do |fh|
+        fh.write(c)
+      end
+    end
+
     def generate_feature_content(feature_heading)
       if feature_file_for(feature_heading).exist?
         return feature_file_for(feature_heading).read
       end
 
       data = {
-        status: "published",
+        status: status,
         project: project,
         epic: title,
         title: feature_heading

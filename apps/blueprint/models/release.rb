@@ -1,15 +1,15 @@
 class Brief::Apps::Blueprint::Release
   include Brief::Model
+  include Brief::RemoteSyncing
 
   defined_in Pathname(__FILE__)
 
   meta do
     title
     status
-    personas
     project
+    remote_id
     tags Array
-    projects Array
   end
 
   content do
@@ -17,8 +17,8 @@ class Brief::Apps::Blueprint::Release
     paragraphs "p"
 
     title "h1:first-of-type", :hide => true
-    tagline "h2:first-of-type", :hide => true
-    yaml_data "code.yaml:first-of-type", :serialize => :yaml, :hide => true
+
+    settings "pre[lang='yaml'] code:first-of-type", :serialize => :yaml, :hide => true
 
     define_section "Features" do
       each("h2").has(:title     => "h2",
@@ -27,4 +27,15 @@ class Brief::Apps::Blueprint::Release
                     )
     end
   end
+
+  actions do
+    def publish
+      publish_service.publish(self, via: briefcase.settings.try(:tracking_system))
+    end
+
+    def sync
+      sync_service.sync(self, via: briefcase.settings.try(:tracking_system))
+    end
+  end
+
 end
