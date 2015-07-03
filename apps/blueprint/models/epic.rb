@@ -97,7 +97,7 @@ class Brief::Apps::Blueprint::Epic
       path = feature_file_for(feature_heading)
       FileUtils.mkdir_p(path.dirname)
 
-      c = generate_feature_content(c)
+      c = generate_feature_content(feature_heading)
 
       path.open("w+") do |fh|
         fh.write(c)
@@ -182,7 +182,9 @@ class Brief::Apps::Blueprint::Epic
       errors = []
 
       begin
-        features
+        if features.any? {|f| f.title.to_s.length == 0 }
+          errors.push "Feature is missing title. Should be an h2 element"
+        end
       rescue => e
         errors.push "Error generating features: #{ e.message }"
       end

@@ -32,6 +32,9 @@ module Brief::Document::SourceMap
   end
 
   def line_numbers_for_heading(heading_element, include_heading=true)
+    if heading_element.nil?
+      binding.pry
+    end
     if heading_element.is_a?(String) && heading_element.length > 1
       heading_element = heading_element_tags.find do |el|
         el.attr('data-heading').include?(heading_element.strip.downcase) || el.text.to_s.strip.downcase.include?(heading_element.strip.downcase)
@@ -39,7 +42,7 @@ module Brief::Document::SourceMap
     end
 
     if heading_element.nil?
-      return nil
+      binding.pry
     end
 
     start_index = heading_element.attr('data-line-number').to_i
