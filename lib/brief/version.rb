@@ -1,3 +1,5 @@
+require 'git-version-bump'
+
 module Brief
-  VERSION = '1.17.4'
+  VERSION = GVB.version
 end
