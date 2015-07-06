@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    brief (1.17.6)
+    brief (1.17.7.1.gd149144)
       activesupport (> 3.2)
       commander (~> 4.3)
       em-websocket (~> 0.5)
