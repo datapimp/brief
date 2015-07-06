@@ -118,7 +118,7 @@ class Brief::Apps::Blueprint::Epic
 
       content = raw_content_for_feature(feature_heading)
 
-      data.to_yaml + "\n---\n" + content
+      data.stringify_keys.to_yaml + "---\n\n" + content
     end
 
     def feature_file_for(feature_heading)

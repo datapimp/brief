@@ -1,6 +1,6 @@
-command "create app" do |c|
-  c.syntax = "brief create app NAME"
-  c.description = "create a new brief app"
+command "generate app" do |c|
+  c.syntax = "brief generate app NAME"
+  c.description = "generate a new brief app"
 
   c.option '--clone EXISTING_APP', String, 'Clone an existing app'
 
@@ -33,9 +33,38 @@ command "create app" do |c|
   end
 end
 
-command "create briefcase" do |c|
-  c.syntax = "brief create briefcase PATH"
-  c.description = "create a new briefcase"
+command "generate model" do |c|
+  c.syntax = "brief generate model MODEL_NAME"
+  c.description = "generate a new model"
+
+  c.option '--models-path PATH', String, 'Which folder to use?'
+  c.option '--force', nil, 'Required if PATH already exists'
+
+  c.action do |args, options|
+    options.default(models_path: Brief.pwd.join("models"))
+
+    model_name = args.first || (puts "Must pass a model name" and exit)
+    model_name = model_name.to_s.singularize.parameterize.underscore
+
+    FileUtils.mkdir_p(models_path)
+
+    path = Pathname(models_path).join("#{model_name}.rb")
+
+    if !options.force && path.exist?
+      raise 'Model already exists. Pass --force to continue'
+    end
+
+    data = "class #{ model_name }\n  include Brief::Model\n  meta do\n  # define frontmatter attributes\n  end\n\nend"
+
+    path.open do |fh|
+      fh.write(data)
+    end
+  end
+end
+
+command "generate briefcase" do |c|
+  c.syntax = "brief generate briefcase PATH"
+  c.description = "generate a new briefcase"
 
   c.option '--app APP_NAME', String, 'Use the specified app'
   c.option '--use-local-models', nil, 'When using an app, this option will copy over the models locally instead, so you can customize them.'
@@ -52,7 +81,7 @@ command "create briefcase" do |c|
 
     FileUtils.mkdir_p(folder)
 
-    folder.join("config.rb").open("w+") do |fh|
+    folder.join("brief.rb").open("w+") do |fh|
       fh.write("config do\n  set(:models_path, \"./models\") \nend")
     end
 
@@ -67,7 +96,7 @@ command "create briefcase" do |c|
 
     when options.app
       folder.join("brief.rb").open("a") do |fh|
-        fh.write "\nuse #{ options.app }"
+        fh.write "\nuse \"#{ options.app }\""
       end
     end
 
@@ -75,6 +104,6 @@ command "create briefcase" do |c|
       FileUtils.mkdir_p folder.join(subfolder)
     end
 
-    puts "Created briefcase in #{ folder }"
+    puts "== Created briefcase in #{ folder }"
   end
 end
