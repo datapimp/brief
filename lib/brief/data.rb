@@ -23,7 +23,14 @@ module Brief
         @sources = {}.to_mash
 
         load_files.each do |source, data|
-          @sources[source] = Queryable.new(data)
+          if data.is_a?(Hash)
+            @sources[source] = data.keys.inject({}.to_mash) do |memo, key|
+              memo[key] = Queryable.new(data[key])
+              memo
+            end
+          elsif data.is_a?(Array)
+            @sources[source] = Queryable.new(data)
+          end
         end
       end
 
