@@ -19,6 +19,15 @@ module Brief
     module Rendering
       extend ActiveSupport::Concern
 
+      module ClassMethods
+        def render_gfm(content)
+          html = Github::Markdown.render_pure_gfm(content)
+          fragment = Nokogiri::HTML.fragment(html)
+          fragment.css("p br").remove
+          fragment.to_html
+        end
+      end
+
       def script_preamble
         <<-EOF
         <script type="text/javascript">
