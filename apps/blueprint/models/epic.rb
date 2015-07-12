@@ -55,6 +55,24 @@ class Brief::Apps::Blueprint::Epic
     def publish
       BlueprintEpicPublisher.publish(self, via: briefcase.settings.try(:tracking_system))
     end
+
+    # Converts a draft epic which contains inline feature definitions
+    # into individual feature files
+    def featurize
+      puts "== Generating features for #{ title }"
+
+      features_data.each do |feature|
+        puts "    -- #{ feature.title }"
+
+        begin
+          generate_feature(feature.title) if feature.title
+        rescue => e
+          puts "Error generating feature: #{ feature.title } #{ e.message }".red
+        end
+      end
+
+      nil
+    end
   end
 
   helpers do
@@ -137,7 +155,7 @@ class Brief::Apps::Blueprint::Epic
         # UGLY
         # Promotes the h2 heading to an h1 for this document
         v.gsub! "## #{ feature_heading }", "# #{ feature_heading }"
-        v.gsub! "###{ feature_heading }", "##{ feature_heading }"
+        v.gsub! "###{ feature_heading }", "# #{ feature_heading }"
       end
     end
 
@@ -216,5 +234,35 @@ class Brief::Apps::Blueprint::Epic
         errors.each {|w| puts "  -- #{ w }" }
       end
     end
+
+    def github_issue_body
+      replace_feature_content_with_issue_links
+    end
+
+    def github_issue_title
+      title
+    end
+
+    def replace_feature_content_with_issue_links
+      content
+    end
+
+    def github_issue_labels
+      []
+    end
+
+    def github_milestone_number
+      nil
+    end
+
+    def github_issue_attributes
+      {
+        title: github_issue_title,
+        body: github_issue_body,
+        labels: github_issue_labels,
+        milestone: github_milestone_number
+      }
+    end
+
   end
 end
