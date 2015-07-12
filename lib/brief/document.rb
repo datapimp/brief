@@ -97,6 +97,11 @@ module Brief
       true
     end
 
+    def refreshed
+      refresh!
+      self
+    end
+
     def save!
       if set_raw?
         file_contents = raw_content
