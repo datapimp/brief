@@ -1,3 +1,14 @@
+# A Briefcase is a repository of markdown documents which are turned into active-record like model objects.
+#
+# Special behaviors can be built into these documents by assigning them a `type` value.  Doing this is done either
+# by
+#
+# A Briefcase contains a query interface for different Brief::Documents.  A Brief::Document takes YAML frontmatter,
+# and rendered markdown, and builds key / value attribute pairs for the document.  Each document expects to be able
+# to determine its type by accessing the type field contained in the YAML frontmatter
+#
+# The Briefcase allows you to treat each markdown document as
+#
 module Brief
   class Briefcase
     include Brief::DSL
@@ -9,6 +20,18 @@ module Brief
     attr_accessor :asset_finder,
                   :href_builder
 
+    # Creates a new briefcase
+    #
+    # options:
+    #   - root: (required) the root folder of the briefcase project.  will default to PWD
+    #
+    #   - app: (optional) the name of the app this briefcase should use
+    #
+    #   - href_builder: (optional) reference to a block which will be used to post-process any generated
+    #                   href values for the documents in this briefcase. This will generally be used by
+    #                   apps which render the briefcase content.
+    #   - asset_finder: (optional) reference to a block which will be used to find assets when used as attachments
+    #                   or when embedding inline:svg through the special image markdown syntax
     def initialize(options = {})
       @options = options.to_mash
 
