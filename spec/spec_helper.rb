@@ -2,6 +2,8 @@ require 'pry'
 require 'rack/test'
 require 'brief'
 
+ENV['BRIEF_DEBUG'] = "true"
+
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 module Brief

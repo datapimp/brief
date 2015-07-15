@@ -11,11 +11,12 @@ module Brief
       include Virtus.model(finalize: false)
       include Initializers
       include AccessorMethods
+      include LoggerMethods
       include Persistence
       include Serializers
       include Reports
 
-      class_attribute :models, :after_initialization_hooks
+      class_attribute :models, :after_initialization_hooks, :logger
 
       self.models = Array(models).to_set
 
@@ -27,6 +28,20 @@ module Brief
       attribute :document, Brief::Document
 
       Brief::Model.classes << self
+    end
+
+    module LoggerMethods
+      def log message
+        (!briefcase.nil? && briefcase.log(message))
+      end
+
+      def debug message
+        (!briefcase.nil? && briefcase.debug(message))
+      end
+
+      def puts message
+        (!briefcase.nil? && briefcase.log(message)) || super
+      end
     end
 
     module AccessorMethods

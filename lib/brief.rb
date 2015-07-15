@@ -10,6 +10,7 @@ require 'yaml'
 require 'erb'
 require 'hike'
 require 'pry'
+require 'logger'
 
 module Brief
   # When packaging this up through the traveling ruby system

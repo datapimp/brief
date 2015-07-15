@@ -27,6 +27,8 @@ module Brief
     #
     #   - app: (optional) the name of the app this briefcase should use
     #
+    #   - logger: a logger instance, will default to Logger.new(STDOUT)
+    #
     #   - href_builder: (optional) reference to a block which will be used to post-process any generated
     #                   href values for the documents in this briefcase. This will generally be used by
     #                   apps which render the briefcase content.
@@ -34,6 +36,8 @@ module Brief
     #                   or when embedding inline:svg through the special image markdown syntax
     def initialize(options = {})
       @options = options.to_mash
+
+      debug "Created briefcase instance #{ object_id } at #{ root }"
 
       load_configuration
       use(:app, options[:app]) if options[:app]
@@ -49,15 +53,34 @@ module Brief
 
       Brief.cases[root.basename.to_s] ||= self
 
+      @logger = options.fetch(:logger, nil)
+
+      debug "Loading briefcase lib entries"
       load_briefcase_lib_entries()
+    end
+
+    def logger
+      @logger ||= Logger.new(STDOUT)
+    end
+
+    def log message
+      logger.info(message)
+    end
+
+    def debug message
+      logger.debug(message) if debug?
+    end
+
+    def debug?
+      options.fetch(:debug, nil) || ENV['BRIEF_DEBUG']
     end
 
     def load_briefcase_lib_entries
       begin
         etc = Dir[briefcase_lib_path.join("**/*.rb")]
         etc.each {|f| require(f) } if briefcase_lib_path.exist?
-      rescue
-
+      rescue => e
+        debug "Error while loading briefcase entries: #{ e.message }"
       end
     end
 
