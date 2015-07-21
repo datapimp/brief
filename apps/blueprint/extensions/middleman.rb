@@ -15,7 +15,7 @@
         patterns = [
           '.png',  '.gif', '.jpg', '.jpeg', '.svg', # Images
           '.eot',  '.otf', '.svc', '.woff', '.ttf', # Fonts
-          '.js', '.slim', '.erb', '.md',                                    # Javascript
+          '.js', '.slim', '.erb', '.md', '.psd'                                    # Javascript
         ].map { |e| File.join(blueprint.assets_path, "**", "*#{e}" ) }
 
         sprockets.prepend_path(blueprint.assets_path)
