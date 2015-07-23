@@ -25,7 +25,7 @@ else
   # Eager load the briefcase so that the call to Brief.load_commands()
   # will pick up the briefcase app's model classes
   if ARGV.include?('--root')
-    index = ARGV.index_of('--root')
+    index = ARGV.index('--root')
 
     if value = ARGV[index + 1]
       $briefcase = Brief::Briefcase.new(root: value)
