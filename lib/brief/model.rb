@@ -81,6 +81,12 @@ module Brief
         end
       end
 
+      def set_data_attribute(attribute, value)
+        document.data.send("#{attribute}=", value)
+        document.save
+        value
+      end
+
       def exists?
         document && document.path && document.path.exist?
       end

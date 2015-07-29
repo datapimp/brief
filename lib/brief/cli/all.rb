@@ -11,10 +11,18 @@ command 'change' do |c|
   c.action do |args, options|
     options.default(root: Pathname(Brief.pwd), operator: "eq")
     attribute = args.shift
-    paths     = args.map {|a| Dir[options.root.join(a)] }.flatten
 
-    briefcase = Brief.case(true)
-    documents = briefcase.documents_at(*paths)
+    briefcase = $briefcase || Brief.case
+
+    path_args = args.select { |arg| arg.is_a?(String) && arg.match(/\.md$/) }
+
+    path_args.select! do |arg|
+      briefcase.root.join(arg).exist?
+    end
+
+    path_args.map! { |p| briefcase.root.join(p) }
+
+    documents = briefcase.documents_at(*path_args)
 
     if options.from
       #attribute = attribute.to_sym.send(options.operator)
@@ -26,11 +34,15 @@ command 'change' do |c|
       puts "No documents match this selection"
     end
 
-    if options.dry_run
-      puts documents
-    end
+    models = documents.map(&:to_model)
 
-    documents
+    models.each do |model|
+      briefcase.log("Changing #{ attribute } from #{ model.data[attribute] } to #{ options.to }")
+
+      unless options.dry_run
+        model.set_data_attribute(attribute, options.to)
+      end
+    end
   end
 end
 

@@ -115,7 +115,7 @@ module Brief
 
     def combined_data_and_content
       return content if data.nil? || data.empty?
-      frontmatter.to_hash.to_yaml + "---\n\n#{ content }"
+      data.to_hash.to_yaml + "---\n\n#{ content }"
     end
 
     def data
