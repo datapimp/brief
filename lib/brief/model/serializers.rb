@@ -14,6 +14,8 @@ module Brief::Model::Serializers
       data: data,
       extracted: extracted_content_data,
       path: path.to_s,
+      doc_path: doc_path,
+      path_alias: path_alias,
       type: type,
       group: type.to_s.pluralize,
       title: document_title,

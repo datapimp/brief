@@ -52,6 +52,10 @@ module Brief
       briefcase.present? ? path.relative_path_from(briefcase.docs_path) : path
     end
 
+    def path_alias
+      relative_path.to_s.gsub(relative_path.extname.to_s, '')
+    end
+
     def content_hash
       Digest::MD5.hexdigest(@content.to_s)
     end

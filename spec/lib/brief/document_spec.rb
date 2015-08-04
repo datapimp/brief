@@ -30,6 +30,10 @@ describe "The Brief Document" do
     expect(Brief.page_document.to_html).to be_present
   end
 
+  it "has a path alias property" do
+    expect(Brief.page_document.path_alias).not_to be_empty
+  end
+
   it "parses the html" do
     expect(sample.css("h1").length).to eq(2)
   end
