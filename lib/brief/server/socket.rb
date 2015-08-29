@@ -28,6 +28,14 @@ module Brief class Server
             }
           end
 
+        when action == "run:command"
+          command = message.fetch(:command, 'default')
+          options = message.fetch(:options, {})
+          briefcase = briefcases.fetch(message[:briefcase])
+
+          respond_to(message_id) do
+            briefcase.run_command(command, options)
+          end
         when action == "list:briefcases"
           presenter = message.fetch(:presenter, 'default')
           options = message.fetch(:options, {})
@@ -57,6 +65,8 @@ module Brief class Server
             document.to_model.as_json(options)
           end
 
+        when action == "run:command"
+          binding.pry
         when action == "query"
           params = message.fetch(:params, {})
           model_options = message.fetch(:model_options, {})
